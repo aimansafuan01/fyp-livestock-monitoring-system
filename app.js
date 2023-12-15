@@ -43,7 +43,7 @@ app.get('/home', (req, res) => {
   res.render('dashboard')
 })
 
-//Daily Record
+// Daily Record
 app.get('/daily-record', (req, res) => {
   res.render('daily-record')
 })
@@ -57,37 +57,10 @@ app.post('/login', async (req, res) => {
   console.log(result)
   if (result) {
     res.redirect('/home')
+  } else {
+    console.log('Invalid Username or Password')
   }
-  // connection.query('SELECT * FROM user WHERE username= ? AND password= ?',
-  //   [username, password],
-  //   (err, results) => {
-  //     if (err) {
-  //       console.log(err)
-  //     };
-
-  //     if (results.length > 0) {
-  //       res.redirect('/home')
-  //     } else {
-  //       res.send('Invalid username or password')
-  //     }
-  //   }
-  // )
 })
-
-// Define a route to fetch data from the database and render the EJS template
-// app.get('/', (req, res) => {
-//   const query = 'SELECT * FROM dailyrecord' // Replace with your actual table name
-//   app.use('/assets', express.static('./assets/'))
-
-//   connection.query(query, (err, results) => {
-//     if (err) {
-//       console.error('Error querying database:', err)
-//       res.status(500).send('Internal Server Error')
-//     } else {
-//       res.render('sign-in', { data: results })
-//     }
-//   })
-// })
 
 // Start the server
 const PORT = 3000
