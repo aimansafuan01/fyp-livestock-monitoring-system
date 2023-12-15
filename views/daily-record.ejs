@@ -135,12 +135,34 @@
       </div>
     </nav>
     <!-- End Navbar -->
-    <div class="container-fluid py-0 px-0">
-      <form action="/submit-form" method="post" role="form" class="text-start" enctype="application/x-www-form-urlencoded">
-        <div class="row px-1 mx-4 py-2 border shadow-sm">
+
+    <div class="py-0 px-0 mx-5 text-center">
+        <div class="row border">
+          <div class="col border py-6">
+            <a class="btn btn-primary" href="#" role="button">CHICKEN</a>
+          </div>
+          <div class="col border py-6">
+            <a class="btn btn-primary" href="#" role="button">EGG</a>
+          </div>
+        </div>
+        <div class="row border">
+          <div class="col border py-6">
+            <a class="btn btn-primary" href="#" role="button">BROODER</a>
+          </div>
+          <div class="col border py-6">
+            <a class="btn btn-primary" href="#" role="button">INCUBATOR</a>
+          </div>
+        </div>
+     
+
+
+
+      <!-- OLD FORM -->
+      <!-- <form action="/submit-form" method="post" role="form" class="text-start border mx-3 py-3 shadow-lg" enctype="application/x-www-form-urlencoded">
+        <div class="row px-1 mx-4 py-2 border">
           <p class="text-left font-weight-bolder mb-0 mt-2">Chicken Daily Record</p>
-            <div class="input-group input-group-outline my-2">
-              <select class="form-control-sm input-sm" id="coopID" name="coopID">
+            <div class="my-2 w-25">
+              <select class="form-control px-2 form-select-sm" id="coopID" name="coopID">
                 <option selected>Select Coop ID</option>
                 <option value="R1">R1</option>
                 <option value="R2">R2</option>
@@ -153,11 +175,11 @@
                 <option value="R9">R9</option>
               </select>
             </div>
-            <div class="input-group input-group-outline my-2">
+            <div class="input-group input-group-outline my-2 w-100">
               <label class="form-label">Number of dead Hens</label>
               <input type="text" class="form-control" name="numOfDeadHens">
             </div>
-            <div class="input-group input-group-outline my-2">
+            <div class="input-group input-group-outline my-2 w-100">
               <label class="form-label">Number of dead Roosters</label>
               <input type="text" class="form-control" name="numOfDeadRoosters">
             </div>
@@ -174,7 +196,34 @@
         <div class="row px-1 mx-4">
           <p class="text-left font-weight-bolder">Incubator Record</p>
         </div>
-      </form>
+
+        <button id="showFormButton">Show Form</button>
+        
+        <div id="additionalFormContainer" style="display: none;">
+          <div class="my-2 w-25">
+            <select class="form-control px-2 form-select-sm" id="coopID" name="coopID">
+              <option selected>Select Coop ID</option>
+              <option value="R1">R1</option>
+              <option value="R2">R2</option>
+              <option value="R3">R3</option>
+              <option value="R4">R4</option>
+              <option value="R5">R5</option>
+              <option value="R6">R6</option>
+              <option value="R7">R7</option>
+              <option value="R8">R8</option>
+              <option value="R9">R9</option>
+            </select>
+          </div>
+          <div class="input-group input-group-outline my-2 w-100">
+            <label class="form-label">Number of dead Hens</label>
+            <input type="text" class="form-control" name="numOfDeadHens">
+          </div>
+          <div class="input-group input-group-outline my-2 w-100">
+            <label class="form-label">Number of dead Roosters</label>
+            <input type="text" class="form-control" name="numOfDeadRoosters">
+          </div>
+        </div>
+      </form> -->
 
       <!-- <div class="row">
         <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">

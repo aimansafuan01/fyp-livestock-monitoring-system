@@ -755,6 +755,10 @@ progress {
   }
 }
 
+.reset-input {
+  all: unset;
+}
+
 .row {
   --bs-gutter-x: 1.5rem;
   --bs-gutter-y: 0;
@@ -22679,9 +22683,9 @@ label,
   transition: 0.2s ease all;
 }
 
-.form-control {
+/* .form-control {
   border: none;
-}
+} */
 
 .form-control.is-invalid {
   border: 1px solid #d2d6da;
