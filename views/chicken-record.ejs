@@ -1,0 +1,505 @@
+<!-- 
+
+* Material Dashboard 2 - v3.1.0
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/material-dashboard
+* Copyright 2023 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT (https://www.creative-tim.com/license)
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
+  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+  <title>
+    Tiroi Farm PLT
+  </title>
+  <!--     Fonts and icons     -->
+  <link rel="stylesheet" type="text/css"
+    href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" />
+  <!-- Nucleo Icons -->
+  <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
+  <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
+  <!-- Font Awesome Icons -->
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <!-- CSS Files -->
+  <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.1.0" rel="stylesheet" />
+  <!-- Nepcha Analytics (nepcha.com) -->
+  <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
+  <!-- <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script> -->
+</head>
+
+
+<!------------------------------ Left Navbar ---------------------->
+<body class="g-sidenav-show  bg-gray-200">
+  <aside
+    class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3   bg-gradient-dark"
+    id="sidenav-main">
+    <div class="sidenav-header">
+      <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
+        aria-hidden="true" id="iconSidenav"></i>
+      <a class="navbar-brand m-0" href=" https://demos.creative-tim.com/material-dashboard/pages/dashboard "
+        target="_blank">
+        <img src="../assets/img/logo-ct.png" class="navbar-brand-img h-100" alt="main_logo">
+        <span class="ms-1 font-weight-bold text-white">Tiroi Farm PLT</span>
+      </a>
+    </div>
+    <hr class="horizontal light mt-0 mb-2">
+    <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link text-white" href="/home">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-icons opacity-10">dashboard</i>
+            </div>
+            <span class="nav-link-text ms-1">Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white active bg-gradient-primary" href="/daily-record">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-icons opacity-10">inventory</i>
+            </div>
+            <span class="nav-link-text ms-1">Daily Record</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white " href="../pages/billing.html">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-icons opacity-10">receipt_long</i>
+            </div>
+            <span class="nav-link-text ms-1">Chicken Health Record</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white " href="../pages/virtual-reality.html">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-icons opacity-10">receipt_long</i>
+            </div>
+            <span class="nav-link-text ms-1">Sales Record</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white " href="../pages/rtl.html">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-icons opacity-10">groups</i>
+            </div>
+            <span class="nav-link-text ms-1">Customer List</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white " href="../pages/notifications.html">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-icons opacity-10">summarize</i>
+            </div>
+            <span class="nav-link-text ms-1">Generate Report</span>
+          </a>
+        </li>
+        <li class="nav-item mt-3">
+          <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">Account pages</h6>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white " href="../pages/profile.html">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-icons opacity-10">person</i>
+            </div>
+            <span class="nav-link-text ms-1">Profile</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </aside>
+  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+<!------------------------------ Left Navbar ---------------------->
+
+    <!-- Top Navbar -->
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur"
+      data-scroll="true">
+      <div class="container-fluid py-1 px-3">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/home">Home</a></li>
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/daily-record">Daily Record</a></li>
+            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Chicken Record</li>
+          </ol>
+          <h4 class="font-weight-bolder mb-0">Chicken Record</h4>
+        </nav>
+      </div>
+    </nav>
+    <!-- Top Navbar -->
+
+
+    <div class="p-3 mx-5 border border-secondary rounded shadow-lg mb-4">
+      <form class="needs-validation" action="/submit-chicken-form" method="post" role="form" class="text-start">
+        <div id="formRepeat">
+          <div class="row border px-2 py-2 mx-1">
+            <div class="row mx-1">
+              Chicken Mortality
+            </div>
+            <div class="row w-25 mt-1">
+              <div class="col">
+                <select class="form-select form-select-sm" name="coopID">
+                  <option selected>Coop ID</option>
+                  <option>R1</option>
+                  <option>R2</option>
+                  <option>R3</option>
+                  <option>R4</option>
+                  <option>R5</option>
+                  <option>R6</option>
+                  <option>R7</option>
+                  <option>R8</option>
+                  <option>R9</option>
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col pb-2">
+                <label for="numOfDeadHensR1" class="form-label pt-2 mb-0">Number of Dead Hens</label>
+                <input type="number" class="form-control p-2" name="numOfDeadHensR1" placeholder="Enter number of dead Hens" value="0">
+              </div>
+              <div class="col pb-2">
+                <label for="numOfDeadRoostersR1" class="form-label pt-2 mb-0">Number of Dead Roosters</label>
+                <input type="number" class="form-control p-2" name="numOfDeadRoostersR1" placeholder="Enter number of dead Roosters" value="0">
+              </div>
+            </div>
+          </div>
+          <div class="d-flex align-item-center m-2">
+            <div class="col"></div>
+            <span class="material-symbols-outlined" onclick="addNewSection('formRepeat')" style="cursor: pointer;">
+              add
+            </span>
+            <i onclick="addNewSection('formRepeat')" style="cursor: pointer;">Add Record</i>
+          </div>
+        </div>
+
+        <!-- Additional From Section Displayed after user click '+' button -->
+        <!-- <div id="AdditionalRecord" style="display: none">
+          <div class="row border px-2 py-2 mx-1">
+            <div class="row mx-1">
+              Chicken Mortality
+            </div>
+            <div class="row w-25 mt-1">
+              <div class="col">
+                <select class="form-select form-select-sm" name="coopID">
+                  <option selected>Choose Coop ID</option>
+                  <option selected>R1</option>
+                  <option selected>R2</option>
+                  <option selected>R3</option>
+                  <option selected>R4</option>
+                  <option selected>R5</option>
+                  <option selected>R6</option>
+                  <option selected>R7</option>
+                  <option selected>R8</option>
+                  <option selected>R9</option>
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col pb-2">
+                <label for="numOfDeadHensR1" class="form-label pt-2 mb-0">Number of Dead Hens</label>
+                <input type="number" class="form-control p-2" name="numOfDeadHensR1" placeholder="Enter number of dead Hens"
+                  value="0">
+              </div>
+              <div class="col pb-2">
+                <label for="numOfDeadRoostersR1" class="form-label pt-2 mb-0">Number of Dead Roosters</label>
+                <input type="number" class="form-control p-2" name="numOfDeadRoostersR1"
+                  placeholder="Enter number of dead Roosters" value="0">
+              </div>
+            </div>
+          </div>
+          <div class="d-flex align-item-center mt-2">
+            <div class="col"></div>
+            <span class="material-symbols-outlined" onclick="toggleSection('AdditionalRecord')" style="cursor: pointer;">
+              add
+            </span>
+            <i onclick="toggleSection('AdditionalRecord')" style="cursor: pointer;">Add Record</i>
+          </div>
+        </div> -->
+
+        <div class="col-12 mt-3 align-self-end d-flex">
+          <button class="btn btn-primary" type="submit">Submit form</button>
+        </div>
+        <!-- <div class="row border px-2 py-2 mx-1 my-3">
+          <div class="row mx-1">
+            Chicken Mortality
+          </div>
+          <div class="row w-25 mt-1">
+            <div class="col">
+              <select class="form-select form-select-sm" disabled>
+                <option selected>R2</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col pb-2">
+              <label for="numOfDeadHensR2" class="form-label pt-2 mb-0">Number of Dead Hens</label>
+              <input type="text" class="form-control p-2" name="numOfDeadHensR2" placeholder="Enter number of dead Hens" value="0">
+            </div>
+            <div class="col pb-2">
+              <label for="numOfDeadRoostersR2" class="form-label pt-2 mb-0">Number of Dead Roosters</label>
+              <input type="text" class="form-control p-2" name="numOfDeadRoostersR2" placeholder="Enter number of dead Roosters" value="0">
+            </div>
+          </div>
+        </div>
+        
+        <div class="row border px-2 py-2 mx-1 my-3">
+          <div class="row mx-1">
+            Chicken Mortality
+          </div>
+          <div class="row w-25 mt-1">
+            <div class="col">
+              <select class="form-select form-select-sm" disabled>
+                <option selected>R3</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col pb-2">
+              <label for="numOfDeadHensR3" class="form-label pt-2 mb-0">Number of Dead Hens</label>
+              <input type="text" class="form-control p-2" name="numOfDeadHensR3" placeholder="Enter number of dead Hens" value="0">
+            </div>
+            <div class="col pb-2">
+              <label for="numOfDeadRoostersR3" class="form-label pt-2 mb-0">Number of Dead Roosters</label>
+              <input type="text" class="form-control p-2" name="numOfDeadRoostersR3" placeholder="Enter number of dead Roosters" value="0">
+            </div>
+          </div>
+        </div>
+        
+        <div class="row border px-2 py-2 mx-1 my-3">
+          <div class="row mx-1">
+            Chicken Mortality
+          </div>
+          <div class="row w-25 mt-1">
+            <div class="col">
+              <select class="form-select form-select-sm" disabled>
+                <option selected>R4</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col pb-2">
+              <label for="numOfDeadHensR4" class="form-label pt-2 mb-0">Number of Dead Hens</label>
+              <input type="text" class="form-control p-2" name="numOfDeadHensR4" placeholder="Enter number of dead Hens" value="0">
+            </div>
+            <div class="col pb-2">
+              <label for="numOfDeadRoostersR4" class="form-label pt-2 mb-0">Number of Dead Roosters</label>
+              <input type="text" class="form-control p-2" name="numOfDeadRoostersR4" placeholder="Enter number of dead Roosters" value="0">
+            </div>
+          </div>
+        </div>
+
+        <div class="row border px-2 py-2 mx-1 my-3">
+          <div class="row mx-1">
+            Chicken Mortality
+          </div>
+          <div class="row w-25 mt-1">
+            <div class="col">
+              <select class="form-select form-select-sm" disabled>
+                <option selected>R5</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col pb-2">
+              <label for="numOfDeadHensR5" class="form-label pt-2 mb-0">Number of Dead Hens</label>
+              <input type="text" class="form-control p-2" name="numOfDeadHensR5" placeholder="Enter number of dead Hens" value="0">
+            </div>
+            <div class="col pb-2">
+              <label for="numOfDeadRoostersR5" class="form-label pt-2 mb-0">Number of Dead Roosters</label>
+              <input type="text" class="form-control p-2" name="numOfDeadRoostersR5" placeholder="Enter number of dead Roosters" value="0">
+            </div>
+          </div>
+        </div>
+
+        <div class="row border px-2 py-2 mx-1 my-3">
+          <div class="row mx-1">
+            Chicken Mortality
+          </div>
+          <div class="row w-25 mt-1">
+            <div class="col">
+              <select class="form-select form-select-sm" disabled>
+                <option selected>R6</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col pb-2">
+              <label for="numOfDeadHensR6" class="form-label pt-2 mb-0">Number of Dead Hens</label>
+              <input type="text" class="form-control p-2" name="numOfDeadHensR6" placeholder="Enter number of dead Hens" value="0">
+            </div>
+            <div class="col pb-2">
+              <label for="numOfDeadRoostersR6" class="form-label pt-2 mb-0">Number of Dead Roosters</label>
+              <input type="text" class="form-control p-2" name="numOfDeadRoostersR6" placeholder="Enter number of dead Roosters" value="0">
+            </div>
+          </div>
+        </div>
+        
+        <div class="row border px-2 py-2 mx-1 my-3">
+          <div class="row mx-1">
+            Chicken Mortality
+          </div>
+          <div class="row w-25 mt-1">
+            <div class="col">
+              <select class="form-select form-select-sm" disabled>
+                <option selected>R7</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col pb-2">
+              <label for="numOfDeadHensR7" class="form-label pt-2 mb-0">Number of Dead Hens</label>
+              <input type="text" class="form-control p-2" name="numOfDeadHensR7" placeholder="Enter number of dead Hens" value="0">
+            </div>
+            <div class="col pb-2">
+              <label for="numOfDeadRoostersR7" class="form-label pt-2 mb-0">Number of Dead Roosters</label>
+              <input type="text" class="form-control p-2" name="numOfDeadRoostersR7" placeholder="Enter number of dead Roosters" value="0">
+            </div>
+          </div>
+        </div>
+        
+        <div class="row border px-2 py-2 mx-1 my-3">
+          <div class="row mx-1">
+            Chicken Mortality
+          </div>
+          <div class="row w-25 mt-1">
+            <div class="col">
+              <select class="form-select form-select-sm" disabled>
+                <option selected>R8</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col pb-2">
+              <label for="numOfDeadHensR8" class="form-label pt-2 mb-0">Number of Dead Hens</label>
+              <input type="text" class="form-control p-2" name="numOfDeadHensR8" placeholder="Enter number of dead Hens" value="0">
+            </div>
+            <div class="col pb-2">
+              <label for="numOfDeadRoostersR8" class="form-label pt-2 mb-0">Number of Dead Roosters</label>
+              <input type="text" class="form-control p-2" name="numOfDeadRoostersR8" placeholder="Enter number of dead Roosters" value="0">
+            </div>
+          </div>
+        </div>
+        
+        <div class="row border px-2 py-2 mx-1 my-3">
+          <div class="row mx-1">
+            Chicken Mortality
+          </div>
+          <div class="row w-25 mt-1">
+            <div class="col">
+              <select class="form-select form-select-sm" disabled>
+                <option selected>R9</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col pb-2">
+              <label for="numOfDeadHensR9" class="form-label pt-2 mb-0">Number of Dead Hens</label>
+              <input type="text" class="form-control p-2" name="numOfDeadHensR9" placeholder="Enter number of dead Hens" value="0">
+            </div>
+            <div class="col pb-2">
+              <label for="numOfDeadRoostersR9" class="form-label pt-2 mb-0">Number of Dead Roosters</label>
+              <input type="text" class="form-control p-2" name="numOfDeadRoostersR9" placeholder="Enter number of dead Roosters" value="0">
+            </div>
+          </div>
+        </div> -->
+
+      </form>
+    </div>
+
+    <!--   Core JS Files   -->
+    <script src="../assets/js/core/popper.min.js"></script>
+    <script src="../assets/js/core/bootstrap.min.js"></script>
+    <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
+    <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
+    <script src="../assets/js/plugins/chartjs.min.js"></script>
+
+    <script>
+      var win = navigator.platform.indexOf('Win') > -1;
+      if (win && document.querySelector('#sidenav-scrollbar')) {
+        var options = {
+          damping: '0.5'
+        }
+        Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+      }
+    </script>
+
+    <script>
+      let counter = 2;
+
+      function addNewSection(sectionId) {
+        const sectionContainer = document.getElementById('formRepeat');
+
+        // Create a new div for each instance of Section 1
+        const newSection = document.createElement('div');
+        newSection.id = `section1_${counter}`;
+
+        // Add the content of Section 1 (you can customize this content)
+        newSection.innerHTML = `
+            <div class="row border px-2 py-2 mx-1">
+            <div class="row mx-1">
+              Chicken Mortality
+            </div>
+            <div class="row w-25 mt-1">
+              <div class="col">
+                <select class="form-select form-select-sm" name="coopID">
+                  <option selected>Coop ID</option>
+                  <option>R1</option>
+                  <option>R2</option>
+                  <option>R3</option>
+                  <option>R4</option>
+                  <option>R5</option>
+                  <option>R6</option>
+                  <option>R7</option>
+                  <option>R8</option>
+                  <option>R9</option>
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col pb-2">
+                <label for="numOfDeadHensR${counter}" class="form-label pt-2 mb-0">Number of Dead Hens</label>
+                <input type="number" class="form-control p-2" name="numOfDeadHensR${counter}" placeholder="Enter number of dead Hens" value="0">
+              </div>
+              <div class="col pb-2">
+                <label for="numOfDeadRoostersR${counter}" class="form-label pt-2 mb-0">Number of Dead Roosters</label>
+                <input type="number" class="form-control p-2" name="numOfDeadRoostersR${counter}" placeholder="Enter number of dead Roosters" value="0">
+              </div>
+            </div>
+          </div>
+          <div class="d-flex align-item-center m-2">
+            <div class="col"></div>
+            <span class="material-symbols-outlined" onclick="addNewSection('formRepeat')" style="cursor: pointer;">
+              add
+            </span>
+            <i onclick="addNewSection('formRepeat')" style="cursor: pointer;">Add Record</i>
+          </div>
+          `;
+
+        // Append the new section to the container
+        sectionContainer.appendChild(newSection);
+
+        // Increment the counter for unique IDs
+        counter++;
+      }
+    </script>
+
+    <!-- Github buttons -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+    <script src="../assets/js/material-dashboard.min.js?v=3.1.0"></script>
+</body>
+
+</html>

@@ -2947,8 +2947,8 @@ textarea.form-control-lg {
 }
 
 .form-select:disabled {
-  color: #6c757d;
-  background-color: #f0f2f5;
+  color: #ffffff;
+  background-color: #969696;
 }
 
 .form-select:-moz-focusring {
@@ -23421,6 +23421,13 @@ hr.horizontal.gray-light {
 
 .rtl .start-0 {
   right: 0 !important;
+}
+
+.card.enlargeable:hover {
+  transform: scale(1.04);
+  /* You can adjust the scale factor based on your preference */
+  transition: transform 0.3s ease-in-out;
+  /* Add a smooth transition effect */
 }
 
 .rtl .end-0 {
