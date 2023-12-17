@@ -1,4 +1,4 @@
 - Some of the UI components and pages are taken from https://www.creative-tim.com/product/material-dashboard
-- Uses ExpressJS, EJS, Bootstrap
+- Uses ExpressJS, EJS, Bootstrap, MySQL
 - Ongoing project
 - LOOKING FOR INTERNSHIP OPPORTUNITIES IN SELANGOR
