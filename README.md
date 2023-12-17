@@ -1,3 +1,4 @@
+- Academic Final Year Project for Information System Engineering
 - Some of the UI components and pages are taken from https://www.creative-tim.com/product/material-dashboard
 - Uses ExpressJS, EJS, Bootstrap, MySQL
 - Ongoing project
