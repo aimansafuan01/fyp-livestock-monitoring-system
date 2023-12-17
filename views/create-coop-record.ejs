@@ -18,8 +18,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
-  <link rel="icon" type="image/png" href="../assets/img/favicon.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="../../assets/img/apple-icon.png">
+  <link rel="icon" type="image/png" href="../../assets/img/favicon.png">
   <title>
     Tiroi Farm PLT
   </title>
@@ -27,8 +27,8 @@
   <link rel="stylesheet" type="text/css"
     href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" />
   <!-- Nucleo Icons -->
-  <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
-  <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
+  <link href="/assets/css/nucleo-icons.css" rel="stylesheet" />
+  <link href="/assets/css/nucleo-svg.css" rel="stylesheet" />
   <!-- Font Awesome Icons -->
   <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
   <!-- Material Icons -->
@@ -36,7 +36,7 @@
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
   <!-- CSS Files -->
-  <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.1.0" rel="stylesheet" />
+  <link id="pagestyle" href="/assets/css/material-dashboard.css?v=3.1.0" rel="stylesheet" />
   <!-- Nepcha Analytics (nepcha.com) -->
   <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
   <!-- <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script> -->
@@ -133,7 +133,7 @@
           <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/home">Home</a></li>
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/daily-record">Daily Record</a></li>
-            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Chicken Record</li>
+            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Chicken Record.</li>
           </ol>
           <h4 class="font-weight-bolder mb-0">Chicken Record</h4>
         </nav>
@@ -143,26 +143,15 @@
 
 
     <div class="p-3 mx-5 border border-secondary rounded shadow-lg mb-4">
-      <form class="needs-validation" action="/submit-chicken-form" method="post" role="form" class="text-start">
+      <form class="needs-validation" action="/submit-coop-record" method="post" role="form" class="text-start">
         <div id="formRepeat">
           <div class="row border px-2 py-2 mx-1">
             <div class="row mx-1">
-              Chicken Mortality
+              Coop ID
             </div>
-            <div class="row w-25 mt-1">
-              <div class="col">
-                <select class="form-select form-select-sm" name="coopID">
-                  <option selected>Coop ID</option>
-                  <option>R1</option>
-                  <option>R2</option>
-                  <option>R3</option>
-                  <option>R4</option>
-                  <option>R5</option>
-                  <option>R6</option>
-                  <option>R7</option>
-                  <option>R8</option>
-                  <option>R9</option>
-                </select>
+            <div class="row mt-1">
+              <div class="col-12 col-md-2">
+                <input type="text" class="form-control text-black ps-2" name="coopID" value="<%= id %>" readonly>
               </div>
             </div>
             <div class="row">
@@ -175,14 +164,28 @@
                 <input type="number" class="form-control p-2" name="numOfDeadRoostersR1" placeholder="Enter number of dead Roosters" value="0">
               </div>
             </div>
+            <div class="row">
+              <div class="col pb-2">
+                <label for="numOfEggs" class="form-label pt-2 mb-0">Total Number of Collected Eggs</label>
+                <input type="number" class="form-control p-2" name="numOfEggs" id="numOfEggs" placeholder="Enter number of dead Hens" value="0">
+              </div>
+              <div class="col pb-2">
+                <label for="numOfNC" class="form-label pt-2 mb-0">Number of NC Eggs</label>
+                <input type="number" class="form-control p-2" name="numOfNC" id="numOfNC" placeholder="Enter number of dead Hens" value="0">
+              </div>
+              <div class="col pb-2">
+                <label for="acceptedEggs" class="form-label pt-2 mb-0">Number of Accepted Eggs</label>
+                <input type="number" class="form-control p-2" name="acceptedEggs" id="acceptedEggs" readonly>
+              </div>
+            </div>
           </div>
-          <div class="d-flex align-item-center m-2">
+          <!-- <div class="d-flex align-item-center m-2">
             <div class="col"></div>
             <span class="material-symbols-outlined" onclick="addNewSection('formRepeat')" style="cursor: pointer;">
               add
             </span>
             <i onclick="addNewSection('formRepeat')" style="cursor: pointer;">Add Record</i>
-          </div>
+          </div> -->
         </div>
 
         <!-- Additional From Section Displayed after user click '+' button -->
@@ -232,200 +235,16 @@
         <div class="col-12 mt-3 align-self-end d-flex">
           <button class="btn btn-primary" type="submit">Submit form</button>
         </div>
-        <!-- <div class="row border px-2 py-2 mx-1 my-3">
-          <div class="row mx-1">
-            Chicken Mortality
-          </div>
-          <div class="row w-25 mt-1">
-            <div class="col">
-              <select class="form-select form-select-sm" disabled>
-                <option selected>R2</option>
-              </select>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col pb-2">
-              <label for="numOfDeadHensR2" class="form-label pt-2 mb-0">Number of Dead Hens</label>
-              <input type="text" class="form-control p-2" name="numOfDeadHensR2" placeholder="Enter number of dead Hens" value="0">
-            </div>
-            <div class="col pb-2">
-              <label for="numOfDeadRoostersR2" class="form-label pt-2 mb-0">Number of Dead Roosters</label>
-              <input type="text" class="form-control p-2" name="numOfDeadRoostersR2" placeholder="Enter number of dead Roosters" value="0">
-            </div>
-          </div>
-        </div>
-        
-        <div class="row border px-2 py-2 mx-1 my-3">
-          <div class="row mx-1">
-            Chicken Mortality
-          </div>
-          <div class="row w-25 mt-1">
-            <div class="col">
-              <select class="form-select form-select-sm" disabled>
-                <option selected>R3</option>
-              </select>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col pb-2">
-              <label for="numOfDeadHensR3" class="form-label pt-2 mb-0">Number of Dead Hens</label>
-              <input type="text" class="form-control p-2" name="numOfDeadHensR3" placeholder="Enter number of dead Hens" value="0">
-            </div>
-            <div class="col pb-2">
-              <label for="numOfDeadRoostersR3" class="form-label pt-2 mb-0">Number of Dead Roosters</label>
-              <input type="text" class="form-control p-2" name="numOfDeadRoostersR3" placeholder="Enter number of dead Roosters" value="0">
-            </div>
-          </div>
-        </div>
-        
-        <div class="row border px-2 py-2 mx-1 my-3">
-          <div class="row mx-1">
-            Chicken Mortality
-          </div>
-          <div class="row w-25 mt-1">
-            <div class="col">
-              <select class="form-select form-select-sm" disabled>
-                <option selected>R4</option>
-              </select>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col pb-2">
-              <label for="numOfDeadHensR4" class="form-label pt-2 mb-0">Number of Dead Hens</label>
-              <input type="text" class="form-control p-2" name="numOfDeadHensR4" placeholder="Enter number of dead Hens" value="0">
-            </div>
-            <div class="col pb-2">
-              <label for="numOfDeadRoostersR4" class="form-label pt-2 mb-0">Number of Dead Roosters</label>
-              <input type="text" class="form-control p-2" name="numOfDeadRoostersR4" placeholder="Enter number of dead Roosters" value="0">
-            </div>
-          </div>
-        </div>
-
-        <div class="row border px-2 py-2 mx-1 my-3">
-          <div class="row mx-1">
-            Chicken Mortality
-          </div>
-          <div class="row w-25 mt-1">
-            <div class="col">
-              <select class="form-select form-select-sm" disabled>
-                <option selected>R5</option>
-              </select>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col pb-2">
-              <label for="numOfDeadHensR5" class="form-label pt-2 mb-0">Number of Dead Hens</label>
-              <input type="text" class="form-control p-2" name="numOfDeadHensR5" placeholder="Enter number of dead Hens" value="0">
-            </div>
-            <div class="col pb-2">
-              <label for="numOfDeadRoostersR5" class="form-label pt-2 mb-0">Number of Dead Roosters</label>
-              <input type="text" class="form-control p-2" name="numOfDeadRoostersR5" placeholder="Enter number of dead Roosters" value="0">
-            </div>
-          </div>
-        </div>
-
-        <div class="row border px-2 py-2 mx-1 my-3">
-          <div class="row mx-1">
-            Chicken Mortality
-          </div>
-          <div class="row w-25 mt-1">
-            <div class="col">
-              <select class="form-select form-select-sm" disabled>
-                <option selected>R6</option>
-              </select>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col pb-2">
-              <label for="numOfDeadHensR6" class="form-label pt-2 mb-0">Number of Dead Hens</label>
-              <input type="text" class="form-control p-2" name="numOfDeadHensR6" placeholder="Enter number of dead Hens" value="0">
-            </div>
-            <div class="col pb-2">
-              <label for="numOfDeadRoostersR6" class="form-label pt-2 mb-0">Number of Dead Roosters</label>
-              <input type="text" class="form-control p-2" name="numOfDeadRoostersR6" placeholder="Enter number of dead Roosters" value="0">
-            </div>
-          </div>
-        </div>
-        
-        <div class="row border px-2 py-2 mx-1 my-3">
-          <div class="row mx-1">
-            Chicken Mortality
-          </div>
-          <div class="row w-25 mt-1">
-            <div class="col">
-              <select class="form-select form-select-sm" disabled>
-                <option selected>R7</option>
-              </select>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col pb-2">
-              <label for="numOfDeadHensR7" class="form-label pt-2 mb-0">Number of Dead Hens</label>
-              <input type="text" class="form-control p-2" name="numOfDeadHensR7" placeholder="Enter number of dead Hens" value="0">
-            </div>
-            <div class="col pb-2">
-              <label for="numOfDeadRoostersR7" class="form-label pt-2 mb-0">Number of Dead Roosters</label>
-              <input type="text" class="form-control p-2" name="numOfDeadRoostersR7" placeholder="Enter number of dead Roosters" value="0">
-            </div>
-          </div>
-        </div>
-        
-        <div class="row border px-2 py-2 mx-1 my-3">
-          <div class="row mx-1">
-            Chicken Mortality
-          </div>
-          <div class="row w-25 mt-1">
-            <div class="col">
-              <select class="form-select form-select-sm" disabled>
-                <option selected>R8</option>
-              </select>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col pb-2">
-              <label for="numOfDeadHensR8" class="form-label pt-2 mb-0">Number of Dead Hens</label>
-              <input type="text" class="form-control p-2" name="numOfDeadHensR8" placeholder="Enter number of dead Hens" value="0">
-            </div>
-            <div class="col pb-2">
-              <label for="numOfDeadRoostersR8" class="form-label pt-2 mb-0">Number of Dead Roosters</label>
-              <input type="text" class="form-control p-2" name="numOfDeadRoostersR8" placeholder="Enter number of dead Roosters" value="0">
-            </div>
-          </div>
-        </div>
-        
-        <div class="row border px-2 py-2 mx-1 my-3">
-          <div class="row mx-1">
-            Chicken Mortality
-          </div>
-          <div class="row w-25 mt-1">
-            <div class="col">
-              <select class="form-select form-select-sm" disabled>
-                <option selected>R9</option>
-              </select>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col pb-2">
-              <label for="numOfDeadHensR9" class="form-label pt-2 mb-0">Number of Dead Hens</label>
-              <input type="text" class="form-control p-2" name="numOfDeadHensR9" placeholder="Enter number of dead Hens" value="0">
-            </div>
-            <div class="col pb-2">
-              <label for="numOfDeadRoostersR9" class="form-label pt-2 mb-0">Number of Dead Roosters</label>
-              <input type="text" class="form-control p-2" name="numOfDeadRoostersR9" placeholder="Enter number of dead Roosters" value="0">
-            </div>
-          </div>
-        </div> -->
-
       </form>
     </div>
 
     <!--   Core JS Files   -->
-    <script src="../assets/js/core/popper.min.js"></script>
-    <script src="../assets/js/core/bootstrap.min.js"></script>
-    <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
-    <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
-    <script src="../assets/js/plugins/chartjs.min.js"></script>
-
+    <script src="/assets/js/core/popper.min.js"></script>
+    <script src="/assets/js/core/bootstrap.min.js"></script>
+    <script src="/assets/js/plugins/perfect-scrollbar.min.js"></script>
+    <script src="/assets/js/plugins/smooth-scrollbar.min.js"></script>
+    <script src="/assets/js/plugins/chartjs.min.js"></script>
+    
     <script>
       var win = navigator.platform.indexOf('Win') > -1;
       if (win && document.querySelector('#sidenav-scrollbar')) {
@@ -434,6 +253,18 @@
         }
         Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
       }
+    </script>
+
+    <!-- Add value in Total number of eggs automatically -->
+    <script>
+      document.addEventListener('input', function() {
+        var numOfEggs = document.getElementById('numOfEggs').value;
+        var numOfNC = document.getElementById('numOfNC').value;
+
+        var acceptedEggs = numOfEggs - numOfNC;
+
+        document.querySelector('input[name="acceptedEggs"]').value = acceptedEggs;
+      })
     </script>
 
     <script>

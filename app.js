@@ -2,7 +2,7 @@ import express from 'express';
 import mysql2 from 'mysql2';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
-import { login } from './database.js';
+import { login, submitCoopRecord, getAllCoop } from './database.js';
 
 dotenv.config();
 const app = express();
@@ -55,13 +55,42 @@ app.get('/chicken-record', (req, res) => {
 });
 
 // View Coop
-app.get('/coop/view', (req, res) => {
-  res.render('view-coop-record');
+app.get('/coop/view', async (req, res) => {
+  const allCoop = await getAllCoop();
+  res.render('coop-record', { allCoop });
 });
 
 // Create Coop Record
-app.get('/coop/view/create-coop-record/:id', (req, res) => {
-  res.send(req.params.id);
+app.get('/coop/create', (req, res) => {
+  const coop = {
+    id: req.query.id
+  };
+  console.log(req.query.id);
+
+  res.render('create-coop-record', coop);
+});
+
+// Submit Coop Record
+app.post('/submit-coop-record', async (req, res) => {
+  try {
+    const data = {
+      coopID: req.body.coopID,
+      numDeadHen: req.body.numOfDeadHensR1,
+      numDeadRoosters: req.body.numOfDeadRoostersR1,
+      numEggs: req.body.numOfEggs,
+      numNc: req.body.numOfNC,
+      numAccepted: req.body.acceptedEggs
+    };
+    const result = await submitCoopRecord(data);
+    if (result) {
+      res.status(200)
+        .redirect('/coop/view');
+    }
+  } catch (error) {
+    console.error('Error during submitted coop record', error);
+    res.status(500)
+      .send('Interbal Server Error');
+  }
 });
 
 // Login
@@ -69,18 +98,12 @@ app.post('/login', async (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
   const result = await login(username, password);
-  console.log(result);
   if (result) {
-    res.redirect('/home');
+    res.status(200)
+      .redirect('/home');
   } else {
-    console.log('Invalid Username or Password');
+    res.status(401).send('Invalid credentials');
   }
-});
-
-// Submit Chicken Record
-app.post('/submit-chicken-form', async (req, res) => {
-  console.log(req.body);
-  // obj = req.body;
 });
 
 // Start the server
