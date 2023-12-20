@@ -2,7 +2,7 @@ import express from 'express';
 import mysql2 from 'mysql2';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
-import { login, submitCoopRecord, getAllCoop } from './database.js';
+import { login, submitCoopRecord, getAllCoop, getAllBrooder, submitBrooderRecord, updateBrooderNumChick, updateCoop } from './database.js';
 
 dotenv.config();
 const app = express();
@@ -60,6 +60,12 @@ app.get('/coop/view', async (req, res) => {
   res.render('coop-record', { allCoop });
 });
 
+// View Brooder
+app.get('/brooder/view', async (req, res) => {
+  const allBrooder = await getAllBrooder();
+  res.render('brooder-record', { allBrooder });
+});
+
 // Create Coop Record
 app.get('/coop/create', (req, res) => {
   const coop = {
@@ -70,10 +76,18 @@ app.get('/coop/create', (req, res) => {
   res.render('create-coop-record', coop);
 });
 
+// Create Brooder Record
+app.get('/brooder/create', (req, res) => {
+  const coop = {
+    id: req.query.id
+  };
+  res.render('create-brooder-record', coop);
+});
+
 // Submit Coop Record
 app.post('/submit-coop-record', async (req, res) => {
   try {
-    const data = {
+    const coopData = {
       coopID: req.body.coopID,
       numDeadHen: req.body.numOfDeadHensR1,
       numDeadRoosters: req.body.numOfDeadRoostersR1,
@@ -81,15 +95,36 @@ app.post('/submit-coop-record', async (req, res) => {
       numNc: req.body.numOfNC,
       numAccepted: req.body.acceptedEggs
     };
-    const result = await submitCoopRecord(data);
-    if (result) {
+    const resultSubmit = await submitCoopRecord(coopData);
+    const resultUpdate = await updateCoop(coopData);
+    if (resultSubmit && resultUpdate) {
       res.status(200)
         .redirect('/coop/view');
     }
   } catch (error) {
-    console.error('Error during submitted coop record', error);
+    console.error('Error during submitting coop record', error);
     res.status(500)
-      .send('Interbal Server Error');
+      .send('Internal Server Error');
+  }
+});
+
+// Submit Brooder Record
+app.post('/submit-brooder-record', async (req, res) => {
+  try {
+    const brooderData = {
+      brooderID: req.body.brooderID,
+      numDeadChick: req.body.numDeadChick
+    };
+    const resultSubmit = await submitBrooderRecord(brooderData);
+    const resultUpdate = await updateBrooderNumChick(brooderData);
+    if (resultSubmit && resultUpdate) {
+      res.status(200)
+        .redirect('/brooder/view');
+    }
+  } catch (error) {
+    console.error('Error during submitting brooder record', error);
+    res.status(500)
+      .send('Internal Server Error');
   }
 });
 
