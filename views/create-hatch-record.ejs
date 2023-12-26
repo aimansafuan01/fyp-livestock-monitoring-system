@@ -161,7 +161,7 @@
               </div>
               <div class="col-12 col-md-2">
                 <label for="incubatorID" class="form-label pt-2 mb-0">Date</label>
-                <input type="text" class="form-control text-black ps-2" name="dateIn" value="<%= currDate %>" readonly>
+                <input type="text" class="form-control text-black ps-2" name="dateOut" value="<%= currDate %>" readonly>
               </div>
               <div class="col-12 col-md-2">
                 <label for="incubatorID" class="form-label pt-2 mb-0">Eggs in Basket</label>
@@ -169,9 +169,21 @@
               </div>
             </div>
             <div class="row mt-1">
-              <div class="col-12 col-md-6">
-                <label for="trayPlacement" class="form-label pt-2 mb-0">Number Did Not Hatch:</label>
+              <div class="col-12 col-md-3">
+                <label for="trayPlacement" class="form-label pt-2 mb-0">Number Did Not Hatch</label>
                 <input type="number" class="form-control text-black ps-2" name="notHatch" value="0">
+              </div>
+              <div class="col-12 col-md-3">
+                <label for="brooderID" class="form-label pt-2 mb-0">Place to brooder</label>
+                <select class="form-select ps-2" name="brooderID">
+                  <option selected>Choose Brooder</option>
+                  <option value="BR1">BR1</option>
+                  <option value="BR2">BR2</option>
+                  <option value="BR3">BR3</option>
+                  <option value="BR4">BR4</option>
+                  <option value="BR5">BR5</option>
+                  <option value="BR6">BR6</option>
+                </select>
               </div>
             </div>
             <div class="col-12 mt-3 align-self-end d-flex">

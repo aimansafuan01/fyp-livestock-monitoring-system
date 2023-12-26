@@ -7,7 +7,8 @@ import {
   submitBrooderRecord, updateBrooderNumChick, updateCoop,
   getAllIncubator, submitTrayRecord, updateIncubatorEgg,
   getNumEggsInBasket, getIncubatorRecord, getHatchingDate,
-  getTrayToBasketRecord
+  getTrayToBasketRecord, addChickToBrooder, updateIncubator,
+  getIncubator
 } from './database.js';
 
 dotenv.config();
@@ -187,25 +188,39 @@ app.post('/submit-tray-record', async (req, res) => {
 app.post('/submit-hatch-record', async (req, res) => {
   console.log(req.body);
   const incubatorID = req.body.incubatorID;
-  const numEggInBasket = req.body.numEgg;
-  const numDidNotHatch = req.body.notHatch;
-  const numHatch = numEggInBasket - numDidNotHatch;
-  const hatchingRate = (numHatch / numEggInBasket) * 100;
+  const eggInBasket = req.body.numEgg;
+  const notHatch = req.body.notHatch;
+  const brooderID = req.body.brooderID;
+  const numChick = +eggInBasket - +notHatch;
+  const hatchRate = (numChick / +eggInBasket) * 100;
 
-  const hatchData = {
-    incubatorID,
-    dateIn: req.body.dateIn,
-    numEgg: req.body.numEgg,
-    hatchingRate
-  };
+  const incubatorResult = await getIncubator(incubatorID);
+  const currentHatchRate = incubatorResult[0].hatchingRate;
+  const latestHatchRate = (+currentHatchRate + +hatchRate) / 2;
 
-  const resultSubmitTray = await submitTrayRecord(hatchData);
-  const resultUpdateEgg = await updateIncubatorEgg(hatchData);
-  if (resultSubmitTray && resultUpdateEgg) {
-    res.status(200)
-      .redirect('/incubator/view');
-  } else {
-    console.log('Something went wrong');
+  try {
+    const hatchData = {
+      brooderID,
+      numChick
+    };
+
+    const incubatorData = {
+      incubatorID,
+      latestHatchRate,
+      eggInBasket
+    };
+
+    const resultChickBrooder = await addChickToBrooder(hatchData);
+    const resultUpdateIncubator = await updateIncubator(incubatorData);
+
+    if (resultChickBrooder && resultUpdateIncubator) {
+      res.status(200)
+        .redirect('/incubator/view');
+    }
+  } catch (error) {
+    console.error('Error during submitting hatch record', error);
+    res.status(500)
+      .send('Internal Server Error');
   }
 });
 

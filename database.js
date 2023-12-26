@@ -66,12 +66,22 @@ export async function submitTrayRecord (trayData) {
   return resultTray;
 }
 
-// Update Brooder
+// Update Brooder after casualty
 export async function updateBrooderNumChick (brooderData) {
   const brooderID = brooderData.brooderID;
   const numDeadChick = +brooderData.numDeadChick;
   const result = await pool.query(`UPDATE BROODER
   SET brooder.numChick = brooder.numChick - ${numDeadChick}, brooder.availableChick = brooder.availableChick - ${numDeadChick}
+  WHERE brooderID = '${brooderID}'`);
+  return result;
+}
+
+// Update Brooder after hatch
+export async function addChickToBrooder (hatchData) {
+  const brooderID = hatchData.brooderID;
+  const numChick = hatchData.numChick;
+  const result = await pool.query(`UPDATE BROODER
+  SET brooder.numChick = brooder.numChick + ${numChick}, brooder.availableChick = brooder.availableChick + ${numChick}
   WHERE brooderID = '${brooderID}'`);
   return result;
 }
@@ -84,6 +94,19 @@ export async function updateCoop (coopData) {
   const result = await pool.query(`UPDATE COOP
   SET coop.numOfHens = coop.numOfHens - ${numDeadHen}, coop.numOfRoosters = coop.numOfRoosters - ${numDeadRoosters}
   WHERE coopID = '${coopID}'`);
+  return result;
+}
+
+// Update Incubator
+export async function updateIncubator (incubatorData) {
+  const incubatorID = incubatorData.incubatorID;
+  const hatchingRate = +incubatorData.latestHatchRate;
+  const eggOut = incubatorData.eggInBasket;
+
+  const result = await pool.query(`UPDATE INCUBATOR
+  SET incubator.totalEggInside = incubator.totalEggInside - ${eggOut},
+  incubator.hatchingRate = (incubator.hatchingRate + ${hatchingRate}) / 2
+  WHERE incubatorID = '${incubatorID}'`);
   return result;
 }
 
@@ -135,6 +158,16 @@ export async function getAllIncubator () {
   const [result] = await pool.query(`
   SELECT *
   FROM incubator
+  `);
+  return result;
+}
+
+// Get Incubator
+export async function getIncubator (incubatorID) {
+  const [result] = await pool.query(`
+  SELECT *
+  FROM incubator
+  WHERE incubatorID = '${incubatorID}'
   `);
   return result;
 }
