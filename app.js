@@ -2,7 +2,13 @@ import express from 'express';
 import mysql2 from 'mysql2';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
-import { login, submitCoopRecord, getAllCoop, getAllBrooder, submitBrooderRecord, updateBrooderNumChick, updateCoop } from './database.js';
+import {
+  login, submitCoopRecord, getAllCoop, getAllBrooder,
+  submitBrooderRecord, updateBrooderNumChick, updateCoop,
+  getAllIncubator, submitTrayRecord, updateIncubatorEgg,
+  getNumEggsInBasket, getIncubatorRecord, getHatchingDate,
+  getTrayToBasketRecord
+} from './database.js';
 
 dotenv.config();
 const app = express();
@@ -66,7 +72,15 @@ app.get('/brooder/view', async (req, res) => {
   res.render('brooder-record', { allBrooder });
 });
 
-// Create Coop Record
+// View Incubator
+app.get('/incubator/view', async (req, res) => {
+  const allIncubator = await getAllIncubator();
+  const hatchingDate = await getHatchingDate();
+  console.log(hatchingDate);
+  res.render('incubator-record', { allIncubator, hatchingDate });
+});
+
+// Get Coop Record
 app.get('/coop/create', (req, res) => {
   const coop = {
     id: req.query.id
@@ -76,12 +90,34 @@ app.get('/coop/create', (req, res) => {
   res.render('create-coop-record', coop);
 });
 
-// Create Brooder Record
+// Get Brooder Record Page
 app.get('/brooder/create', (req, res) => {
   const coop = {
     id: req.query.id
   };
   res.render('create-brooder-record', coop);
+});
+
+// Get Incubator Tray Record Page
+app.get('/incubator/create-tray', async (req, res) => {
+  const data = {
+    id: req.query.id
+  };
+  const incubatorResult = await getIncubatorRecord(data);
+  const numEggsInTray = await getTrayToBasketRecord(data);
+  res.render('create-tray-record', { data, incubatorResult, numEggsInTray });
+});
+
+// Get Incubator Hatch Record Page
+app.get('/incubator/create-hatch', async (req, res) => {
+  const incubatorID = req.query.id;
+  const numEgg = await getNumEggsInBasket(incubatorID);
+  const data = {
+    id: incubatorID,
+    numEgg: numEgg[0].numEggs
+  };
+
+  res.render('create-hatch-record', data);
 });
 
 // Submit Coop Record
@@ -125,6 +161,51 @@ app.post('/submit-brooder-record', async (req, res) => {
     console.error('Error during submitting brooder record', error);
     res.status(500)
       .send('Internal Server Error');
+  }
+});
+
+// Submit Incubator Tray Record
+app.post('/submit-tray-record', async (req, res) => {
+  console.log(req.body);
+  const trayData = {
+    incubatorID: req.body.incubatorID,
+    dateIn: req.body.dateIn,
+    trayID: req.body.trayID,
+    numEggs: req.body.numEggs
+  };
+  const resultSubmitTray = await submitTrayRecord(trayData);
+  const resultUpdateEgg = await updateIncubatorEgg(trayData);
+  if (resultSubmitTray && resultUpdateEgg) {
+    res.status(200)
+      .redirect('/incubator/view');
+  } else {
+    console.log('Something went wrong');
+  }
+});
+
+// Submit Incubator Hatch Record
+app.post('/submit-hatch-record', async (req, res) => {
+  console.log(req.body);
+  const incubatorID = req.body.incubatorID;
+  const numEggInBasket = req.body.numEgg;
+  const numDidNotHatch = req.body.notHatch;
+  const numHatch = numEggInBasket - numDidNotHatch;
+  const hatchingRate = (numHatch / numEggInBasket) * 100;
+
+  const hatchData = {
+    incubatorID,
+    dateIn: req.body.dateIn,
+    numEgg: req.body.numEgg,
+    hatchingRate
+  };
+
+  const resultSubmitTray = await submitTrayRecord(hatchData);
+  const resultUpdateEgg = await updateIncubatorEgg(hatchData);
+  if (resultSubmitTray && resultUpdateEgg) {
+    res.status(200)
+      .redirect('/incubator/view');
+  } else {
+    console.log('Something went wrong');
   }
 });
 
