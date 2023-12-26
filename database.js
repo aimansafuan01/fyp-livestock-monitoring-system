@@ -163,6 +163,16 @@ export async function getIncubatorRecord (data) {
   return result;
 }
 
+// Get hatching date
+export async function getHatchingDate () {
+  const [result] = await pool.query(`
+  SELECT incubatorID, dateOut
+  FROM  \`record-incubator\`
+  WHERE dateOut = CURDATE()
+  ORDER BY incubatorID`);
+  return result;
+}
+
 pool.connect(err => {
   if (err) {
     console.error('Error connecting to MySQL:', err);

@@ -12,9 +12,40 @@
 
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. -->
 
-<%
-  const incubator = allIncubator.map(obj => ({ [obj.incubatorID]: obj }));
-  console.log(incubator);
+<% 
+  
+  // Button disable for Monday & Thursday
+  let insertTrayFlag = "disabled";
+  const currDate = new Date(); 
+  const currDay = currDate.getDay(); // Return 0 for Sunday, 1 for Monday
+  if (currDay === 1 || currDay === 4) {
+    console.log("No Tray inserted for today")
+    insertTrayFlag="";
+  }
+  
+  // Button disable for hatching date
+  let inc1_flag = "disabled";
+  let inc2_flag = "disabled";
+  if (!hatchingDate || hatchingDate.length == 0) {
+    console.log("No hatching today")
+  } else {
+    if (hatchingDate.length == 2) {
+      inc1_flag = "";
+      inc2_flag = "";
+    }
+  
+    if (hatchingDate[0] && hatchingDate[0].incubatorID == 'INC1') {
+      inc1_flag = "";
+    }
+  
+    if (hatchingDate[0] && hatchingDate[0].incubatorID == 'INC2') {
+      inc2_flag = "";
+    }
+  
+    if (hatchingDate[1] && hatchingDate[1].incubatorID == 'INC2') {
+      inc2_flag = "";
+    }
+  }
 %>
 
 <!DOCTYPE html>
@@ -154,23 +185,23 @@
           <div class="card-header p-3 pt-2">
             <div class="icon-xl shadow-dark text-center border-radius-xl mt-n4 position-absolute bg-gray-200"
               style="display: flex; align-items: center; justify-content: center;">
-              <h3 class="text-black m-0">INC1</h3>
+              <h3 class="text-black m-0"><%= allIncubator[0].incubatorID %></h3>
             </div>
             <div class="text-end pt-1">
               <p class="text-sm mb-0 text-capitalize">Hatching Rate</p>
               <h4 class="mb-2">
-                <%= incubator[0]['INC1'].hatchingRate %>%
+                <%= allIncubator[0].hatchingRate %>%
               </h4>
               <p class="text-sm mb-0 text-capitalize">Egg Inside</p>
               <h4 class="mb-0">
-                <%= incubator[0]['INC1'].totalEggInside %>
+                <%= allIncubator[0].totalEggInside %>
               </h4>
             </div>
           </div>
           <hr class="dark horizontal my-0 mt-3 mb-3">
           <div class="row mx-3">
-            <a class="btn btn-primary" href="/incubator/create-tray?id=INC1" role="button">Insert Tray Record</a>
-            <a class="btn btn-primary" href="/incubator/create-hatch?id=INC1" role="button">Add Hatch Record</a>
+            <a class="btn btn-primary <%= insertTrayFlag %>" href="/incubator/create-tray?id=INC1" role="button">Insert Tray Record</a>
+            <a class="btn btn-primary <%= inc1_flag %>" href="/incubator/create-hatch?id=INC1" role="button">Add Hatch Record</a>
           </div>
         </div>
       </div>
@@ -180,23 +211,23 @@
           <div class="card-header p-3 pt-2">
             <div class="icon-xl shadow-dark text-center border-radius-xl mt-n4 position-absolute bg-gray-200"
               style="display: flex; align-items: center; justify-content: center;">
-              <h3 class="text-black m-0">INC2</h3>
+              <h3 class="text-black m-0"><%= allIncubator[1].incubatorID %></h3>
             </div>
             <div class="text-end pt-1">
               <p class="text-sm mb-0 text-capitalize">Hatching Rate</p>
               <h4 class="mb-2">
-                <%= incubator[1]['INC2'].hatchingRate %>%
+                <%= allIncubator[1].hatchingRate %>%
               </h4>
               <p class="text-sm mb-0 text-capitalize">Egg Inside</p>
               <h4 class="mb-0">
-                <%= incubator[1]['INC2'].totalEggInside %>
+                <%= allIncubator[1].totalEggInside %>
               </h4>
             </div>
           </div>
           <hr class="dark horizontal my-0 mt-3 mb-3">
           <div class="row mx-3">
-            <a class="btn btn-primary" href="/incubator/create-tray?id=INC2" role="button">Insert Tray Record</a>
-            <a class="btn btn-primary" href="/incubator/create-hatch?id=INC2" role="button">Add Hatch Record</a>
+            <a class="btn btn-primary <%= insertTrayFlag %>" href="/incubator/create-tray?id=INC2" role="button">Insert Tray Record</a>
+            <a class="btn btn-primary <%= inc2_flag %>" href="/incubator/create-hatch?id=INC2" role="button">Add Hatch Record</a>
           </div>
         </div>
       </div>

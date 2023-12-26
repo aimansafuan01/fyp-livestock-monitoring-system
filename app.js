@@ -6,7 +6,7 @@ import {
   login, submitCoopRecord, getAllCoop, getAllBrooder,
   submitBrooderRecord, updateBrooderNumChick, updateCoop,
   getAllIncubator, submitTrayRecord, updateIncubatorEgg,
-  getNumEggsInBasket, getIncubatorRecord
+  getNumEggsInBasket, getIncubatorRecord, getHatchingDate
 } from './database.js';
 
 dotenv.config();
@@ -74,7 +74,9 @@ app.get('/brooder/view', async (req, res) => {
 // View Incubator
 app.get('/incubator/view', async (req, res) => {
   const allIncubator = await getAllIncubator();
-  res.render('incubator-record', { allIncubator });
+  const hatchingDate = await getHatchingDate();
+  console.log(hatchingDate);
+  res.render('incubator-record', { allIncubator, hatchingDate });
 });
 
 // Get Coop Record
