@@ -149,6 +149,7 @@
     <%
       const currDate = new Date().toLocaleDateString('en-MY');
       console.log(incubatorResult);
+      console.log(numEggsInTray);
     %>
 
     <div class="p-3 mx-5 border border-secondary rounded shadow-lg mb-4">
@@ -204,8 +205,9 @@
               <div class="col-12 p-2 text-center" style="border: 1px solid red">
                 <h3>Hatching Basket</h3>
                 <div class="row align-center">
-                    <p class="mb-0">Date Entered: <b>12/12/2023</b></p>
-                    <p>Date Move: <b>12/12/2023</b></p>
+                    <p class="mb-0">Origin: <b><%= numEggsInTray[0].trayID %></b></p>
+                    <p class="mb-0">Number of Eggs: <b><%= numEggsInTray[0].numEggs %></b></p>
+                    <p>Date Hatch: <b><%= numEggsInTray[0].dateOut.toLocaleDateString('en-MY') %></b></p>
                 </div>
               </div>
             </div>

@@ -6,7 +6,8 @@ import {
   login, submitCoopRecord, getAllCoop, getAllBrooder,
   submitBrooderRecord, updateBrooderNumChick, updateCoop,
   getAllIncubator, submitTrayRecord, updateIncubatorEgg,
-  getNumEggsInBasket, getIncubatorRecord, getHatchingDate
+  getNumEggsInBasket, getIncubatorRecord, getHatchingDate,
+  getTrayToBasketRecord
 } from './database.js';
 
 dotenv.config();
@@ -103,7 +104,8 @@ app.get('/incubator/create-tray', async (req, res) => {
     id: req.query.id
   };
   const incubatorResult = await getIncubatorRecord(data);
-  res.render('create-tray-record', { data, incubatorResult });
+  const numEggsInTray = await getTrayToBasketRecord(data);
+  res.render('create-tray-record', { data, incubatorResult, numEggsInTray });
 });
 
 // Get Incubator Hatch Record Page

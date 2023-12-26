@@ -150,6 +150,18 @@ export async function getNumEggsInBasket (incubatorID) {
   return result;
 }
 
+// Get tray record that is moved to hatching basket
+export async function getTrayToBasketRecord (data) {
+  const incubatorID = data.id;
+  const [result] = await pool.query(`
+    SELECT trayID, numEggs, dateOut
+    FROM \`record-incubator\`
+    WHERE dateMove = CURDATE()
+    AND incubatorID = '${incubatorID}'
+    `);
+  return result;
+}
+
 // Get record-incubator for occupied tray
 export async function getIncubatorRecord (data) {
   const incubatorID = data.id;
