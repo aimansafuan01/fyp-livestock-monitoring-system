@@ -8,7 +8,9 @@ import {
   getAllIncubator, submitTrayRecord, updateIncubatorEgg,
   getNumEggsInBasket, getIncubatorRecord, getHatchingDate,
   getTrayToBasketRecord, addChickToBrooder, updateIncubator,
-  getIncubator
+  getIncubator, getTodayEgg, getTodayChickDead, getTodayChickenDead,
+  getChickToSell, getWeeklyEggs, getWeeklyChickDead, getWeeklyChickenDead,
+  getNumberOfChicken, getNumEggsMonthly
 } from './database.js';
 
 dotenv.config();
@@ -42,13 +44,32 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
 // Login
-app.get('/login', (req, res) => {
+app.get(['/', '/login'], (req, res) => {
   res.render('sign-in');
 });
 
 // Dashboard
-app.get('/home', (req, res) => {
-  res.render('dashboard');
+app.get('/home', async (req, res) => {
+  const eggData = await getTodayEgg();
+  const chickDeadData = await getTodayChickDead();
+  const chickenDeadData = await getTodayChickenDead();
+  const chickToSellData = await getChickToSell();
+  const weeklyEggsData = await getWeeklyEggs();
+  const weeklyChickDead = await getWeeklyChickDead();
+  const weeklyChickenDead = await getWeeklyChickenDead();
+  const numOfChicken = await getNumberOfChicken();
+  const monthlyEggs = await getNumEggsMonthly();
+  res.render('dashboard', {
+    eggData,
+    chickDeadData,
+    chickenDeadData,
+    chickToSellData,
+    weeklyEggsData,
+    weeklyChickDead,
+    weeklyChickenDead,
+    numOfChicken,
+    monthlyEggs
+  });
 });
 
 // Daily Record

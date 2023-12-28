@@ -3792,8 +3792,8 @@ fieldset:disabled .btn {
   --bs-btn-active-border-color: #fb981a;
   --bs-btn-active-shadow: none;
   --bs-btn-disabled-color: #000;
-  --bs-btn-disabled-bg: #fb8c00;
-  --bs-btn-disabled-border-color: #fb8c00;
+  --bs-btn-disabled-bg: #888888;
+  --bs-btn-disabled-border-color: #888888;
 }
 
 .btn-danger {
@@ -20802,11 +20802,6 @@ fieldset:disabled .btn {
   opacity: .75;
   box-shadow: none;
   color: #1A73E8;
-}
-
-.btn-warning,
-.btn.bg-gradient-warning {
-  box-shadow: 0 3px 3px 0 rgba(251, 140, 0, 0.15), 0 3px 1px -2px rgba(251, 140, 0, 0.2), 0 1px 5px 0 rgba(251, 140, 0, 0.15);
 }
 
 .btn-warning:hover,

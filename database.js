@@ -218,6 +218,131 @@ export async function getHatchingDate () {
   return result;
 }
 
+// Get today's egg
+export async function getTodayEgg () {
+  const [result] = await pool.query(`
+  SELECT numEggs
+  FROM \`record-coop\`
+  WHERE DATE(recorded_at) = CURDATE()
+  ORDER BY coopID`);
+  return result;
+}
+
+// Get today's chick dead
+export async function getTodayChickDead () {
+  const [result] = await pool.query(`
+  SELECT numDeadChick
+  FROM \`record-brooder\`
+  WHERE DATE(created_at) = CURDATE()
+  ORDER BY brooderID`);
+  return result;
+}
+
+// Get today's chick dead
+export async function getTodayChickenDead () {
+  const [result] = await pool.query(`
+  SELECT numDeadHen, numDeadRooster
+  FROM \`record-coop\`
+  WHERE DATE(recorded_at) = CURDATE()
+  ORDER BY coopID`);
+  return result;
+}
+
+// Get available chick to be sold
+export async function getChickToSell () {
+  const [result] = await pool.query(`
+  SELECT availableChick
+  FROM BROODER
+  WHERE DATEDIFF(CURDATE(), DATE(inserted_at)) >= 5
+  ORDER BY brooderID`);
+  return result;
+}
+
+// Get Egg Collected for the week
+export async function getWeeklyEggs () {
+  const [result] = await pool.query(`
+  SELECT
+    DAYNAME(DATE(recorded_at)) AS dayOfTheWeek,
+    SUM(numEggs) AS totalNumEggs
+  FROM
+    \`record-coop\`
+  WHERE
+    YEARWEEK(DATE(recorded_at)) = YEARWEEK(CURDATE())
+  GROUP BY
+    DAYOFWEEK(DATE(recorded_at)),
+    DAYNAME(DATE(recorded_at))
+  ORDER BY
+    DAYOFWEEK(DATE(recorded_at))`);
+  return result;
+}
+
+// Get dead chick for the week
+export async function getWeeklyChickDead () {
+  const [result] = await pool.query(`
+  SELECT
+    DAYNAME(DATE(created_at)) AS dayOfTheWeek,
+    SUM(numDeadChick) AS totalDeadChick
+  FROM
+    \`record-brooder\`
+  WHERE
+    YEARWEEK(DATE(created_at)) = YEARWEEK(CURDATE())
+  GROUP BY
+    DAYOFWEEK(DATE(created_at)),
+    DAYNAME(DATE(created_at))
+  ORDER BY
+    DAYOFWEEK(DATE(created_at));
+`);
+  return result;
+}
+
+// Get dead chick for the week
+export async function getWeeklyChickenDead () {
+  const [result] = await pool.query(`
+  SELECT
+    DAYNAME(DATE(recorded_at)) AS dayOfTheWeek,
+    SUM(numDeadHen) AS totalDeadHen,
+    SUM(numDeadRooster) AS totalDeadRooster
+  FROM
+    \`record-coop\`
+  WHERE
+    YEARWEEK(DATE(recorded_at)) = YEARWEEK(CURDATE())
+  GROUP BY
+    DAYOFWEEK(DATE(recorded_at)),
+    DAYNAME(DATE(recorded_at))
+  ORDER BY
+    DAYOFWEEK(DATE(recorded_at));
+`);
+  return result;
+}
+
+// Get dead chicken for the week
+export async function getNumberOfChicken () {
+  const [result] = await pool.query(`
+  SELECT
+    SUM(numOfHens) AS totalHens,
+    SUM(numOfRoosters) AS totalRoosters
+  FROM
+    coop
+`);
+  return result;
+}
+// Get number of eggs monthly
+export async function getNumEggsMonthly () {
+  const [result] = await pool.query(`
+  SELECT
+      MONTH(recorded_at) AS month,
+      YEAR(recorded_at) AS year,
+      SUM(numEggs) AS numEggs
+  FROM
+      \`record-coop\`
+  GROUP BY
+      YEAR(recorded_at), MONTH(recorded_at)
+  ORDER BY
+    month
+`);
+  return result;
+}
+
 pool.connect(err => {
   if (err) {
     console.error('Error connecting to MySQL:', err);
