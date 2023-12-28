@@ -70,7 +70,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white active bg-gradient-primary" href="/daily-record">
+          <a class="nav-link text-white active bg-gradient-warning" href="/daily-record">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">inventory</i>
             </div>
@@ -132,7 +132,7 @@
       <div class="container-fluid py-1 px-3">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/home">Home</a></li>
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/home">Dashboard</a></li>
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/daily-record">Daily Record</a>
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/incubator/view">Incubator</a>
             </li>
@@ -150,6 +150,15 @@
       const currDate = new Date().toLocaleDateString('en-MY');
       console.log(incubatorResult);
       console.log(numEggsInTray);
+      const trayID ="-";
+      const numEggs ="-";
+      const dateOut ="-";
+      if (numEggsInTray[0] && numEggsInTray[0].trayID !== undefined) {
+        trayID = numEggsInTray[0].trayID
+        numEggs = numEggsInTray[0].numEggs
+        dateOut = numEggsInTray[0].dateOut
+      }
+
     %>
 
     <div class="p-3 mx-5 border border-secondary rounded shadow-lg mb-4">
@@ -169,7 +178,7 @@
             <div class="row mt-1">
               <div class="col-12 col-md-3">
                 <label for="trayID" class="form-label pt-2 mb-0">Tray Placement:</label>
-                <select class="form-select" name="trayID">
+                <select class="form-select ps-2" name="trayID">
                   <option selected>Choose Incubator Row</option>
                   <option value="TR1">TR1</option>
                   <option value="TR2">TR2</option>
@@ -187,13 +196,13 @@
             <div class="col-12 col-md-2">
             </div>
             <div class="col-12 mt-3 align-self-end d-flex">
-              <button class="btn btn-primary" type="submit">Submit form</button>
+              <button class="btn btn-warning" type="submit">Submit form</button>
             </div>
         </form>
             
             <div class="row m-2 mb-0 text-center mx-auto">
               <% for (let i=0; i<incubatorResult.length; i++) { %>
-              <div class="col-12 p-2 text-center" style="border: 1px solid red"> 
+              <div class="col-12 p-2 text-center" style="border: 1px solid rgb(68, 68, 68)"> 
                 <h3><%= incubatorResult[i].trayID %></h3>
                 <div class="row align-center">
                     <p class="mb-0">Date Entered: <b><%= incubatorResult[i].dateEnter.toLocaleDateString('en-MY') %></b></p>
@@ -202,12 +211,12 @@
               </div>
               <% } %>
               
-              <div class="col-12 p-2 text-center" style="border: 1px solid red">
+              <div class="col-12 p-2 text-center" style="border: 1px solid rgb(68, 68, 68)">
                 <h3>Hatching Basket</h3>
                 <div class="row align-center">
-                    <p class="mb-0">Origin: <b><%= numEggsInTray[0].trayID %></b></p>
-                    <p class="mb-0">Number of Eggs: <b><%= numEggsInTray[0].numEggs %></b></p>
-                    <p>Date Hatch: <b><%= numEggsInTray[0].dateOut.toLocaleDateString('en-MY') %></b></p>
+                    <p class="mb-0">Origin: <b><%= trayID %></b></p>
+                    <p class="mb-0">Number of Eggs: <b><%= numEggs %></b></p>
+                    <p>Date Hatch: <b><%= dateOut %></b></p>
                 </div>
               </div>
             </div>
