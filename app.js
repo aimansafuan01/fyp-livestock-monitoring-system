@@ -12,6 +12,7 @@ import {
   getChickToSell, getWeeklyEggs, getWeeklyChickDead, getWeeklyChickenDead,
   getNumberOfChicken, getNumEggsMonthly
 } from './database.js';
+import { sendAlert } from './mailer.js';
 
 dotenv.config();
 const app = express();
@@ -255,6 +256,13 @@ app.post('/login', async (req, res) => {
       .redirect('/home');
   } else {
     res.status(401).send('Invalid credentials');
+  }
+});
+
+app.get('/send-email', async (req, res) => {
+  const result = await sendAlert();
+  if (result) {
+    res.redirect('/home');
   }
 });
 
