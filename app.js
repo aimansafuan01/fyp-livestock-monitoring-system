@@ -10,7 +10,7 @@ import {
   getTrayToBasketRecord, addChickToBrooder, updateIncubator,
   getIncubator, getTodayEgg, getTodayChickDead, getTodayChickenDead,
   getChickToSell, getWeeklyEggs, getWeeklyChickDead, getWeeklyChickenDead,
-  getNumberOfChicken, getNumEggsMonthly
+  getNumberOfChicken, getNumEggsMonthly, updateChickMR, getSurveillance
 } from './database.js';
 import { sendAlert } from './mailer.js';
 
@@ -175,8 +175,15 @@ app.post('/submit-brooder-record', async (req, res) => {
       numDeadChick: req.body.numDeadChick
     };
     const resultSubmit = await submitBrooderRecord(brooderData);
-    const resultUpdate = await updateBrooderNumChick(brooderData);
-    if (resultSubmit && resultUpdate) {
+    const resultUpdateMRChick = await updateChickMR(brooderData);
+    const resultUpdateNumChick = await updateBrooderNumChick(brooderData);
+    const chickMRThreshold = await getSurveillance();
+
+    if (resultUpdateMRChick[1] > chickMRThreshold[0].chickMRThreshold) {
+      sendAlert();
+    }
+
+    if (resultSubmit && resultUpdateNumChick && resultUpdateMRChick) {
       res.status(200)
         .redirect('/brooder/view');
     }
@@ -256,13 +263,6 @@ app.post('/login', async (req, res) => {
       .redirect('/home');
   } else {
     res.status(401).send('Invalid credentials');
-  }
-});
-
-app.get('/send-email', async (req, res) => {
-  const result = await sendAlert();
-  if (result) {
-    res.redirect('/home');
   }
 });
 

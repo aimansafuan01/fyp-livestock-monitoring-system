@@ -19,7 +19,7 @@ export async function sendAlert (req, res) {
     theme: 'salted',
     product: {
       name: 'Tiroi Farm Surveillance',
-      link: 'https://mailgen.js/'
+      link: 'http://localhost:3000'
     }
   });
 
@@ -50,8 +50,8 @@ export async function sendAlert (req, res) {
   };
 
   transporter.sendMail(message).then(() => {
-
+    return console.log('Sent mail successfully');
   }).catch(e => {
-    return e;
+    console.log(e);
   });
 };

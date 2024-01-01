@@ -135,6 +135,25 @@ export async function updateEggs (eggData) {
   return result;
 }
 
+// Update chick mortality rate
+export async function updateChickMR (brooderData) {
+  const { numDeadChick, brooderID } = brooderData;
+  const numChickQuery = await getNumChick(brooderID);
+  const currMRQuery = await getChickMR(brooderID);
+
+  const { numChick } = numChickQuery[0][0];
+  const { mortalityRate } = currMRQuery[0][0];
+
+  const updatedMR = ((+numDeadChick / +numChick) * 100) + +mortalityRate;
+
+  const result = await pool.query(`
+  UPDATE brooder
+  SET brooder.mortalityRate = ${+updatedMR}
+  WHERE brooderID = '${brooderID}'`);
+
+  return [result, updatedMR];
+}
+
 // Get All Coop
 export async function getAllCoop () {
   const [result] = await pool.query(`
@@ -168,6 +187,26 @@ export async function getIncubator (incubatorID) {
   SELECT *
   FROM incubator
   WHERE incubatorID = '${incubatorID}'
+  `);
+  return result;
+}
+
+// Get Number of Chick
+export async function getNumChick (brooderID) {
+  const result = await pool.query(`
+  SELECT numChick
+  FROM brooder
+  WHERE brooderID = '${brooderID}'
+  `);
+  return result;
+}
+
+// Get Chick MR
+export async function getChickMR (brooderID) {
+  const result = await pool.query(`
+  SELECT mortalityRate
+  FROM brooder
+  WHERE brooderID = '${brooderID}'
   `);
   return result;
 }
@@ -340,6 +379,13 @@ export async function getNumEggsMonthly () {
   ORDER BY
     month
 `);
+  return result;
+}
+
+// Get Surveillance Criteria
+export async function getSurveillance () {
+  const [result] = await pool.query(`
+  SELECT * FROM surveillance`);
   return result;
 }
 
