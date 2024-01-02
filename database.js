@@ -169,15 +169,14 @@ export async function updateBrooderMR (brooderData) {
 // Update coop mortality rate
 export async function updateCoopMR (coopData) {
   const { coopID, numDeadHen, numDeadRoosters } = coopData;
-  const numChicken = await getChickens(coopID);
+  const numChicken = await getNumChickens(coopID);
   const currCoopMR = await getCoopMR(coopID);
 
-  const { numOfHens, numOfRoosters } = numChicken[0];
+  const { totalChickens } = numChicken[0];
   const { mortalityRate } = currCoopMR[0][0];
-  const totalChicken = +numOfHens + +numOfRoosters;
   const totalDeadChicken = +numDeadHen + +numDeadRoosters;
 
-  const updatedMR = ((+totalDeadChicken / +totalChicken) * 100) + +mortalityRate;
+  const updatedMR = ((+totalDeadChicken / +totalChickens) * 100) + +mortalityRate;
   const result = await pool.query(`
   UPDATE coop
   SET coop.mortalityRate = ?
@@ -466,9 +465,9 @@ export async function getRecordSurveillance () {
 }
 
 // Get Number of Chicken
-export async function getChickens (coopID) {
+export async function getNumChickens (coopID) {
   const [result] = await pool.query(
-    `SELECT numOfHens, numOfRoosters
+    `SELECT totalChickens
     FROM coop
     WHERE coopID = ?`, [coopID]);
   return result;
