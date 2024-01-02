@@ -4,15 +4,15 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import {
   login, submitCoopRecord, getAllCoop, getAllBrooder,
-  submitBrooderRecord, updateBrooderNumChick, updateCoop,
+  submitBrooderRecord, updateBrooderNumChick, updateNumChickenCoop,
   getAllIncubator, submitTrayRecord, updateIncubatorEgg,
   getNumEggsInBasket, getIncubatorRecord, getHatchingDate,
   getTrayToBasketRecord, addChickToBrooder, updateIncubator,
   getIncubator, getTodayEgg, getTodayChickDead, getTodayChickenDead,
   getChickToSell, getWeeklyEggs, getWeeklyChickDead, getWeeklyChickenDead,
-  getNumberOfChicken, getNumEggsMonthly, updateChickMR, getSurveillance,
+  getNumberOfChicken, getNumEggsMonthly, updateBrooderMR, getSurveillance,
   submitSurveillanceRecord, getRecordSurveillance, updateSurveillanceStatus,
-  getAllRecordSurveillance
+  getAllRecordSurveillance, updateCoopMR
 } from './database.js';
 import { sendAlert } from './mailer.js';
 
@@ -177,8 +177,22 @@ app.post('/submit-coop-record', async (req, res) => {
       numNc: req.body.numOfNC,
       numAccepted: req.body.acceptedEggs
     };
+
+    const coopSurveillance = {
+      coopID: req.body.coopID,
+      brooderID: null,
+      incubatorID: null
+    };
+
     const resultSubmit = await submitCoopRecord(coopData);
-    const resultUpdate = await updateCoop(coopData);
+    const resultUpdateCoopMR = await updateCoopMR(coopData);
+    const resultUpdate = await updateNumChickenCoop(coopData);
+    const surveillanceThreshold = await getSurveillance();
+
+    if (resultUpdateCoopMR[1] > surveillanceThreshold[0].chickenMRThreshold) {
+      await submitSurveillanceRecord(coopSurveillance);
+      sendAlert();
+    }
     if (resultSubmit && resultUpdate) {
       res.status(200)
         .redirect('/coop/view');
@@ -204,11 +218,11 @@ app.post('/submit-brooder-record', async (req, res) => {
       coopID: null
     };
     const resultSubmit = await submitBrooderRecord(brooderData);
-    const resultUpdateMRChick = await updateChickMR(brooderData);
+    const resultUpdateMRChick = await updateBrooderMR(brooderData);
     const resultUpdateNumChick = await updateBrooderNumChick(brooderData);
-    const chickMRThreshold = await getSurveillance();
+    const surveillanceThreshold = await getSurveillance();
 
-    if (resultUpdateMRChick[1] > chickMRThreshold[0].chickMRThreshold) {
+    if (resultUpdateMRChick[1] > surveillanceThreshold[0].chickMRThreshold) {
       await submitSurveillanceRecord(brooderSurveillance);
       sendAlert();
     }
