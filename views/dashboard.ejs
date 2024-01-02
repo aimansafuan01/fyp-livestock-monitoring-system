@@ -30,6 +30,12 @@
   }, 0)
 
   const currDate = new Date().toLocaleDateString('en-MY');
+
+  const surveillanceBG = surveillance.length > 0 ? 'bg-gradient-danger' : 'bg-gradient-success';
+  const surveillanceIcon = surveillance.length > 0 ? 'warning' : 'nest_cam_iq_outdoor'
+  const surveillanceBGSize = surveillance.length > 0 ? 'p-8' : 'p-4'
+
+
 %>
 
 
@@ -62,7 +68,7 @@
 
 <body class="g-sidenav-show  bg-gray-200">
   <aside
-    class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3   bg-gradient-dark"
+    class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-gradient-dark"
     id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
@@ -101,11 +107,11 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white " href="../pages/virtual-reality.html">
+          <a class="nav-link text-white " href="/surveillance-record">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="material-icons opacity-10">receipt_long</i>
+              <i class="material-icons opacity-10">visibility</i>
             </div>
-            <span class="nav-link-text ms-1">Sales Record</span>
+            <span class="nav-link-text ms-1">Surveillance Record</span>
           </a>
         </li>
         <li class="nav-item">
@@ -170,9 +176,9 @@
     <!---------------- End BreadCrumb ------------------>
     <div class="container-fluid py-4">
       <div class="row mb-6 d-flex justify-content-center">
-        <div class="col-6 align-self-center text-center p-4 bg-gradient-success">
+        <div class="col-6 align-self-center text-center <%= surveillanceBGSize %> <%= surveillanceBG %>">
           <span class="material-symbols-outlined" style="color: white; font-size:60px">
-            nest_cam_iq_outdoor
+            <%= surveillanceIcon %>
           </span>
         </div>
       </div>

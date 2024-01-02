@@ -4,14 +4,17 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import {
   login, submitCoopRecord, getAllCoop, getAllBrooder,
-  submitBrooderRecord, updateBrooderNumChick, updateCoop,
+  submitBrooderRecord, updateBrooderNumChick, updateNumChickenCoop,
   getAllIncubator, submitTrayRecord, updateIncubatorEgg,
   getNumEggsInBasket, getIncubatorRecord, getHatchingDate,
   getTrayToBasketRecord, addChickToBrooder, updateIncubator,
   getIncubator, getTodayEgg, getTodayChickDead, getTodayChickenDead,
   getChickToSell, getWeeklyEggs, getWeeklyChickDead, getWeeklyChickenDead,
-  getNumberOfChicken, getNumEggsMonthly
+  getNumberOfChicken, getNumEggsMonthly, updateBrooderMR, getSurveillance,
+  submitSurveillanceRecord, getRecordSurveillance, updateSurveillanceStatus,
+  getAllRecordSurveillance, updateCoopMR
 } from './database.js';
+import { sendAlert } from './mailer.js';
 
 dotenv.config();
 const app = express();
@@ -59,6 +62,7 @@ app.get('/home', async (req, res) => {
   const weeklyChickenDead = await getWeeklyChickenDead();
   const numOfChicken = await getNumberOfChicken();
   const monthlyEggs = await getNumEggsMonthly();
+  const surveillance = await getRecordSurveillance();
   res.render('dashboard', {
     eggData,
     chickDeadData,
@@ -68,7 +72,8 @@ app.get('/home', async (req, res) => {
     weeklyChickDead,
     weeklyChickenDead,
     numOfChicken,
-    monthlyEggs
+    monthlyEggs,
+    surveillance
   });
 });
 
@@ -98,7 +103,6 @@ app.get('/brooder/view', async (req, res) => {
 app.get('/incubator/view', async (req, res) => {
   const allIncubator = await getAllIncubator();
   const hatchingDate = await getHatchingDate();
-  console.log(hatchingDate);
   res.render('incubator-record', { allIncubator, hatchingDate });
 });
 
@@ -107,8 +111,6 @@ app.get('/coop/create', (req, res) => {
   const coop = {
     id: req.query.id
   };
-  console.log(req.query.id);
-
   res.render('create-coop-record', coop);
 });
 
@@ -142,6 +144,28 @@ app.get('/incubator/create-hatch', async (req, res) => {
   res.render('create-hatch-record', data);
 });
 
+// Get surveillamce Record Page
+app.get('/surveillance-record', async (req, res) => {
+  const recordSurveillanceData = await getAllRecordSurveillance();
+  res.render('surveillance-record', { recordSurveillanceData });
+});
+
+// Update Surveillance Status
+app.get('/update-surveillance', async (req, res) => {
+  try {
+    const id = req.query.id;
+    const result = await updateSurveillanceStatus(id);
+    if (result) {
+      res.status(200)
+        .redirect('/home');
+    }
+  } catch (error) {
+    console.error('Error during updating coop record', error);
+    res.status(500)
+      .send('Internal Server Error');
+  }
+});
+
 // Submit Coop Record
 app.post('/submit-coop-record', async (req, res) => {
   try {
@@ -153,8 +177,22 @@ app.post('/submit-coop-record', async (req, res) => {
       numNc: req.body.numOfNC,
       numAccepted: req.body.acceptedEggs
     };
+
+    const coopSurveillance = {
+      coopID: req.body.coopID,
+      brooderID: null,
+      incubatorID: null
+    };
+
     const resultSubmit = await submitCoopRecord(coopData);
-    const resultUpdate = await updateCoop(coopData);
+    const resultUpdateCoopMR = await updateCoopMR(coopData);
+    const resultUpdate = await updateNumChickenCoop(coopData);
+    const surveillanceThreshold = await getSurveillance();
+
+    if (resultUpdateCoopMR[1] > surveillanceThreshold[0].chickenMRThreshold) {
+      await submitSurveillanceRecord(coopSurveillance);
+      sendAlert();
+    }
     if (resultSubmit && resultUpdate) {
       res.status(200)
         .redirect('/coop/view');
@@ -173,9 +211,23 @@ app.post('/submit-brooder-record', async (req, res) => {
       brooderID: req.body.brooderID,
       numDeadChick: req.body.numDeadChick
     };
+
+    const brooderSurveillance = {
+      brooderID: req.body.brooderID,
+      incubatorID: null,
+      coopID: null
+    };
     const resultSubmit = await submitBrooderRecord(brooderData);
-    const resultUpdate = await updateBrooderNumChick(brooderData);
-    if (resultSubmit && resultUpdate) {
+    const resultUpdateMRChick = await updateBrooderMR(brooderData);
+    const resultUpdateNumChick = await updateBrooderNumChick(brooderData);
+    const surveillanceThreshold = await getSurveillance();
+
+    if (resultUpdateMRChick[1] > surveillanceThreshold[0].chickMRThreshold) {
+      await submitSurveillanceRecord(brooderSurveillance);
+      sendAlert();
+    }
+
+    if (resultSubmit && resultUpdateNumChick && resultUpdateMRChick) {
       res.status(200)
         .redirect('/brooder/view');
     }
@@ -188,7 +240,6 @@ app.post('/submit-brooder-record', async (req, res) => {
 
 // Submit Incubator Tray Record
 app.post('/submit-tray-record', async (req, res) => {
-  console.log(req.body);
   const trayData = {
     incubatorID: req.body.incubatorID,
     dateIn: req.body.dateIn,
@@ -207,17 +258,12 @@ app.post('/submit-tray-record', async (req, res) => {
 
 // Submit Incubator Hatch Record
 app.post('/submit-hatch-record', async (req, res) => {
-  console.log(req.body);
   const incubatorID = req.body.incubatorID;
   const eggInBasket = req.body.numEgg;
   const notHatch = req.body.notHatch;
   const brooderID = req.body.brooderID;
   const numChick = +eggInBasket - +notHatch;
-  const hatchRate = (numChick / +eggInBasket) * 100;
-
-  const incubatorResult = await getIncubator(incubatorID);
-  const currentHatchRate = incubatorResult[0].hatchingRate;
-  const latestHatchRate = (+currentHatchRate + +hatchRate) / 2;
+  const hatchRate = (+numChick / +eggInBasket) * 100;
 
   try {
     const hatchData = {
@@ -227,12 +273,24 @@ app.post('/submit-hatch-record', async (req, res) => {
 
     const incubatorData = {
       incubatorID,
-      latestHatchRate,
+      hatchRate,
       eggInBasket
+    };
+
+    const incubatorSurveillance = {
+      coopID: null,
+      brooderID: null,
+      incubatorID
     };
 
     const resultChickBrooder = await addChickToBrooder(hatchData);
     const resultUpdateIncubator = await updateIncubator(incubatorData);
+    const surveillanceThreshold = await getSurveillance();
+
+    if (hatchRate < surveillanceThreshold[0].hatchingRateThreshold) {
+      await submitSurveillanceRecord(incubatorSurveillance);
+      sendAlert();
+    }
 
     if (resultChickBrooder && resultUpdateIncubator) {
       res.status(200)
