@@ -8,11 +8,11 @@ import {
   getAllIncubator, submitTrayRecord, updateIncubatorEgg,
   getNumEggsInBasket, getIncubatorRecord, getHatchingDate,
   getTrayToBasketRecord, addChickToBrooder, updateIncubator,
-  getIncubator, getTodayEgg, getTodayChickDead, getTodayChickenDead,
-  getChickToSell, getWeeklyEggs, getWeeklyChickDead, getWeeklyChickenDead,
+  getTodayEgg, getTodayChickDead, getTodayChickenDead, getChickToSell,
+  getWeeklyEggs, getWeeklyChickDead, getWeeklyChickenDead,
   getNumberOfChicken, getNumEggsMonthly, updateBrooderMR, getSurveillance,
   submitSurveillanceRecord, getRecordSurveillance, updateSurveillanceStatus,
-  getAllRecordSurveillance, updateCoopMR
+  getAllRecordSurveillance, updateCoopMR, getCoopIDs
 } from './database.js';
 import { sendAlert } from './mailer.js';
 
@@ -87,6 +87,12 @@ app.get('/chicken-record', (req, res) => {
   res.render('chicken-record');
 });
 
+// View Chicken Record
+app.get('/chicken/view', async (req, res) => {
+  const allCoop = await getAllCoop();
+  res.render('chicken-transfer', { allCoop });
+});
+
 // View Coop
 app.get('/coop/view', async (req, res) => {
   const allCoop = await getAllCoop();
@@ -106,12 +112,23 @@ app.get('/incubator/view', async (req, res) => {
   res.render('incubator-record', { allIncubator, hatchingDate });
 });
 
-// Get Coop Record
+// Get Coop Record Page
 app.get('/coop/create', (req, res) => {
   const coop = {
     id: req.query.id
   };
   res.render('create-coop-record', coop);
+});
+
+// Get Chicken Record Page
+app.get('/chicken/create', async (req, res) => {
+  console.log(req.query.id);
+  const coopIDS = await getCoopIDs();
+  const data = {
+    id: req.query.id,
+    coopIDS
+  };
+  res.render('create-chicken-transfer-record', { data });
 });
 
 // Get Brooder Record Page

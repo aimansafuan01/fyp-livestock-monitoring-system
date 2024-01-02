@@ -195,6 +195,15 @@ export async function updateSurveillanceStatus (recordID) {
   return result;
 }
 
+// Get All CoopID
+export async function getCoopIDs () {
+  const [result] = await pool.query(`
+  SELECT coopID
+  FROM coop
+  `);
+  return result;
+}
+
 // Get All Coop
 export async function getAllCoop () {
   const [result] = await pool.query(`
