@@ -112,13 +112,13 @@ export async function updateNumChickenCoop (coopData) {
 // Update Incubator
 export async function updateIncubator (incubatorData) {
   const incubatorID = incubatorData.incubatorID;
-  const hatchingRate = +incubatorData.latestHatchRate;
+  const hatchingRate = +incubatorData.hatchRate;
   const eggOut = incubatorData.eggInBasket;
-
   const result = await pool.query(`UPDATE INCUBATOR
-  SET incubator.totalEggInside = incubator.totalEggInside - ${eggOut},
-  incubator.hatchingRate = (incubator.hatchingRate + ${hatchingRate}) / 2
-  WHERE incubatorID = '${incubatorID}'`);
+  SET incubator.totalEggInside = incubator.totalEggInside - ?,
+  incubator.hatchingRate = ?
+  WHERE incubatorID = ?`,
+  [+eggOut, +hatchingRate, incubatorID]);
   return result;
 }
 
@@ -227,6 +227,16 @@ export async function getAllIncubator () {
 export async function getIncubator (incubatorID) {
   const [result] = await pool.query(`
   SELECT *
+  FROM incubator
+  WHERE incubatorID = '${incubatorID}'
+  `);
+  return result;
+}
+
+// Get Incubator Hatching Rate
+export async function getIncubatorHR (incubatorID) {
+  const [result] = await pool.query(`
+  SELECT hatchingRate
   FROM incubator
   WHERE incubatorID = '${incubatorID}'
   `);
@@ -444,7 +454,7 @@ export async function getSurveillance () {
 // Get All Surveillance Record
 export async function getAllRecordSurveillance () {
   const [result] = await pool.query(`
-  SELECT * FROM \`record-surveillance\` ORDER BY status DESC`);
+  SELECT * FROM \`record-surveillance\` ORDER BY status DESC, created_at DESC`);
   return result;
 }
 

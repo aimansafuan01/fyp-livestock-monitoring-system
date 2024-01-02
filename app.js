@@ -263,11 +263,7 @@ app.post('/submit-hatch-record', async (req, res) => {
   const notHatch = req.body.notHatch;
   const brooderID = req.body.brooderID;
   const numChick = +eggInBasket - +notHatch;
-  const hatchRate = (numChick / +eggInBasket) * 100;
-
-  const incubatorResult = await getIncubator(incubatorID);
-  const currentHatchRate = incubatorResult[0].hatchingRate;
-  const latestHatchRate = (+currentHatchRate + +hatchRate) / 2;
+  const hatchRate = (+numChick / +eggInBasket) * 100;
 
   try {
     const hatchData = {
@@ -277,12 +273,24 @@ app.post('/submit-hatch-record', async (req, res) => {
 
     const incubatorData = {
       incubatorID,
-      latestHatchRate,
+      hatchRate,
       eggInBasket
+    };
+
+    const incubatorSurveillance = {
+      coopID: null,
+      brooderID: null,
+      incubatorID
     };
 
     const resultChickBrooder = await addChickToBrooder(hatchData);
     const resultUpdateIncubator = await updateIncubator(incubatorData);
+    const surveillanceThreshold = await getSurveillance();
+
+    if (hatchRate < surveillanceThreshold[0].hatchingRateThreshold) {
+      await submitSurveillanceRecord(incubatorSurveillance);
+      sendAlert();
+    }
 
     if (resultChickBrooder && resultUpdateIncubator) {
       res.status(200)

@@ -15,7 +15,7 @@
 <% 
   
   // Button disable for Monday & Thursday
-  let insertTrayFlag = "disabled";
+  let insertTrayFlag = "";
   const currDate = new Date(); 
   const currDay = currDate.getDay(); // Return 0 for Sunday, 1 for Monday
   if (currDay === 1 || currDay === 4) {
@@ -23,8 +23,8 @@
   }
   
   // Button disable for hatching date
-  let inc1_flag = "disabled";
-  let inc2_flag = "disabled";
+  let inc1_flag = "";
+  let inc2_flag = "";
   if (!hatchingDate || hatchingDate.length == 0) {
     console.log("No hatching today")
   } else {
@@ -225,7 +225,7 @@
           </div>
           <hr class="dark horizontal my-0 mt-3 mb-3">
           <div class="row mx-3">
-            <a class="btn btn-warning<%= insertTrayFlag %>" href="/incubator/create-tray?id=INC2" role="button">Insert Tray Record</a>
+            <a class="btn btn-warning <%= insertTrayFlag %>" href="/incubator/create-tray?id=INC2" role="button">Insert Tray Record</a>
             <a class="btn btn-warning <%= inc2_flag %>" href="/incubator/create-hatch?id=INC2" role="button">Add Hatch Record</a>
           </div>
         </div>
