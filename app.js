@@ -10,7 +10,9 @@ import {
   getTrayToBasketRecord, addChickToBrooder, updateIncubator,
   getIncubator, getTodayEgg, getTodayChickDead, getTodayChickenDead,
   getChickToSell, getWeeklyEggs, getWeeklyChickDead, getWeeklyChickenDead,
-  getNumberOfChicken, getNumEggsMonthly, updateChickMR, getSurveillance
+  getNumberOfChicken, getNumEggsMonthly, updateChickMR, getSurveillance,
+  submitSurveillanceRecord, getRecordSurveillance, updateSurveillanceStatus,
+  getAllRecordSurveillance
 } from './database.js';
 import { sendAlert } from './mailer.js';
 
@@ -60,6 +62,7 @@ app.get('/home', async (req, res) => {
   const weeklyChickenDead = await getWeeklyChickenDead();
   const numOfChicken = await getNumberOfChicken();
   const monthlyEggs = await getNumEggsMonthly();
+  const surveillance = await getRecordSurveillance();
   res.render('dashboard', {
     eggData,
     chickDeadData,
@@ -69,7 +72,8 @@ app.get('/home', async (req, res) => {
     weeklyChickDead,
     weeklyChickenDead,
     numOfChicken,
-    monthlyEggs
+    monthlyEggs,
+    surveillance
   });
 });
 
@@ -99,7 +103,6 @@ app.get('/brooder/view', async (req, res) => {
 app.get('/incubator/view', async (req, res) => {
   const allIncubator = await getAllIncubator();
   const hatchingDate = await getHatchingDate();
-  console.log(hatchingDate);
   res.render('incubator-record', { allIncubator, hatchingDate });
 });
 
@@ -108,8 +111,6 @@ app.get('/coop/create', (req, res) => {
   const coop = {
     id: req.query.id
   };
-  console.log(req.query.id);
-
   res.render('create-coop-record', coop);
 });
 
@@ -143,6 +144,28 @@ app.get('/incubator/create-hatch', async (req, res) => {
   res.render('create-hatch-record', data);
 });
 
+// Get surveillamce Record Page
+app.get('/surveillance-record', async (req, res) => {
+  const recordSurveillanceData = await getAllRecordSurveillance();
+  res.render('surveillance-record', { recordSurveillanceData });
+});
+
+// Update Surveillance Status
+app.get('/update-surveillance', async (req, res) => {
+  try {
+    const id = req.query.id;
+    const result = await updateSurveillanceStatus(id);
+    if (result) {
+      res.status(200)
+        .redirect('/home');
+    }
+  } catch (error) {
+    console.error('Error during updating coop record', error);
+    res.status(500)
+      .send('Internal Server Error');
+  }
+});
+
 // Submit Coop Record
 app.post('/submit-coop-record', async (req, res) => {
   try {
@@ -174,12 +197,19 @@ app.post('/submit-brooder-record', async (req, res) => {
       brooderID: req.body.brooderID,
       numDeadChick: req.body.numDeadChick
     };
+
+    const brooderSurveillance = {
+      brooderID: req.body.brooderID,
+      incubatorID: null,
+      coopID: null
+    };
     const resultSubmit = await submitBrooderRecord(brooderData);
     const resultUpdateMRChick = await updateChickMR(brooderData);
     const resultUpdateNumChick = await updateBrooderNumChick(brooderData);
     const chickMRThreshold = await getSurveillance();
 
     if (resultUpdateMRChick[1] > chickMRThreshold[0].chickMRThreshold) {
+      await submitSurveillanceRecord(brooderSurveillance);
       sendAlert();
     }
 
@@ -196,7 +226,6 @@ app.post('/submit-brooder-record', async (req, res) => {
 
 // Submit Incubator Tray Record
 app.post('/submit-tray-record', async (req, res) => {
-  console.log(req.body);
   const trayData = {
     incubatorID: req.body.incubatorID,
     dateIn: req.body.dateIn,
@@ -215,7 +244,6 @@ app.post('/submit-tray-record', async (req, res) => {
 
 // Submit Incubator Hatch Record
 app.post('/submit-hatch-record', async (req, res) => {
-  console.log(req.body);
   const incubatorID = req.body.incubatorID;
   const eggInBasket = req.body.numEgg;
   const notHatch = req.body.notHatch;

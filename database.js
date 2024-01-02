@@ -66,6 +66,18 @@ export async function submitTrayRecord (trayData) {
   return resultTray;
 }
 
+// Submit Surveillance Record
+export async function submitSurveillanceRecord (surveillanceData) {
+  const brooderID = surveillanceData.brooderID;
+  const incubatorID = surveillanceData.incubatorID;
+  const coopID = surveillanceData.coopID;
+  const result = await pool.query(`
+  INSERT INTO \`record-surveillance\` (incubatorID, brooderID, coopID, status)
+  VALUES (?, ?, ?, ?)`,
+  [incubatorID, brooderID, coopID, 'Unresolved']);
+  return result;
+}
+
 // Update Brooder after casualty
 export async function updateBrooderNumChick (brooderData) {
   const brooderID = brooderData.brooderID;
@@ -152,6 +164,16 @@ export async function updateChickMR (brooderData) {
   WHERE brooderID = '${brooderID}'`);
 
   return [result, updatedMR];
+}
+
+// Update Record Surveillance Status
+export async function updateSurveillanceStatus (recordID) {
+  const result = await pool.query(`
+  UPDATE \`record-surveillance\`
+  SET \`record-surveillance\`.status = 'Resolved'
+  WHERE \`record-surveillance\`.surveillanceID = ?`, [recordID]);
+
+  return result;
 }
 
 // Get All Coop
@@ -386,6 +408,20 @@ export async function getNumEggsMonthly () {
 export async function getSurveillance () {
   const [result] = await pool.query(`
   SELECT * FROM surveillance`);
+  return result;
+}
+
+// Get All Surveillance Record
+export async function getAllRecordSurveillance () {
+  const [result] = await pool.query(`
+  SELECT * FROM \`record-surveillance\` ORDER BY status DESC`);
+  return result;
+}
+
+// Get Unresolved Surveillance Record
+export async function getRecordSurveillance () {
+  const [result] = await pool.query(`
+  SELECT * FROM \`record-surveillance\` WHERE status = 'Unresolved'`);
   return result;
 }
 
