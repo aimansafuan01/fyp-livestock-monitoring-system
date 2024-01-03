@@ -78,6 +78,18 @@ export async function submitSurveillanceRecord (surveillanceData) {
   return result;
 }
 
+export async function submitTransferRecord (transferData) {
+  const origin = transferData.origin;
+  const destination = transferData.destination;
+  const numOfHens = transferData.numOfHens;
+  const numOfRoosters = transferData.numOfRoosters;
+  const result = await pool.query(`
+  INSERT INTO \`record-transfer\` (origin, destination, numOfHens, numOfRoosters)
+  VALUES (?, ?, ?, ?)`,
+  [origin, destination, +numOfHens, +numOfRoosters]);
+  return result;
+}
+
 // Update Brooder after casualty
 export async function updateBrooderNumChick (brooderData) {
   const brooderID = brooderData.brooderID;
@@ -88,7 +100,7 @@ export async function updateBrooderNumChick (brooderData) {
   return result;
 }
 
-// Update Brooder after hatch
+// Update Num Chick in Brooder after hatch
 export async function addChickToBrooder (hatchData) {
   const brooderID = hatchData.brooderID;
   const numChick = hatchData.numChick;
@@ -98,14 +110,27 @@ export async function addChickToBrooder (hatchData) {
   return result;
 }
 
-// Update Coop
+// Update Num Chicken in Coop after casualty
 export async function updateNumChickenCoop (coopData) {
   const coopID = coopData.coopID;
   const numDeadHen = +coopData.numDeadHen;
   const numDeadRoosters = +coopData.numDeadRoosters;
   const result = await pool.query(`UPDATE COOP
-  SET coop.numOfHens = coop.numOfHens - ${numDeadHen}, coop.numOfRoosters = coop.numOfRoosters - ${numDeadRoosters}
-  WHERE coopID = '${coopID}'`);
+  SET coop.numOfHens = coop.numOfHens - ?,
+  coop.numOfRoosters = coop.numOfRoosters - ?
+  WHERE coopID = ?`, [+numDeadHen, +numDeadRoosters, coopID]);
+  return result;
+}
+
+// Add Num Chicken in Coop
+export async function addNumChickenCoop (coopData) {
+  const coopID = coopData.coopID;
+  const numOfHens = +coopData.numOfHens;
+  const numOfRoosters = +coopData.numOfRoosters;
+  const result = await pool.query(`UPDATE COOP
+  SET coop.numOfHens = coop.numOfHens + ?,
+  coop.numOfRoosters = coop.numOfRoosters + ?
+  WHERE coopID = ?`, [+numOfHens, +numOfRoosters, coopID]);
   return result;
 }
 

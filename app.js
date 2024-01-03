@@ -12,7 +12,8 @@ import {
   getWeeklyEggs, getWeeklyChickDead, getWeeklyChickenDead,
   getNumberOfChicken, getNumEggsMonthly, updateBrooderMR, getSurveillance,
   submitSurveillanceRecord, getRecordSurveillance, updateSurveillanceStatus,
-  getAllRecordSurveillance, updateCoopMR, getCoopIDs
+  getAllRecordSurveillance, updateCoopMR, getCoopIDs, submitTransferRecord,
+  addNumChickenCoop
 } from './database.js';
 import { sendAlert } from './mailer.js';
 
@@ -315,6 +316,46 @@ app.post('/submit-hatch-record', async (req, res) => {
     }
   } catch (error) {
     console.error('Error during submitting hatch record', error);
+    res.status(500)
+      .send('Internal Server Error');
+  }
+});
+
+app.post('/submit-chicken-transfer-record', async (req, res) => {
+  const origin = req.body.origin;
+  const destination = req.body.destination;
+  const numOfHens = req.body.numOfHens;
+  const numOfRoosters = req.body.numOfRoosters;
+
+  const transferData = {
+    origin,
+    destination,
+    numOfHens,
+    numOfRoosters
+  };
+
+  const coopData = {
+    coopID: origin,
+    numDeadHen: numOfHens,
+    numDeadRoosters: numOfRoosters
+  };
+
+  const addData = {
+    coopID: destination,
+    numOfHens,
+    numOfRoosters
+  };
+
+  try {
+    const transferResult = await submitTransferRecord(transferData);
+    const updateNumChickenResult = await updateNumChickenCoop(coopData);
+    const addNumChickenResult = await addNumChickenCoop(addData);
+    if (transferResult && updateNumChickenResult && addNumChickenResult) {
+      res.status(200)
+        .redirect('/chicken/view');
+    }
+  } catch (error) {
+    console.error('Error during submitting transfer record', error);
     res.status(500)
       .send('Internal Server Error');
   }
