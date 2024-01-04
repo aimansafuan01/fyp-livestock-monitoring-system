@@ -78,7 +78,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white " href="../pages/billing.html">
+          <a class="nav-link text-white " href="/chicken-health-record">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">receipt_long</i>
             </div>
@@ -86,7 +86,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white active bg-gradient-warning" href="../pages/virtual-reality.html">
+          <a class="nav-link text-white active bg-gradient-warning" href="/surveillance-record">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">visibility</i>
             </div>
@@ -155,7 +155,8 @@
                           </th>
                           <th class="text-center text-uppercase text-secondary text-lg font-weight-bolder">Date
                           </th>
-                          <th class="text-secondary"></th>
+                          <th class="text-center text-uppercase text-secondary text-lg font-weight-bolder">Action
+                          </th>
                         </tr>
                       </thead>
                       <tbody>
@@ -196,17 +197,18 @@
                             <p class="text-md font-weight-bold mb-0"><%= origin %></p>
                             <p class="text-xs text-secondary mb-0"><%= originDesc %></p>
                           </td>
-                          <td class="align-middle text-center text-sm">
-                            <span class="badge badge-sm <%= badgeBG %>"><%= status %></span>
+                          <td class="align-middle text-center text-md">
+                            <span class="badge badge-md <%= badgeBG %>"><%= status %></span>
                           </td>
                           <td class="align-middle text-center">
                             <span class="text-secondary text-md font-weight-bold opacity-7"><%= date %></span>
                           </td>
-                          <td class="align-middle">
+                          <td class="align-middle text-center">
                               <% if (btnBG=modalStatus==='disabled') continue; %>
-                              <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#confirmationModal" <%= modalStatus %>>
+                              <button type="button" class="btn btn-sm btn-success p-3 px-5" data-bs-toggle="modal" data-bs-target="#confirmationModal" <%= modalStatus %>>
                                 Resolve
                               </button>
+                          </td>
                               
                               <!-- Modal -->
                               <div class="modal fade" id="confirmationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
@@ -227,7 +229,7 @@
                                   </div>
                                 </div>
                               </div>
-                          </td>
+                          
                         </tr>
                         <% } %>
                       </tbody>

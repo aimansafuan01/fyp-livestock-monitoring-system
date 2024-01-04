@@ -90,6 +90,21 @@ export async function submitTransferRecord (transferData) {
   return result;
 }
 
+export async function submitChickenHealthRecord (healthRecord) {
+  const origin = healthRecord.origin;
+  const symptom = healthRecord.symptom;
+  const status = healthRecord.status;
+  const numOfHens = healthRecord.numOfHens;
+  const numOfRoosters = healthRecord.numOfRoosters;
+
+  const result = await pool.query(`
+  INSERT INTO \`record-chicken-health\` (origin, status, symptom, numOfHens, numOfRoosters)
+  VALUES (?, ?, ?, ?, ?)`,
+  [origin, status, symptom, numOfHens, numOfRoosters]);
+
+  return result;
+}
+
 // Update Brooder after casualty
 export async function updateBrooderNumChick (brooderData) {
   const brooderID = brooderData.brooderID;
@@ -111,10 +126,10 @@ export async function addChickToBrooder (hatchData) {
 }
 
 // Update Num Chicken in Coop after casualty
-export async function updateNumChickenCoop (coopData) {
+export async function minusNumChickenCoop (coopData) {
   const coopID = coopData.coopID;
-  const numDeadHen = +coopData.numDeadHen;
-  const numDeadRoosters = +coopData.numDeadRoosters;
+  const numDeadHen = +coopData.numDeadHen ?? 0;
+  const numDeadRoosters = +coopData.numDeadRoosters ?? 0;
   const result = await pool.query(`UPDATE COOP
   SET coop.numOfHens = coop.numOfHens - ?,
   coop.numOfRoosters = coop.numOfRoosters - ?
@@ -211,6 +226,16 @@ export async function updateCoopMR (coopData) {
 }
 
 // Update Record Surveillance Status
+export async function updateChickenHealthStatus (recordID, status) {
+  const result = await pool.query(`
+  UPDATE \`record-chicken-health\`
+  SET \`record-chicken-health\`.status = ?
+  WHERE \`record-chicken-health\`.recordHealthID = ?`, [status, recordID]);
+
+  return result;
+}
+
+// Update Record Chicken Health Status
 export async function updateSurveillanceStatus (recordID) {
   const result = await pool.query(`
   UPDATE \`record-surveillance\`
@@ -504,6 +529,27 @@ export async function getNumChickens (coopID) {
     `SELECT totalChickens
     FROM coop
     WHERE coopID = ?`, [coopID]);
+  return result;
+}
+
+// Get chicken health symptoms
+export async function getHealthSymptoms () {
+  const [result] = await pool.query(`
+  SELECT * FROM health_symptoms`);
+  return result;
+}
+
+// Get chicken health status
+export async function getHealthStatus () {
+  const [result] = await pool.query(`
+  SELECT * FROM health_status`);
+  return result;
+}
+
+// Get chicken health record
+export async function getChickenHealthRecord () {
+  const [result] = await pool.query(`
+  SELECT * FROM \`record-chicken-health\``);
   return result;
 }
 

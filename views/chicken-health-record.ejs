@@ -70,7 +70,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white active bg-gradient-warning" href="/daily-record">
+          <a class="nav-link text-white" href="/daily-record">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">inventory</i>
             </div>
@@ -78,7 +78,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white " href="/chicken-health-record">
+          <a class="nav-link text-white active bg-gradient-warning" href="/chicken-health-record">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">receipt_long</i>
             </div>
@@ -86,7 +86,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white " href="/surveillance-record">
+          <a class="nav-link text-white" href="/surveillance-record">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">visibility</i>
             </div>
@@ -133,57 +133,137 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/home">Dashboard</a></li>
-            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/daily-record">Daily Record</a>
-            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Chicken</li>
+            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Chicken Health</li>
           </ol>
-          <h4 class="font-weight-bolder mb-0">Chicken</h4>
+          <h4 class="font-weight-bolder mb-0">Chicken Health</h4>
         </nav>
       </div>
     </nav>
     <!------------------------------- Top Navbar ----------------------->
 
+    <div class="row ms-2 mt-2 mb-0">
+      <div class="col-4">
+        <button type="button" class="btn btn-sm btn-warning p-4 mb-0" onclick="location.href='/create-chicken-health-record'">
+          Create new record
+        </button>
+      </div>
+    </div>
+    
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="card my-4">
+            <div class="card-body px-0 pb-2">
+              <div class="table-responsive p-0">
+                <table class="table align-items-center mb-0">
+                  <thead>
+                    <tr>
+                      <th class="text-uppercase text-secondary text-lg font-weight-bolder">Record ID</th>
+                      <th class="text-uppercase text-secondary text-lg font-weight-bolder ps-2">Origin</th>
+                      <th class="text-center text-secondary text-lg font-weight-bolder ps-2">Hens</th>
+                      <th class="text-center text-secondary text-lg font-weight-bolder ps-2">Roosters</th>
+                      <th class="text-center text-uppercase text-secondary text-lg font-weight-bolder">Symptoms
+                      </th>
+                      <th class="text-center text-uppercase text-secondary text-lg font-weight-bolder">Date
+                      </th>
+                      <th class="text-center text-uppercase text-secondary text-lg font-weight-bolder">Status
+                      </th>
+                      <th class="text-center text-uppercase text-secondary text-lg font-weight-bolder">Update
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% 
+                      for (let i=0; i<healthRecord.length; i++) {
+                        let badgeBG = '';
+                        if (healthRecord[i].status === 'Moved to SB') {
+                          badgeBG = 'bg-gradient-dark'
+                        }
 
-    <!-------------------- GET CURRENT DATE ---------------------->
-    <div class="row mt-4 m-4">
-      <% 
-        for (const data of allCoop) {
-          if (data.coopID === 'SB') {
-            continue;
-          }
-      %>
-      <div class="col-12 col-md-4 mb-5">
-        <div class="card enlargeable">
-          <div class="card-header p-3 pt-2">
-            <div class="icon-lg shadow-dark text-center border-radius-xl mt-n4 position-absolute bg-gray-200"
-              style="display: flex; align-items: center; justify-content: center;">
-              <h3 class="text-black m-0"><%= data.coopID %></h3>
+                        if (healthRecord[i].status === 'Cured') {
+                          badgeBG = 'bg-gradient-success'
+                        }
+
+                        if (healthRecord[i].status === 'Culled') {
+                          badgeBG = 'bg-gradient-warning'
+                        }
+
+                        if (healthRecord[i].status === 'Dead') {
+                          badgeBG = 'bg-gradient-danger'
+                        }
+                    %>
+                      <tr>
+                        <td class="align-middle text-center">
+                          <div class="d-flex px-2 py-1">
+                            <div class="justify-content-center">
+                              <h6 class="mb-0 text-md ps-2">
+                                <%= healthRecord[i].recordHealthID %>
+                              </h6>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <p class="text-md font-weight-bold mb-0">
+                            <%= healthRecord[i].origin %>
+                          </p>
+                          <p class="text-xs text-secondary mb-0">
+                            Coop
+                          </p>
+                        </td>
+                        <td class="align-middle text-center text-sm">
+                          <p class="text-md mb-0">
+                            <%= healthRecord[i].numOfHens %>
+                          </p>
+                        </td>
+                        <td class="align-middle text-center text-sm">
+                          <p class="text-md mb-0">
+                            <%= healthRecord[i].numOfRoosters %>
+                          </p>
+                        </td>
+                        <td class="align-middle text-center text-sm">
+                          <p class="text-md mb-0">
+                            <%= healthRecord[i].symptom %>
+                          </p>
+                        </td>
+                        <td class="align-middle text-center">
+                          <span class="text-secondary text-md">
+                            <%= healthRecord[i].created_at.toLocaleDateString('en-MY') %>
+                          </span>
+                          <br>
+                          <span class="text-secondary text-md opacity-7">
+                            <%= healthRecord[i].created_at.toLocaleTimeString('en-MY') %>
+                          </span>
+                        </td>
+                        <td class="align-middle text-center text-lg">
+                          <span class="badge badge-lg <%= badgeBG %>">
+                            <%= healthRecord[i].status %>
+                          </span>
+                        </td>
+                        <% if (healthRecord[i].status !== 'Moved to SB') { continue; } %>
+                        <td class="align-middle text-center">
+                          <select class="form-select ps-2 updateStatus" aria-label="Default select example" name="status" id="updateStatus__<%= healthRecord[i].recordHealthID %>">
+                            <option selected>Open this select menu</option>
+                            <% for (status of healthStatus) {
+                              if (status.status === 'Moved to SB') { continue; } 
+                            %>
+                            <option value="<%= status.status %>" 
+                              data-numHens="<%= healthRecord[i].numOfHens %>"
+                              data-recordid="<%= healthRecord[i].recordHealthID %>"
+                              data-numRoosters="<%= healthRecord[i].numOfRoosters %>"><%= status.status %></option>
+                            <% } %>
+                          </select>
+                        </td>
+                      </tr>
+                      <% } %>
+                  </tbody>
+                </table>
+              </div>
             </div>
-            <div class="text-end pt-1">
-              <p class="text-sm mb-0 text-capitalize">Ratio</p>
-              <% const ratio = +data.numOfHens / +data.numOfRoosters %>
-              <h4 class="mb-0">
-                1 : <%= ratio.toFixed(0) %>
-              </h4>
-            </div>
-          </div>
-          <hr class="dark horizontal my-0">
-          <div class="card-footer p-3">
-            <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder">
-                <%= data.numOfRoosters %>
-              </span>Roosters</p>
-            <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder">
-                <%= data.numOfHens %>
-              </span>Hens</p>
-            <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder">
-                <%= data.totalChickens %>
-              </span>Total</p>
-          </div>
-          <div class="row mx-3">
-            <a class="btn btn-warning" href="/chicken/create?id=<%= data.coopID %>" role="button">Transfer</a>
           </div>
         </div>
       </div>
-      <% } %>
+
+
 
       <!--   Core JS Files   -->
       <script src="/assets/js/core/popper.min.js"></script>
@@ -200,6 +280,26 @@
           }
           Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
         }
+      </script>
+
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          document.body.addEventListener('change', async (event) => {
+            if (event.target.classList.contains('updateStatus')) {
+            const selectElement = event.target;
+            const selectedOption = selectElement.options[selectElement.selectedIndex];
+            const updatedStatus = selectedOption.value;
+            const numHens = selectedOption.dataset.numhens;
+            const recordID = selectedOption.dataset.recordid;
+            const numRoosters = selectedOption.dataset.numroosters;
+            const response = await fetch(`/update-chicken-health-status?status=${updatedStatus}&numHens=${numHens}&recordID=${recordID}&numRoosters=${numRoosters}`)
+            
+            if (response.ok) {
+                location.reload();
+              }
+          }
+          })
+        })
       </script>
 
       <!-- Github buttons -->
