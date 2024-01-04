@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import {
   login, submitCoopRecord, getAllCoop, getAllBrooder,
-  submitBrooderRecord, updateBrooderNumChick, updateNumChickenCoop,
+  submitBrooderRecord, updateBrooderNumChick, minusNumChickenCoop,
   getAllIncubator, submitTrayRecord, updateIncubatorEgg,
   getNumEggsInBasket, getIncubatorRecord, getHatchingDate,
   getTrayToBasketRecord, addChickToBrooder, updateIncubator,
@@ -13,7 +13,8 @@ import {
   getNumberOfChicken, getNumEggsMonthly, updateBrooderMR, getSurveillance,
   submitSurveillanceRecord, getRecordSurveillance, updateSurveillanceStatus,
   getAllRecordSurveillance, updateCoopMR, getCoopIDs, submitTransferRecord,
-  addNumChickenCoop
+  addNumChickenCoop, getHealthSymptoms, getHealthStatus, submitChickenHealthRecord,
+  getChickenHealthRecord, updateChickenHealthStatus
 } from './database.js';
 import { sendAlert } from './mailer.js';
 
@@ -162,10 +163,31 @@ app.get('/incubator/create-hatch', async (req, res) => {
   res.render('create-hatch-record', data);
 });
 
-// Get surveillamce Record Page
+// Get surveillance Record Page
 app.get('/surveillance-record', async (req, res) => {
   const recordSurveillanceData = await getAllRecordSurveillance();
+
   res.render('surveillance-record', { recordSurveillanceData });
+});
+
+// Get Chicken Health Record Page
+app.get('/chicken-health-record', async (req, res) => {
+  const healthRecord = await getChickenHealthRecord();
+  const healthStatus = await getHealthStatus();
+  res.render('chicken-health-record', { healthRecord, healthStatus });
+});
+
+// Get Create Chicken Health Record Page
+app.get('/create-chicken-health-record', async (req, res) => {
+  try {
+    const coopIDs = await getCoopIDs();
+    const healthSymptoms = await getHealthSymptoms();
+    const healthStatus = await getHealthStatus();
+    res.render('create-chicken-health-record', { coopIDs, healthSymptoms, healthStatus });
+  } catch (error) {
+    res.status(500)
+      .send('Internal Server Error');
+  }
 });
 
 // Update Surveillance Status
@@ -204,7 +226,7 @@ app.post('/submit-coop-record', async (req, res) => {
 
     const resultSubmit = await submitCoopRecord(coopData);
     const resultUpdateCoopMR = await updateCoopMR(coopData);
-    const resultUpdate = await updateNumChickenCoop(coopData);
+    const resultUpdate = await minusNumChickenCoop(coopData);
     const surveillanceThreshold = await getSurveillance();
 
     if (resultUpdateCoopMR[1] > surveillanceThreshold[0].chickenMRThreshold) {
@@ -348,7 +370,7 @@ app.post('/submit-chicken-transfer-record', async (req, res) => {
 
   try {
     const transferResult = await submitTransferRecord(transferData);
-    const updateNumChickenResult = await updateNumChickenCoop(coopData);
+    const updateNumChickenResult = await minusNumChickenCoop(coopData);
     const addNumChickenResult = await addNumChickenCoop(addData);
     if (transferResult && updateNumChickenResult && addNumChickenResult) {
       res.status(200)
@@ -356,6 +378,88 @@ app.post('/submit-chicken-transfer-record', async (req, res) => {
     }
   } catch (error) {
     console.error('Error during submitting transfer record', error);
+    res.status(500)
+      .send('Internal Server Error');
+  }
+});
+
+app.post('/submit-chicken-health-record', async (req, res) => {
+  const origin = req.body.origin;
+  const symptom = req.body.symptom;
+  const status = req.body.status;
+  const numOfHens = req.body.numOfHens;
+  const numOfRoosters = req.body.numOfRoosters;
+
+  const healthData = {
+    origin,
+    symptom,
+    status,
+    numOfHens,
+    numOfRoosters
+  };
+
+  const transferData = {
+    origin,
+    destination: 'SB',
+    numOfHens,
+    numOfRoosters
+  };
+
+  const minusChicken = {
+    coopID: origin,
+    numDeadHen: numOfHens,
+    numDeadRoosters: numOfRoosters
+  };
+
+  const addData = {
+    coopID: 'SB',
+    numOfHens,
+    numOfRoosters
+  };
+
+  try {
+    const healthResult = await submitChickenHealthRecord(healthData);
+    const transferResult = await submitTransferRecord(transferData);
+    const updateNumChickenResult = await minusNumChickenCoop(minusChicken);
+    const addNumChickenResult = await addNumChickenCoop(addData);
+
+    if (healthResult && transferResult && updateNumChickenResult && addNumChickenResult) {
+      res.status(200)
+        .redirect('/chicken-health-record');
+    }
+  } catch (error) {
+    console.error('Error during submitting transfer record', error);
+    res.status(500)
+      .send('Internal Server Error');
+  }
+});
+
+app.get('/update-chicken-health-status', async (req, res) => {
+  const recordID = req.query.recordID;
+  const status = req.query.status;
+  const numDeadHen = req.query.numHens;
+  const numDeadRoosters = req.query.numRoosters;
+  let resultMinusChicken = null;
+
+  const minusData = {
+    coopID: 'SB',
+    numDeadHen,
+    numDeadRoosters
+  };
+
+  try {
+    const resultUpdate = await updateChickenHealthStatus(recordID, status);
+
+    if (status !== 'Cured') {
+      resultMinusChicken = await minusNumChickenCoop(minusData);
+    }
+
+    if (resultUpdate && resultMinusChicken) {
+      res.status(200)
+        .redirect('/chicken-health-record');
+    }
+  } catch (error) {
+    console.error('Error during updating health record', error);
     res.status(500)
       .send('Internal Server Error');
   }
