@@ -14,7 +14,11 @@ import {
   submitSurveillanceRecord, getRecordSurveillance, updateSurveillanceStatus,
   getAllRecordSurveillance, updateCoopMR, getCoopIDs, submitTransferRecord,
   addNumChickenCoop, getHealthSymptoms, getHealthStatus, submitChickenHealthRecord,
-  getChickenHealthRecord, updateChickenHealthStatus
+  getChickenHealthRecord, updateChickenHealthStatus, getAllChicken, getCurrMonthEggs,
+  updateTotalEggs, getAsOfTotalEggs, getFirstDateCoopRecord, avgDailyEgg, getChickenDeadCurrMonth,
+  getMonthlyChickenDead, submitHatchRecord, getIncubationData, getFirstIncubationDate,
+  getTotalChickenDead, getTotalIncubationData, getDailyEggsInAMonth, getDailyChickDeathInAMonth,
+  getTotalChickDeathCurrMonth, getCumTotalChickDeath
 } from './database.js';
 import { sendAlert } from './mailer.js';
 
@@ -209,31 +213,43 @@ app.get('/update-surveillance', async (req, res) => {
 // Submit Coop Record
 app.post('/submit-coop-record', async (req, res) => {
   try {
+    const coopID = req.body.coopID;
+    const numEggs = req.body.numOfEggs;
+    const numNc = req.body.numOfNC;
+    const numAccepted = req.body.acceptedEggs;
+
     const coopData = {
-      coopID: req.body.coopID,
+      coopID,
       numDeadHen: req.body.numOfDeadHensR1,
       numDeadRoosters: req.body.numOfDeadRoostersR1,
-      numEggs: req.body.numOfEggs,
-      numNc: req.body.numOfNC,
-      numAccepted: req.body.acceptedEggs
+      numEggs,
+      numNc,
+      numAccepted
     };
 
     const coopSurveillance = {
-      coopID: req.body.coopID,
+      coopID,
       brooderID: null,
       incubatorID: null
+    };
+
+    const eggData = {
+      numEggs,
+      numNc,
+      numAccepted
     };
 
     const resultSubmit = await submitCoopRecord(coopData);
     const resultUpdateCoopMR = await updateCoopMR(coopData);
     const resultUpdate = await minusNumChickenCoop(coopData);
+    const resultUpdateEggs = await updateTotalEggs(eggData);
     const surveillanceThreshold = await getSurveillance();
 
     if (resultUpdateCoopMR[1] > surveillanceThreshold[0].chickenMRThreshold) {
       await submitSurveillanceRecord(coopSurveillance);
       sendAlert();
     }
-    if (resultSubmit && resultUpdate) {
+    if (resultSubmit && resultUpdate && resultUpdateEggs) {
       res.status(200)
         .redirect('/coop/view');
     }
@@ -299,14 +315,15 @@ app.post('/submit-tray-record', async (req, res) => {
 // Submit Incubator Hatch Record
 app.post('/submit-hatch-record', async (req, res) => {
   const incubatorID = req.body.incubatorID;
+  const dateHatch = req.body.dateOut;
   const eggInBasket = req.body.numEgg;
   const notHatch = req.body.notHatch;
   const brooderID = req.body.brooderID;
   const numChick = +eggInBasket - +notHatch;
-  const hatchRate = (+numChick / +eggInBasket) * 100;
+  const hatchRate = Number((+numChick / +eggInBasket) * 100).toFixed(2);
 
   try {
-    const hatchData = {
+    const brooderData = {
       brooderID,
       numChick
     };
@@ -323,8 +340,19 @@ app.post('/submit-hatch-record', async (req, res) => {
       incubatorID
     };
 
-    const resultChickBrooder = await addChickToBrooder(hatchData);
+    const hatchData = {
+      dateHatch,
+      numEgg: eggInBasket,
+      numHatch: numChick,
+      numNotHatch: notHatch,
+      hatchRate,
+      incubatorID,
+      brooderID
+    };
+
+    const resultChickBrooder = await addChickToBrooder(brooderData);
     const resultUpdateIncubator = await updateIncubator(incubatorData);
+    const resultSubmitHatchRecord = await submitHatchRecord(hatchData);
     const surveillanceThreshold = await getSurveillance();
 
     if (hatchRate < surveillanceThreshold[0].hatchingRateThreshold) {
@@ -332,7 +360,7 @@ app.post('/submit-hatch-record', async (req, res) => {
       sendAlert();
     }
 
-    if (resultChickBrooder && resultUpdateIncubator) {
+    if (resultChickBrooder && resultUpdateIncubator && resultSubmitHatchRecord) {
       res.status(200)
         .redirect('/incubator/view');
     }
@@ -463,6 +491,59 @@ app.get('/update-chicken-health-status', async (req, res) => {
     res.status(500)
       .send('Internal Server Error');
   }
+});
+
+// Get Data for Report
+app.get('/data', async (req, res) => {
+
+});
+
+// Get Data for Report
+app.get('/report', async (req, res) => {
+  const monthlyEggs = await getNumEggsMonthly();
+  const numOfChicken = await getNumberOfChicken();
+  const coopData = await getAllChicken();
+  const eggData = await getCurrMonthEggs();
+  const asOfEggData = await getAsOfTotalEggs();
+  const firstDateCoopRecord = await getFirstDateCoopRecord();
+  const avgEggDaily = await avgDailyEgg();
+  const chickenDeadData = await getChickenDeadCurrMonth();
+  const dailyEggsAMonth = await getDailyEggsInAMonth();
+  const monthlyChickenDead = await getMonthlyChickenDead();
+  const incubationRecord = await getIncubationData();
+  const firstIncubationDate = await getFirstIncubationDate();
+  const totalChickenDeadData = await getTotalChickenDead();
+  const totalIncubationData = await getTotalIncubationData();
+  const dailyChickDeathInAMonth = await getDailyChickDeathInAMonth();
+  const totalChickDeathCurrMonth = await getTotalChickDeathCurrMonth();
+  const cumTotalChickDeath = await getCumTotalChickDeath();
+  const dailyEggsAMonthData = dailyEggsAMonth.map(data => data.numEggs);
+  const monthlyEggsData = monthlyEggs.map((data) => data.numEggs);
+  const monthlyHensDeadData = monthlyChickenDead.map((data) => data.numDeadHen);
+  const monthlyRoosterDeadData = monthlyChickenDead.map((data) => data.numDeadRooster);
+  const dailyChickDeathInAMonthData = dailyChickDeathInAMonth.map((data) => data.numDeadChick);
+
+  res.render('report', {
+    monthlyEggs,
+    numOfChicken,
+    coopData,
+    eggData,
+    asOfEggData,
+    firstDateCoopRecord,
+    avgEggDaily,
+    chickenDeadData,
+    monthlyEggsData,
+    dailyEggsAMonthData,
+    monthlyHensDeadData,
+    monthlyRoosterDeadData,
+    incubationRecord,
+    firstIncubationDate,
+    totalChickenDeadData,
+    totalIncubationData,
+    dailyChickDeathInAMonthData,
+    totalChickDeathCurrMonth,
+    cumTotalChickDeath
+  });
 });
 
 // Login

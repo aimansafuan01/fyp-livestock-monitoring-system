@@ -94,15 +94,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white " href="../pages/rtl.html">
-            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="material-icons opacity-10">groups</i>
-            </div>
-            <span class="nav-link-text ms-1">Customer List</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white " href="../pages/notifications.html">
+          <a class="nav-link text-white " href="/report">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">summarize</i>
             </div>
@@ -242,7 +234,7 @@
                         <% if (healthRecord[i].status !== 'Moved to SB') { continue; } %>
                         <td class="align-middle text-center">
                           <select class="form-select ps-2 updateStatus" aria-label="Default select example" name="status" id="updateStatus__<%= healthRecord[i].recordHealthID %>">
-                            <option selected>Open this select menu</option>
+                            <option selected>Update Chicken Health Status</option>
                             <% for (status of healthStatus) {
                               if (status.status === 'Moved to SB') { continue; } 
                             %>

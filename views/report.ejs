@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <link rel="stylesheet" type="text/css"
+    href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" />
+  <link rel="apple-touch-icon" sizes="76x76" href="../../assets/img/apple-icon.png">
+  <link rel="icon" type="image/png" href="../../assets/img/favicon.png">
+  <!-- Nucleo Icons -->
+  <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
+  <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
+  <!-- Font Awesome Icons -->
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <!-- CSS Files -->
+  <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.1.0" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <title>Tiroi Farm PLT</title>
+</head>
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+<body class="ms-7 me-7">
+  <%
+    const today = new Date();
+    const month = today.toLocaleString('default', { month: 'long' });
+    const year = new Date().getFullYear();
+    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+    const asOfDate = new Intl.DateTimeFormat('en-MY', options).format(today);
+    const numOfChickenArray = numOfChicken.map(chicken => [chicken.totalHens, chicken.totalRoosters]);
+    const avgProductionRate = ((Number(avgEggDaily[0].avgDailyEgg).toFixed(2) / +numOfChicken[0].totalHens) * 100).toFixed(2);
+    const monthlyEggsData = monthlyEggs.map((row) => row.numEggs);
+    const avgMonthlyProductionRate = avgEggDaily.map((row) => (((Number(row.avgDailyEgg).toFixed(2) / +numOfChicken[0].totalHens)* 100).toFixed(2) ))
+  %>
+  <button class="btn btn-warning m-2" id="downloadBtn">Download PDF</button>
+  <h2 class="text-center"><u>TIROI FARM PLT</u></h2>
+  <div class="row mt-3 align-middle text-center d-flex">
+    <h5>MONTHLY PRODUCTION REPORT</h5>
+    <p class="m-0">Month: <h5 class= "mb-0"> <%= month %> <%= year %></h5></p>
+    <p class="m-0">Duration: <h5 class= "mb-0">1 <%= month %> <%= year %> - <%= asOfDate %></h5></p>
+  </div>
+  <div class="row mt-4 align-items-end">
+    <h5>CHICKEN DATA AS OF <%= asOfDate %></h5>
+    <div class="col-12 col-md-4 me-7">
+      <table class="table mb-0">
+        <thead>
+          <tr>
+            <th class ="text-center">Bay</th>
+            <th class ="text-center">Hen</th>
+            <th class ="text-center">Rooster</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for (coop of coopData) { %>
+          <tr>
+            <td class="align-middle text-center">
+              <%= coop.coopID %>
+            </td>
+            <td class="align-middle text-center">
+              <%= coop.numOfHens %>
+            </td>
+            <td class="align-middle text-center">
+              <%= coop.numOfRoosters %>
+            </td>
+          </tr>
+          <% } %>
+          <tr>
+            <td class="align-middle text-center"><b>Total</b></td>
+            <td class="align-middle text-center"><b><%= numOfChicken[0].totalHens %></b></td>
+            <td class="align-middle text-center"><b><%= numOfChicken[0].totalRoosters %></b></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="text-center">Table 1: Chicken Count in Each Coop</p>
+    </div>
+    <div class="col-12 col-md-6 mt-3">
+      <canvas id="chicken-count" class="chart-canvas" height="200"></canvas>
+      <p class="text-center">Figure 1: Number of Hens and Roosters at the farm</p>
+    </div>
+    <div class="row">
+      <div class="col-12 mb-3">
+        <p class="mb-0">The total death count in <%= month %> as of <b><%= asOfDate %></b> is <b><%= chickenDeadData[0].totalDead %></b> (<b><%= chickenDeadData[0].numDeadRooster %></b> rooster, <b><%= chickenDeadData[0].numDeadHen %></b>
+          hens).</p>
+          <p>Total death count from start of operation until as of <b><%= asOfDate %></b> is <b><%= totalChickenDeadData[0].totalChickenDead %></b> (<b><%= totalChickenDeadData[0].totalDeadRooster %></b> rooster, <b><%= totalChickenDeadData[0].totalDeadHen %></b> hen).</p>
+      </div>
+      <div class="col-12 mb-3">
+        <canvas id="chicken-death-count" class="chart-canvas" height="50"></canvas>
+        <p class="mt-2 text-center">Figure 2: Monthly Chicken death count</p>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <h5>EGG PRODUCTION AS OF <%= asOfDate %></h5>
+    <p>A total of <b><%= eggData[0].totalNumEggs %></b>  eggs produced in <%= month %>. Total number of eggs produced since 
+      <%= firstDateCoopRecord[0].DAY %> <%= firstDateCoopRecord[0].MONTH %> <%= firstDateCoopRecord[0].YEAR %> is <b><%= asOfEggData[0].totalEggCollected %></b>.
+      The daily average collected eggs in <%= month %> is <b><%= Number(avgEggDaily[0].avgDailyEgg).toFixed(2) %> </b>eggs. The average production rate in <%= month %> is <b>
+        <%= avgProductionRate %></b>.</p>
+  </div>
+  
+  <div class="row m-3">
+    <div class="col-12 mb-3">
+      <canvas id="num-egg-monthly" class="chart-canvas" height="50"></canvas>
+      <p class="mt-2 text-center">Figure 3: Number of eggs collected monthly</p>
+    </div>
+    <div class="col-12 mb-3">
+      <canvas id="production-rate-egg-monthly" class="chart-canvas" height="50"></canvas>
+      <p class="mt-2 text-center">Figure 4: Monthly production rates</p>
+    </div>
+    <div class="col-12">
+      <canvas id="daily-egg-current-month" class="chart-canvas" height="50"></canvas>
+      <p class="mt-2 text-center">Figure 5: Daily Eggs Collected</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <h5>INCUBATION DATA AS OF <%= asOfDate %></h5>
+    <div class="col-12">
+      <p>A total of <b><%=incubationRecord[0].numEgg %></b> was incubated in <%= month %>. Since <b><%= firstIncubationDate[0].firstIncubationDate.toLocaleDateString('en-MY') %></b>, a total of 
+      <b><%= incubationRecord[0].numEgg %></b> eggs has been incubated. <b><%= incubationRecord[0].numHatch %> </b> eggs hatched in <%= month %> <%= year %>. <%= month %> hatching rate was 
+      <b><%= Number(incubationRecord[0].hatchRate).toFixed(2) %>%</b> (<b><%= incubationRecord[0].numHatch %></b> of <b> <%= incubationRecord[0].numNotHatch %></b>). Range of hatching rate is
+      <b><%= incubationRecord[0].minHatchRate %>%</b> to <b><%= incubationRecord[0].maxHatchRate %>%</b>. A total of <b><%= totalIncubationData[0].totalEggIncubated %></b> eggs incubated as
+      of <%= asOfDate %> with <b><%= totalIncubationData[0].totalEggHatch %></b> hatched.</p>
+    </div>
+    <div clas="col-12">
+      <canvas id="egg-incubated-egg-hatched" class="chart-canvas" height="100"></canvas>
+    </div> 
+    <p class="mt-2 text-center">Figure 6: Monthly Egg Incubated and Hatched</p>
+  </div>
+  
+  <div class="row">
+    <h5>BROODER DATA AS OF <%= asOfDate %></h5>
+    <div class="col-12">
+      <p>Chick death count in <%= month %> <%= year %> is <b><%= totalChickDeathCurrMonth[0].totalDeadChick %></b>. Cumulative total for chick's death count as of <%= asOfDate %> is <b><%= cumTotalChickDeath[0].totalDeadChick %></b>.</p>
+    </div>
+    <div clas="col-12">
+      <canvas id="daily-chick-death-current-month" class="chart-canvas" height="100"></canvas>
+    </div> 
+    <p class="mt-2 text-center mb-5">Figure 7: Daily Chick Death Count</p>
+  </div>
+  <script>
+    var ctx1 = document.getElementById('chicken-count').getContext('2d');
+    var myChart = new Chart(ctx1, {
+      type: 'bar',
+      data: {
+        labels: ["Number of Hens", "Number of Roosters"],
+        datasets: [{
+          label: 'Count',
+          data: [<%= numOfChicken[0].totalHens %>, <%= numOfChicken[0].totalRoosters %>],
+          backgroundColor: ['rgba(255, 134, 197, 0.2)', 'rgba(75, 192, 192, 0.2)'],
+          borderColor: ['rgba(255, 134, 197, 0.8)', 'rgba(75, 192, 192, 1)'],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        },
+        plugins: {
+          legend: {
+            display: false,
+          }
+        },
+      },
+    });
+  </script>
+
+  <script>
+    var ctx2 = document.getElementById('chicken-death-count').getContext('2d');
+    var myChart = new Chart(ctx2, {
+      type: 'line',
+      data: {
+        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+        datasets: [{
+          label: 'Hen Death Count',
+          data: [<%= monthlyHensDeadData %>],
+           backgroundColor: ['rgba(255, 134, 197, 0.2)'],
+          borderColor: ['rgba(255, 134, 197, 0.8)'],
+          borderWidth: 1
+        },
+        {
+          label: 'Rooster Death Count',
+          data: [<%= monthlyRoosterDeadData %>],
+          backgroundColor: ['rgba(75, 192, 192, 0.2)'],
+          borderColor: ['rgba(75, 192, 192, 1)'],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        },
+        plugins: {
+          legend: {
+            display: true,
+          }
+        },
+      }
+    });
+  </script>
+
+  <script>
+    var ctx3 = document.getElementById('num-egg-monthly').getContext('2d');
+      var myChart = new Chart(ctx3, {
+        type: 'line',
+        data: {
+          labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+          datasets: [{
+            label: 'Monthly Egg Production',
+            data: [<%= monthlyEggsData %>],
+            backgroundColor: 'rgba(255, 172, 0, 0.2)',
+            borderColor: 'rgba(255, 172, 0, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          },
+          plugins: {
+            legend: {
+              display: false,
+            }
+          },
+        }
+      });
+  </script>
+  
+  <script>
+    var ctx4 = document.getElementById('production-rate-egg-monthly').getContext('2d');
+      var myChart = new Chart(ctx4, {
+        type: 'line',
+        data: {
+          labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+          datasets: [{
+            label: 'Monthly Egg Production',
+            data: [<%= avgMonthlyProductionRate %>],
+            backgroundColor: 'rgba(255, 172, 0, 0.2)',
+            borderColor: 'rgba(255, 172, 0, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          },
+          plugins: {
+            legend: {
+              display: false,
+            }
+          },
+        }
+      });
+  </script>
+
+  <script>
+    var ctx5 = document.getElementById('daily-egg-current-month').getContext('2d');
+      var myChart = new Chart(ctx5, {
+        type: 'line',
+        data: {
+          labels: [
+            '01/01/2024', '02/01/2024', '03/01/2024',
+            '04/01/2024', '05/01/2024', '06/01/2024',
+            '07/01/2024', '08/01/2024', '09/01/2024',
+            '10/01/2024', '11/01/2024', '12/01/2024',
+            '13/01/2024', '14/01/2024', '15/01/2024',
+            '16/01/2024', '17/01/2024', '18/01/2024',
+            '19/01/2024', '20/01/2024', '21/01/2024',
+            '22/01/2024', '23/01/2024', '24/01/2024',
+            '25/01/2024', '26/01/2024', '27/01/2024',
+            '28/01/2024', '29/01/2024', '30/01/2024',
+            '31/01/2024'
+          ],
+          datasets: [{
+            label: 'Number of eggs',
+            data: [<%= dailyEggsAMonthData %>],
+            backgroundColor: 'rgba(255, 172, 0, 0.2)',
+            borderColor: 'rgba(255, 172, 0, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          },
+          plugins: {
+            legend: {
+              display: false,
+            }
+          },
+        }
+      });
+  </script>
+
+  <script>
+    var ctx6 = document.getElementById('egg-incubated-egg-hatched').getContext('2d');
+    var myChart = new Chart(ctx6, {
+        type: 'bar',
+        data: {
+          labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+          datasets: [
+            {
+              label: 'Incubated',
+              data: [<%= incubationRecord[0].numEgg %>],
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1
+            },
+            {
+              label: 'Hatched',
+              data: [<%= incubationRecord[0].numHatch %>],
+              backgroundColor: 'rgba(255, 134, 197, 0.2)',
+              borderColor: 'rgba(255, 134, 197, 0.8)',
+              borderWidth: 1
+            }
+          ]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            },
+          },
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top'
+            }
+          },
+        },
+      });
+  </script>
+
+  <script>
+    var ctx7 = document.getElementById('daily-chick-death-current-month').getContext('2d');
+    var myChart = new Chart(ctx7, {
+      type: 'line',
+      data: {
+        labels: [
+          '01/01/2024', '02/01/2024', '03/01/2024',
+          '04/01/2024', '05/01/2024', '06/01/2024',
+          '07/01/2024', '08/01/2024', '09/01/2024',
+          '10/01/2024', '11/01/2024', '12/01/2024',
+          '13/01/2024', '14/01/2024', '15/01/2024',
+          '16/01/2024', '17/01/2024', '18/01/2024',
+          '19/01/2024', '20/01/2024', '21/01/2024',
+          '22/01/2024', '23/01/2024', '24/01/2024',
+          '25/01/2024', '26/01/2024', '27/01/2024',
+          '28/01/2024', '29/01/2024', '30/01/2024',
+          '31/01/2024'
+        ],
+        datasets: [{
+          label: 'Number of dead chick',
+          data: [<%= dailyChickDeathInAMonthData %>],
+          backgroundColor: 'rgba(255, 172, 0, 0.2)',
+          borderColor: 'rgba(255, 172, 0, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        },
+        plugins: {
+          legend: {
+            display: false,
+          }
+        },
+      }
+    });
+  </script>
+
+<script>
+  document.getElementById('downloadBtn').addEventListener('click', function () {
+    var pdf = new window.jspdf.jsPDF({
+      orientation: 'portrait',
+    });
+    var canvas = document.getElementById('chicken-count');
+
+    // Get the current image data URL from the canvas
+    var dataURL = canvas.toDataURL();
+
+    // Create an Image object and set the data URL as its source
+    var img = new Image();
+    img.src = dataURL;
+
+    // Set the resolution (DPI) for the image (optional, adjust as needed)
+    var dpi = 300; // Example: 300 dots per inch
+
+    // Calculate the width and height based on the desired DPI
+    var imgWidth = canvas.width * 0.2; // Adjust this factor based on your needs
+    var imgHeight = canvas.height * 0.2; // Adjust this factor based on your needs
+
+    // Add the image to the PDF with improved resolution
+    pdf.setFontSize(15);
+    pdf.setFont('arial');
+    pdf.text("This is an example report that was generated", 70, 10);
+    pdf.addImage(img, 'PNG', 25, 25, imgWidth, imgHeight, 'eggGraph', 'NONE');
+
+    // Save the PDF
+    pdf.save('report.pdf');
+  });
+</script>
+
+
+
+  <script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+  </script>
+</body>
+
+</html>

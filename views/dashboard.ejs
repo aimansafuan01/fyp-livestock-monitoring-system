@@ -115,15 +115,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white " href="../pages/rtl.html">
-            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="material-icons opacity-10">groups</i>
-            </div>
-            <span class="nav-link-text ms-1">Customer List</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white " href="../pages/notifications.html">
+          <a class="nav-link text-white " href="/report">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">summarize</i>
             </div>
@@ -356,7 +348,7 @@
   <script src="../assets/js/plugins/chartjs.min.js"></script>
 
   <%
-    const eggsCollectedArray = weeklyEggsData.map(entry => entry.totalNumEggs);
+    const eggsCollectedArray = weeklyEggsData.map(entry => entry.numEggs);
     const chickDeadArray = weeklyChickDead.map(entry => entry.totalDeadChick);
     const chickenDeadByDay = weeklyChickenDead.reduce((acc, entry) => {
     acc[entry.dayOfTheWeek] = (acc[entry.dayOfTheWeek] || 0) + entry.totalDeadHen + entry.totalDeadRooster;
@@ -373,7 +365,7 @@
     new Chart(ctx, {
       type: "bar",
       data: {
-        labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+        labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
         datasets: [{
           label: "Number of Eggs",
           tension: 0.4,
@@ -454,7 +446,7 @@
     new Chart(ctx2, {
       type: "line",
       data: {
-        labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+        labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
         datasets: [{
           label: "Count",
           tension: 0,
@@ -537,7 +529,7 @@
     new Chart(ctx3, {
       type: "line",
       data: {
-        labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+        labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
         datasets: [{
           label: "Count",
           tension: 0,

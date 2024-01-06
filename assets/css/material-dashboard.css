@@ -27923,4 +27923,8 @@ pre[class*="language-"] {
   }
 }
 
+::-webkit-scrollbar {
+  display: none;
+}
+
 /*# sourceMappingURL=dashboard-free.css.map */

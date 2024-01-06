@@ -105,6 +105,22 @@ export async function submitChickenHealthRecord (healthRecord) {
   return result;
 }
 
+export async function submitHatchRecord (hatchData) {
+  const dateHatch = hatchData.dateHatch;
+  const numEgg = hatchData.numEgg;
+  const numHatch = hatchData.numHatch;
+  const numNotHatch = hatchData.numNotHatch;
+  const hatchRate = hatchData.hatchRate;
+  const incubatorID = hatchData.incubatorID;
+  const brooderID = hatchData.brooderID;
+
+  const [result] = await pool.query(`
+  INSERT INTO \`record-hatch\` (dateHatch, numEgg, numHatch, numNotHatch, hatchRate, incubatorID, brooderID)
+  VALUES (STR_TO_DATE(?, '%d/%m/%Y'), ?, ?, ?, ?, ?, ?)`,
+  [dateHatch, numEgg, numHatch, numNotHatch, hatchRate, incubatorID, brooderID]);
+  return result;
+}
+
 // Update Brooder after casualty
 export async function updateBrooderNumChick (brooderData) {
   const brooderID = brooderData.brooderID;
@@ -146,6 +162,22 @@ export async function addNumChickenCoop (coopData) {
   SET coop.numOfHens = coop.numOfHens + ?,
   coop.numOfRoosters = coop.numOfRoosters + ?
   WHERE coopID = ?`, [+numOfHens, +numOfRoosters, coopID]);
+  return result;
+}
+
+// Add Num Eggs for Farm
+export async function updateTotalEggs (eggData) {
+  const numAccepted = eggData.numAccepted;
+  const numEggs = eggData.numEggs;
+  const numNc = eggData.numNc;
+  console.log('in DataaseJS');
+  console.log(numEggs, numNc, numAccepted);
+
+  const result = await pool.query(`UPDATE eggs
+  SET totalEggAccepted = totalEggAccepted + ?,
+  totalEggNC = totalEggNC + ?,
+  totalEggCollected = totalEggCollected + ?
+  `, [+numAccepted, +numNc, +numEggs]);
   return result;
 }
 
@@ -263,6 +295,68 @@ export async function getAllCoop () {
   return result;
 }
 
+// Get All Chicken Group By Coop ID
+export async function getAllChicken () {
+  const [result] = await pool.query(`
+  SELECT coopID, numOfHens, numOfRoosters
+  FROM coop
+  GROUP BY coopID
+  `);
+  return result;
+}
+
+// Get as of total eggs data
+export async function getAsOfTotalEggs () {
+  const [result] = await pool.query(`
+  SELECT *
+  FROM eggs
+  `);
+  return result;
+}
+
+// Get first date of coop record
+export async function getFirstDateCoopRecord () {
+  const [result] = await pool.query(`
+  SELECT day(recorded_at) AS DAY, MONTHNAME(recorded_at) AS MONTH, year(recorded_at) AS YEAR
+  FROM \`record-cooP\`
+  ORDER BY recorded_at
+  LIMIT 1
+  `);
+  return result;
+}
+
+// Get average eggs daily in a month
+export async function avgDailyEgg () {
+  const [result] = await pool.query(`
+  SELECT sum(numEggs) / count(recordID) AS avgDailyEgg
+  FROM \`record-coop\`
+  WHERE MONTH(current_date()) = MONTH(recorded_at)
+  AND
+  YEAR(current_date()) = YEAR(recorded_at)
+  `);
+  return result;
+}
+
+// Get chicken dead for current month
+export async function getChickenDeadCurrMonth () {
+  const [result] = await pool.query(`
+  SELECT sum(numDeadRooster) AS numDeadRooster, sum(numDeadHen) AS numDeadHen, sum(numDeadHen) + sum(numDeadRooster) AS totalDead FROM \`RECORD-COOP\`
+  WHERE MONTH(current_date()) = MONTH(recorded_at)
+  AND
+  YEAR(current_date()) = YEAR(recorded_at) `);
+  return result;
+}
+
+// Get chick dead for current month
+export async function getChickDeadCurrMonth () {
+  const [result] = await pool.query(`
+  SELECT sum(numDeadRooster) AS numDeadRooster, sum(numDeadHen) AS numDeadHen, sum(numDeadHen) + sum(numDeadRooster) AS totalDead FROM \`RECORD-COOP\`
+  WHERE MONTH(current_date()) = MONTH(recorded_at)
+  AND
+  YEAR(current_date()) = YEAR(recorded_at) `);
+  return result;
+}
+
 // Get All Brooder
 export async function getAllBrooder () {
   const [result] = await pool.query(`
@@ -377,6 +471,19 @@ export async function getHatchingDate () {
   return result;
 }
 
+// Get incubation data for current month (num egg, hatch, not hatch, hatch rate)
+export async function getIncubationData () {
+  const [result] = await pool.query(`
+  SELECT SUM(numEgg) AS numEgg, SUM(numHatch) AS numHatch,
+  sum(numNotHatch) AS numNotHatch, sum(hatchRate) / COUNT(recordHatchID) AS hatchRate,
+  MIN(hatchRate) AS minHatchRate, MAX(hatchRate) AS maxHatchRate
+  FROM \`record-hatch\`
+  WHERE
+  MONTH(created_at) = MONTH(CURDATE())
+  AND YEAR(created_at) = YEAR(CURDATE())`);
+  return result;
+}
+
 // Get today's egg
 export async function getTodayEgg () {
   const [result] = await pool.query(`
@@ -397,13 +504,33 @@ export async function getTodayChickDead () {
   return result;
 }
 
-// Get today's chick dead
+// Get today's chicken dead
 export async function getTodayChickenDead () {
   const [result] = await pool.query(`
   SELECT numDeadHen, numDeadRooster
   FROM \`record-coop\`
   WHERE DATE(recorded_at) = CURDATE()
   ORDER BY coopID`);
+  return result;
+}
+
+// Get monthly chicken dead count
+export async function getMonthlyChickenDead () {
+  const [result] = await pool.query(`
+  SELECT  MONTHNAME(recorded_at) AS monthName, sum(numDeadHen) AS numDeadHen, sum(numDeadRooster) AS numDeadRooster
+  FROM \`record-coop\`
+  WHERE YEAR(current_date()) = YEAR(recorded_at)
+  GROUP BY MONTHNAME(recorded_at)
+  ORDER BY MONTHNAME(recorded_at)`);
+  return result;
+}
+
+// Get total chicken Dead
+export async function getTotalChickenDead () {
+  const [result] = await pool.query(`
+  SELECT SUM(numDeadHen) AS totalDeadHen, SUM(numDeadRooster) AS totalDeadRooster, SUM(numDeadHen)+SUM(numDeadRooster) AS totalChickenDead
+  FROM \`record-coop\`
+  `);
   return result;
 }
 
@@ -420,18 +547,80 @@ export async function getChickToSell () {
 // Get Egg Collected for the week
 export async function getWeeklyEggs () {
   const [result] = await pool.query(`
-  SELECT
-    DAYNAME(DATE(recorded_at)) AS dayOfTheWeek,
-    SUM(numEggs) AS totalNumEggs
-  FROM
-    \`record-coop\`
-  WHERE
-    YEARWEEK(DATE(recorded_at)) = YEARWEEK(CURDATE())
-  GROUP BY
-    DAYOFWEEK(DATE(recorded_at)),
-    DAYNAME(DATE(recorded_at))
-  ORDER BY
-    DAYOFWEEK(DATE(recorded_at))`);
+  SELECT DATE(recorded_at) AS dayOfTheWeek, numEggs
+  FROM \`record-coop\`
+  WHERE WEEK(recorded_at) = WEEK(CURDATE())
+  AND MONTH(recorded_at) = MONTH(CURDATE())
+  AND YEAR(recorded_at) = YEAR(CURDATE())
+  ORDER BY recorded_at`);
+  return result;
+}
+
+// Get daily Egg Collected for the month
+export async function getDailyEggsInAMonth () {
+  const [result] = await pool.query(`
+  SELECT DATE(recorded_at) AS dayOfTheWeek, numEggs
+  FROM \`record-coop\`
+  WHERE MONTH(recorded_at) = MONTH(CURDATE())
+  AND YEAR(recorded_at) = YEAR(CURDATE())
+  ORDER BY recorded_at`);
+  return result;
+}
+
+// Get daily Chick Death for the month
+export async function getDailyChickDeathInAMonth () {
+  const [result] = await pool.query(`
+  SELECT numDeadChick
+  FROM \`record-brooder\`
+  WHERE MONTH(created_at) = MONTH(CURDATE())
+  AND YEAR(created_at) = YEAR(CURDATE())
+  `);
+  return result;
+}
+
+// Get total Chick Death for current Month
+export async function getTotalChickDeathCurrMonth () {
+  const [result] = await pool.query(`
+  SELECT SUM(numDeadChick) AS totalDeadChick
+  FROM \`record-brooder\`
+  WHERE MONTH(created_at) = MONTH(CURDATE())`);
+  return result;
+}
+
+// Get cummulative total Chick Death
+export async function getCumTotalChickDeath () {
+  const [result] = await pool.query(`
+  SELECT SUM(numDeadChick) AS totalDeadChick
+  FROM \`record-brooder\`
+  `);
+  return result;
+}
+
+// Get Egg Collected for current month
+export async function getCurrMonthEggs () {
+  const [result] = await pool.query(`
+    SELECT
+        SUM(numEggs) AS totalNumEggs
+    FROM
+        \`record-coop\`
+    WHERE
+        MONTH(DATE(recorded_at)) = MONTH(CURDATE())
+        AND YEAR(DATE(recorded_at)) = YEAR(CURDATE())
+    `);
+  return result;
+}
+
+// Get Daily Egg Collected for current month
+export async function getDailyCurrMonthEggs () {
+  const [result] = await pool.query(`
+    SELECT
+        SUM(numEggs) AS totalNumEggs
+    FROM
+        \`record-coop\`
+    WHERE
+        MONTH(DATE(recorded_at)) = MONTH(CURDATE())
+        AND YEAR(DATE(recorded_at)) = YEAR(CURDATE())
+    `);
   return result;
 }
 
@@ -454,7 +643,7 @@ export async function getWeeklyChickDead () {
   return result;
 }
 
-// Get dead chick for the week
+// Get dead chicken for the week
 export async function getWeeklyChickenDead () {
   const [result] = await pool.query(`
   SELECT
@@ -488,16 +677,18 @@ export async function getNumberOfChicken () {
 // Get number of eggs monthly
 export async function getNumEggsMonthly () {
   const [result] = await pool.query(`
-  SELECT
+    SELECT
       MONTH(recorded_at) AS month,
       YEAR(recorded_at) AS year,
       SUM(numEggs) AS numEggs
-  FROM
+    FROM
       \`record-coop\`
-  GROUP BY
+    WHERE
+      YEAR(current_date()) = YEAR(recorded_at)
+    GROUP BY
       YEAR(recorded_at), MONTH(recorded_at)
-  ORDER BY
-    month
+    ORDER BY
+      month
 `);
   return result;
 }
@@ -550,6 +741,24 @@ export async function getHealthStatus () {
 export async function getChickenHealthRecord () {
   const [result] = await pool.query(`
   SELECT * FROM \`record-chicken-health\``);
+  return result;
+}
+
+// Get first incubation date
+export async function getFirstIncubationDate () {
+  const [result] = await pool.query(`
+  SELECT DATE(created_at) AS firstIncubationDate FROM \`record-hatch\`
+  ORDER BY DATE(created_at)
+  LIMIT 1`);
+  return result;
+}
+
+// Get total incubation data from first date
+export async function getTotalIncubationData () {
+  const [result] = await pool.query(`
+  SELECT SUM(numEgg) AS totalEggIncubated, SUM(numHatch) AS totalEggHatch
+  FROM \`record-hatch\`
+  `);
   return result;
 }
 

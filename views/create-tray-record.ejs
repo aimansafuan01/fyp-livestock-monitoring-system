@@ -94,15 +94,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white " href="../pages/rtl.html">
-            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="material-icons opacity-10">groups</i>
-            </div>
-            <span class="nav-link-text ms-1">Customer List</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white " href="../pages/notifications.html">
+          <a class="nav-link text-white " href="/report">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">summarize</i>
             </div>
@@ -150,9 +142,9 @@
       const currDate = new Date().toLocaleDateString('en-MY');
       console.log(incubatorResult);
       console.log(numEggsInTray);
-      const trayID ="-";
-      const numEggs ="-";
-      const dateOut ="-";
+      let trayID ="-";
+      let numEggs ="-";
+      let dateOut ="-";
       if (numEggsInTray[0] && numEggsInTray[0].trayID !== undefined) {
         trayID = numEggsInTray[0].trayID
         numEggs = numEggsInTray[0].numEggs
@@ -216,7 +208,7 @@
                 <div class="row align-center">
                     <p class="mb-0">Origin: <b><%= trayID %></b></p>
                     <p class="mb-0">Number of Eggs: <b><%= numEggs %></b></p>
-                    <p>Date Hatch: <b><%= dateOut %></b></p>
+                    <p>Date Hatch: <b><%= dateOut.toLocaleDateString('en-MY') %></b></p>
                 </div>
               </div>
             </div>
