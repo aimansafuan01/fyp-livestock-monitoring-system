@@ -4,7 +4,7 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import {
   login, submitCoopRecord, getAllCoop, getAllBrooder,
-  submitBrooderRecord, updateBrooderNumChick, minusNumChickenCoop,
+  submitBrooderRecord, minusBrooderNumChick, minusNumChickenCoop,
   getAllIncubator, submitTrayRecord, updateIncubatorEgg,
   getNumEggsInBasket, getIncubatorRecord, getHatchingDate,
   getTrayToBasketRecord, addChickToBrooder, updateIncubator,
@@ -18,7 +18,7 @@ import {
   updateTotalEggs, getAsOfTotalEggs, getFirstDateCoopRecord, avgDailyEgg, getChickenDeadCurrMonth,
   getMonthlyChickenDead, submitHatchRecord, getIncubationData, getFirstIncubationDate,
   getTotalChickenDead, getTotalIncubationData, getDailyEggsInAMonth, getDailyChickDeathInAMonth,
-  getTotalChickDeathCurrMonth, getCumTotalChickDeath
+  getTotalChickDeathCurrMonth, getCumTotalChickDeath, submitChickenArrival, getBatchData
 } from './database.js';
 import { sendAlert } from './mailer.js';
 
@@ -128,7 +128,6 @@ app.get('/coop/create', (req, res) => {
 
 // Get Chicken Record Page
 app.get('/chicken/create', async (req, res) => {
-  console.log(req.query.id);
   const coopIDS = await getCoopIDs();
   const data = {
     id: req.query.id,
@@ -181,6 +180,12 @@ app.get('/chicken-health-record', async (req, res) => {
   res.render('chicken-health-record', { healthRecord, healthStatus });
 });
 
+// Get Arrival Chicken Page
+app.get('/arrival-chicken-record', async (req, res) => {
+  const batchData = await getBatchData();
+  res.render('arrival-chicken-record', { batchData });
+});
+
 // Get Create Chicken Health Record Page
 app.get('/create-chicken-health-record', async (req, res) => {
   try {
@@ -188,6 +193,19 @@ app.get('/create-chicken-health-record', async (req, res) => {
     const healthSymptoms = await getHealthSymptoms();
     const healthStatus = await getHealthStatus();
     res.render('create-chicken-health-record', { coopIDs, healthSymptoms, healthStatus });
+  } catch (error) {
+    res.status(500)
+      .send('Internal Server Error');
+  }
+});
+
+// Get Create Arrival Chicken Record Page
+app.get('/create-arrival-chicken-record', async (req, res) => {
+  try {
+    const coopIDs = await getCoopIDs();
+    const coopIDData = coopIDs.map((data) => data.coopID);
+
+    res.render('create-arrival-chicken-record', { coopIDData });
   } catch (error) {
     res.status(500)
       .send('Internal Server Error');
@@ -205,6 +223,41 @@ app.get('/update-surveillance', async (req, res) => {
     }
   } catch (error) {
     console.error('Error during updating coop record', error);
+    res.status(500)
+      .send('Internal Server Error');
+  }
+});
+
+app.post('/submit-arrival-chicken-record', async (req, res) => {
+  const origin = req.body.origin;
+  const numHens = req.body.numHens;
+  const numRoosters = req.body.numRoosters;
+  const placeTo = req.body.placeTo;
+  const ageChicken = req.body.ageChicken;
+
+  const batchData = {
+    origin,
+    numHens,
+    numRoosters,
+    placeTo,
+    ageChicken
+  };
+
+  const coopData = {
+    coopID: placeTo,
+    numOfHens: numHens,
+    numOfRoosters: numRoosters
+  };
+
+  try {
+    const submitArrivalChickenRecord = await submitChickenArrival(batchData);
+    const updateNumChicken = await addNumChickenCoop(coopData);
+    if (submitArrivalChickenRecord && updateNumChicken) {
+      res.status(200)
+        .redirect('/arrival-chicken-record');
+    }
+  } catch (error) {
+    console.error('Error during submitting coop record', error);
     res.status(500)
       .send('Internal Server Error');
   }
@@ -275,7 +328,7 @@ app.post('/submit-brooder-record', async (req, res) => {
     };
     const resultSubmit = await submitBrooderRecord(brooderData);
     const resultUpdateMRChick = await updateBrooderMR(brooderData);
-    const resultUpdateNumChick = await updateBrooderNumChick(brooderData);
+    const resultUpdateNumChick = await minusBrooderNumChick(brooderData);
     const surveillanceThreshold = await getSurveillance();
 
     if (resultUpdateMRChick[1] > surveillanceThreshold[0].chickMRThreshold) {

@@ -121,8 +121,19 @@ export async function submitHatchRecord (hatchData) {
   return result;
 }
 
+export async function submitChickenArrival (batchData) {
+  const { origin, numHens, numRoosters, placeTo, ageChicken } = batchData;
+
+  const [result] = await pool.query(`
+  INSERT INTO \`record-batch\` (origin, numHens, numRoosters, placeTo, ageChicken)
+  VALUES (?, ?, ?, ?, ?)`,
+  [origin, numHens, numRoosters, placeTo, ageChicken]);
+
+  return result;
+}
+
 // Update Brooder after casualty
-export async function updateBrooderNumChick (brooderData) {
+export async function minusBrooderNumChick (brooderData) {
   const brooderID = brooderData.brooderID;
   const numDeadChick = +brooderData.numDeadChick;
   const result = await pool.query(`UPDATE BROODER
@@ -482,6 +493,14 @@ export async function getIncubationData () {
   MONTH(created_at) = MONTH(CURDATE())
   AND YEAR(created_at) = YEAR(CURDATE())`);
   return result;
+}
+
+// Get chicken batch data
+export async function getBatchData () {
+  const [result] = await pool.query(`
+  SELECT * FROM \`record-batch\`
+  ORDER BY arrival_date`);
+  return [result];
 }
 
 // Get today's egg
