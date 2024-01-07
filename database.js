@@ -781,6 +781,15 @@ export async function getTotalIncubationData () {
   return result;
 }
 
+// Register account
+export async function register (accountData) {
+  const { username, password } = accountData;
+  const [result] = await pool.query(`
+  INSERT INTO USER (username, password) VALUES (?, ?)`,
+  [username, password]);
+  return result;
+}
+
 pool.connect(err => {
   if (err) {
     console.error('Error connecting to MySQL:', err);

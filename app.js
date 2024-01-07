@@ -2,6 +2,7 @@ import express from 'express';
 import mysql2 from 'mysql2';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
+import session from 'express-session';
 import {
   login, submitCoopRecord, getAllCoop, getAllBrooder,
   submitBrooderRecord, minusBrooderNumChick, minusNumChickenCoop,
@@ -18,7 +19,8 @@ import {
   updateTotalEggs, getAsOfTotalEggs, getFirstDateCoopRecord, avgDailyEgg, getChickenDeadCurrMonth,
   getMonthlyChickenDead, submitHatchRecord, getIncubationData, getFirstIncubationDate,
   getTotalChickenDead, getTotalIncubationData, getDailyEggsInAMonth, getDailyChickDeathInAMonth,
-  getTotalChickDeathCurrMonth, getCumTotalChickDeath, submitChickenArrival, getBatchData
+  getTotalChickDeathCurrMonth, getCumTotalChickDeath, submitChickenArrival, getBatchData,
+  register
 } from './database.js';
 import { sendAlert } from './mailer.js';
 
@@ -34,6 +36,12 @@ const connection = mysql2.createConnection({
   password: process.env.MYSQL_PASSWORD,
   database: process.env.MYSQL_DATABASE
 });
+
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: true
+}));
 
 connection.connect(err => {
   if (err) {
@@ -54,7 +62,10 @@ app.use(express.static('public'));
 
 // Login
 app.get(['/', '/login'], (req, res) => {
-  res.render('sign-in');
+  const errorMessage = req.session.errorMessage;
+  delete req.session.errorMessage;
+
+  res.render('sign-in', { errorMessage });
 });
 
 // Dashboard
@@ -81,6 +92,11 @@ app.get('/home', async (req, res) => {
     monthlyEggs,
     surveillance
   });
+});
+
+// Register employee
+app.get('/register', (req, res) => {
+  res.render('register');
 });
 
 // Daily Record
@@ -608,7 +624,30 @@ app.post('/login', async (req, res) => {
     res.status(200)
       .redirect('/home');
   } else {
-    res.status(401).send('Invalid credentials');
+    req.session.errorMessage = 'Invalid Username Or Password';
+    res.status(401).redirect('/login');
+  }
+});
+
+// Register account
+app.post('/submit-register-account', async (req, res) => {
+  const { username, password } = req.body;
+  const account = {
+    username,
+    password
+  };
+
+  try {
+    const submitRegisterAccount = await register(account);
+
+    if (submitRegisterAccount) {
+      res.status(200)
+        .redirect('/home');
+    }
+  } catch (error) {
+    console.error('Error during account registration', error);
+    res.status(500)
+      .send('Internal Server Error');
   }
 });
 
