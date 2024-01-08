@@ -13,12 +13,6 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. -->
 
 <%
-  console.log(todayChickDeadata)
-
-  const sumOfChickToSell = chickToSellData.reduce((accumulator, currentValue) =>{
-  return accumulator + currentValue.availableChick;
-  }, 0)
-
   const currDate = new Date().toLocaleDateString('en-MY');
 
   const surveillanceBG = surveillance.length > 0 ? 'bg-gradient-danger' : 'bg-gradient-success';
