@@ -13,17 +13,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. -->
 
 <%
-  const sumOfEggs = eggData.reduce((accumulator, currentValue) => {
-    return accumulator + currentValue.numEggs;
-  }, 0);
-
-  const sumOfDeadChicks = chickDeadData.reduce((accumulator, currentValue) =>{
-    return accumulator + currentValue.numDeadChick;
-  }, 0)
-
-  const sumOfDeadChicken = chickenDeadData.reduce((accumulator, currentValue) =>{
-    return accumulator + +currentValue.numDeadHen + +currentValue.numDeadRooster;
-  }, 0)
+  console.log(todayChickDeadata)
 
   const sumOfChickToSell = chickToSellData.reduce((accumulator, currentValue) =>{
   return accumulator + currentValue.availableChick;
@@ -160,6 +150,9 @@
     <!---------------- End BreadCrumb ------------------>
     <div class="container-fluid py-4">
       <div class="row mb-6 d-flex justify-content-center">
+        <div class="col-6 align-self-center text-center p-3 bg-gradient-success">
+          <span class="material-symbols-outlined" style="color: white; font-size:90px">
+            browse_activity
         <div class="col-6 align-self-center text-center <%= surveillanceBGSize %> <%= surveillanceBG %>">
           <span class="material-symbols-outlined" style="color: white; font-size:60px">
             <%= surveillanceIcon %>
@@ -175,8 +168,8 @@
                 <i class="material-icons opacity-10">egg</i>
               </div>
               <div class="text-end pt-1">
-                <p class="text-sm mb-0 text-capitalize">Today's Egg</p>
-                <h4 class="mb-0"><%= sumOfEggs %></h4>
+                <p class="text-sm mb-0 text-capitalize">Today's Egg Collected</p>
+                <h4 class="mb-0"><%= todayEggData %></h4>
               </div>
             </div>
           </div>
@@ -190,7 +183,7 @@
               </div>
               <div class="text-end pt-1">
                 <p class="text-sm mb-0 text-capitalize">Today's Chick Dead</p>
-                <h4 class="mb-0"><%= sumOfDeadChicks %></h4>
+                <h4 class="mb-0"><%= todayChickDeadata[0] %></h4>
               </div>
             </div>
           </div>
@@ -203,8 +196,8 @@
                 <i class="material-icons opacity-10">priority_high</i>
               </div>
               <div class="text-end pt-1">
-                <p class="text-sm mb-0 text-capitalize">Today's Chicken Dead</p>
-                <h4 class="mb-0"><%= sumOfDeadChicken %></h4>
+                <p class="text-sm mb-0 text-capitalize">Today's Hen Dead</p>
+                <h4 class="mb-0"><%= henDeadData[0] %></h4>
               </div>
             </div>
           </div>
@@ -217,8 +210,8 @@
                 <i class="material-icons opacity-10">sell</i>
               </div>
               <div class="text-end pt-1">
-                <p class="text-sm mb-0 text-capitalize">Chicks Available For Sale</p>
-                <h4 class="mb-0">~<%= sumOfChickToSell %></h4>
+                <p class="text-sm mb-0 text-capitalize">Today's Rooster Dead</p>
+                <h4 class="mb-0"><%= roosterDeadData %></h4>
               </div>
             </div>
           </div>
