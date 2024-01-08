@@ -14,6 +14,12 @@
 
 <%
   const currDate = new Date().toLocaleDateString('en-MY');
+
+  const surveillanceBG = surveillance.length > 0 ? 'bg-gradient-danger' : 'bg-gradient-success';
+  const surveillanceIcon = surveillance.length > 0 ? 'warning' : 'nest_cam_iq_outdoor'
+  const surveillanceBGSize = surveillance.length > 0 ? 'p-8' : 'p-4'
+
+
 %>
 
 
@@ -46,7 +52,7 @@
 
 <body class="g-sidenav-show  bg-gray-200">
   <aside
-    class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3   bg-gradient-dark"
+    class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-gradient-dark"
     id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
@@ -77,7 +83,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white " href="../pages/billing.html">
+          <a class="nav-link text-white " href="/chicken-health-record">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">receipt_long</i>
             </div>
@@ -85,23 +91,23 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white " href="../pages/virtual-reality.html">
+          <a class="nav-link text-white " href="/arrival-chicken-record">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="material-icons opacity-10">receipt_long</i>
+              <i class="material-icons opacity-10">add</i>
             </div>
-            <span class="nav-link-text ms-1">Sales Record</span>
+            <span class="nav-link-text ms-1">Arrival Chicken Record</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white " href="../pages/rtl.html">
+          <a class="nav-link text-white " href="/surveillance-record">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="material-icons opacity-10">groups</i>
+              <i class="material-icons opacity-10">visibility</i>
             </div>
-            <span class="nav-link-text ms-1">Customer List</span>
+            <span class="nav-link-text ms-1">Surveillance Record</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white " href="../pages/notifications.html">
+          <a class="nav-link text-white " href="/report">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">summarize</i>
             </div>
@@ -112,27 +118,11 @@
           <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">Account pages</h6>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white " href="../pages/profile.html">
+          <a class="nav-link text-white " href="/register">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">person</i>
             </div>
-            <span class="nav-link-text ms-1">Profile</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white " href="../pages/sign-in.html">
-            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="material-icons opacity-10">login</i>
-            </div>
-            <span class="nav-link-text ms-1">Sign In</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white " href="../pages/sign-up.html">
-            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="material-icons opacity-10">assignment</i>
-            </div>
-            <span class="nav-link-text ms-1">Sign Up</span>
+            <span class="nav-link-text ms-1">Register Employee</span>
           </a>
         </li>
       </ul>
@@ -157,6 +147,9 @@
         <div class="col-6 align-self-center text-center p-3 bg-gradient-success">
           <span class="material-symbols-outlined" style="color: white; font-size:90px">
             browse_activity
+        <div class="col-6 align-self-center text-center <%= surveillanceBGSize %> <%= surveillanceBG %>">
+          <span class="material-symbols-outlined" style="color: white; font-size:60px">
+            <%= surveillanceIcon %>
           </span>
         </div>
       </div>
@@ -334,7 +327,7 @@
   <script src="../assets/js/plugins/chartjs.min.js"></script>
 
   <%
-    const eggsCollectedArray = weeklyEggsData.map(entry => entry.totalNumEggs);
+    const eggsCollectedArray = weeklyEggsData.map(entry => entry.numEggs);
     const chickDeadArray = weeklyChickDead.map(entry => entry.totalDeadChick);
     const chickenDeadByDay = weeklyChickenDead.reduce((acc, entry) => {
     acc[entry.dayOfTheWeek] = (acc[entry.dayOfTheWeek] || 0) + entry.totalDeadHen + entry.totalDeadRooster;
@@ -351,7 +344,7 @@
     new Chart(ctx, {
       type: "bar",
       data: {
-        labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+        labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
         datasets: [{
           label: "Number of Eggs",
           tension: 0.4,
@@ -432,7 +425,7 @@
     new Chart(ctx2, {
       type: "line",
       data: {
-        labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+        labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
         datasets: [{
           label: "Count",
           tension: 0,
@@ -515,7 +508,7 @@
     new Chart(ctx3, {
       type: "line",
       data: {
-        labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+        labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
         datasets: [{
           label: "Count",
           tension: 0,
