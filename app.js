@@ -70,8 +70,8 @@ app.get(['/', '/login'], (req, res) => {
 
 // Dashboard
 app.get('/home', async (req, res) => {
-  const eggData = await getTodayEgg();
-  const chickDeadData = await getTodayChickDead();
+  const todayEgg = await getTodayEgg();
+  const todayChickDead = await getTodayChickDead();
   const chickenDeadData = await getTodayChickenDead();
   const chickToSellData = await getChickToSell();
   const weeklyEggsData = await getWeeklyEggs();
@@ -79,11 +79,17 @@ app.get('/home', async (req, res) => {
   const weeklyChickenDead = await getWeeklyChickenDead();
   const numOfChicken = await getNumberOfChicken();
   const monthlyEggs = await getNumEggsMonthly();
+  const roosterDeadData = chickenDeadData.map((data) => data.todayRoosterDead);
+  const henDeadData = chickenDeadData.map((data) => data.todayRoosterDead);
+  const todayEggData = todayEgg.map((data) => data.todayEggCollected);
+  const todayChickDeadata = todayChickDead.map((data) => data.todayChickDead);  
+  
   const surveillance = await getRecordSurveillance();
   res.render('dashboard', {
-    eggData,
-    chickDeadData,
-    chickenDeadData,
+    todayEggData,
+    todayChickDeadata,
+    roosterDeadData,
+    henDeadData,
     chickToSellData,
     weeklyEggsData,
     weeklyChickDead,
