@@ -221,30 +221,30 @@ export async function getHatchingDate () {
 // Get today's egg
 export async function getTodayEgg () {
   const [result] = await pool.query(`
-  SELECT numEggs
+  SELECT SUM(numEggs) AS todayEggCollected
   FROM \`record-coop\`
   WHERE DATE(recorded_at) = CURDATE()
-  ORDER BY coopID`);
+  `);
   return result;
 }
 
 // Get today's chick dead
 export async function getTodayChickDead () {
   const [result] = await pool.query(`
-  SELECT numDeadChick
+  SELECT SUM(numDeadChick) AS todayChickDead
   FROM \`record-brooder\`
   WHERE DATE(created_at) = CURDATE()
-  ORDER BY brooderID`);
+  `);
   return result;
 }
 
-// Get today's chick dead
+// Get today's chicken dead
 export async function getTodayChickenDead () {
   const [result] = await pool.query(`
-  SELECT numDeadHen, numDeadRooster
+  SELECT SUM(numDeadHen) AS todayHenDead, SUM(numDeadRooster) AS todayRoosterDead
   FROM \`record-coop\`
   WHERE DATE(recorded_at) = CURDATE()
-  ORDER BY coopID`);
+  `);
   return result;
 }
 
