@@ -70,7 +70,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white active bg-gradient-warning" href="/daily-record">
+          <a class="nav-link text-white" href="/daily-record">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">inventory</i>
             </div>
@@ -94,7 +94,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white " href="/surveillance-record">
+          <a class="nav-link text-white active bg-gradient-warning" href="/surveillance-record">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">visibility</i>
             </div>
@@ -133,43 +133,114 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/home">Dashboard</a></li>
-            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/daily-record">Daily Record</a></li>
-            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/brooder/view">Brooder</a></li>
-            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Brooder Record</li>
+            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Surveillance Record</li>
           </ol>
-          <h4 class="font-weight-bolder mb-0">Brooder Record</h4>
+          <h4 class="font-weight-bolder mb-0">Surveillance Record</h4>
         </nav>
       </div>
     </nav>
     <!------------------------------- Top Navbar ----------------------->
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-12">
+              <div class="card my-4">
+                <div class="card-body px-0 pb-2">
+                  <div class="table-responsive p-0">
+                    <table class="table align-items-center mb-0">
+                      <thead>
+                        <tr>
+                          <th class="text-uppercase text-secondary text-lg font-weight-bolder">Record ID</th>
+                          <th class="text-uppercase text-secondary text-lg font-weight-bolder ps-2">Origin</th>
+                          <th class="text-center text-uppercase text-secondary text-lg font-weight-bolder">Status
+                          </th>
+                          <th class="text-center text-uppercase text-secondary text-lg font-weight-bolder">Date
+                          </th>
+                          <th class="text-center text-uppercase text-secondary text-lg font-weight-bolder">Action
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <% 
+                          for (let i=0; i<recordSurveillanceData.length; i++) {
+                            let surveillanceID = recordSurveillanceData[i].surveillanceID;
+                            let status = recordSurveillanceData[i].status;
+                            let badgeBG = recordSurveillanceData[i].status === 'Resolved' ? 'bg-gradient-dark' : 'bg-gradient-danger';
+                            let date = recordSurveillanceData[i].created_at.toLocaleDateString('en-MY');
+                            let origin = '-';
+                            let originDesc = '-';
+                            let modalStatus = recordSurveillanceData[i].status === 'Resolved' ? 'disabled' : '';
+                            
+                            if (recordSurveillanceData[i].brooderID != null) {
+                              origin = recordSurveillanceData[i].brooderID;
+                              originDesc = 'Brooder';
+                            }
 
+                            if (recordSurveillanceData[i].incubatorID != null) {
+                              origin = recordSurveillanceData[i].incubatorID;
+                              originDesc = 'Incubator';
+                            }
 
-    <div class="p-3 mx-5 border border-secondary rounded shadow-lg mb-4">
-      <form class="needs-validation" action="/submit-brooder-record" method="post" role="form" class="text-start">
-        <div id="formRepeat">
-          <div class="row border px-2 py-2 mx-1">
-            <div class="row mx-1">
-              Brooder ID
-            </div>
-            <div class="row mt-1">
-              <div class="col-12 col-md-2">
-                <input type="text" class="form-control text-black ps-2" name="brooderID" value="<%= id %>" readonly>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col pb-2">
-                <label for="numDeadChick" class="form-label pt-2 mb-0">Number of Dead Chick</label>
-                <input type="number" class="form-control p-2" name="numDeadChick"
-                  placeholder="Enter number of dead Hens" min="0" value="0">
+                            if (recordSurveillanceData[i].coopID != null) {
+                              origin = recordSurveillanceData[i].coopID;
+                              originDesc = 'Coop';
+                            }
+                        %>
+                        <tr>
+                          <td class="align-middle text-center">
+                            <div class="d-flex px-2 py-1">
+                              <div class="justify-content-center">
+                                <h6 class="mb-0 text-md ps-2"><%= surveillanceID %></h6>
+                              </div>
+                            </div>
+                          </td>
+                          <td>
+                            <p class="text-md font-weight-bold mb-0"><%= origin %></p>
+                            <p class="text-xs text-secondary mb-0"><%= originDesc %></p>
+                          </td>
+                          <td class="align-middle text-center text-md">
+                            <span class="badge badge-md <%= badgeBG %>"><%= status %></span>
+                          </td>
+                          <td class="align-middle text-center">
+                            <span class="text-secondary text-md font-weight-bold opacity-7"><%= date %></span>
+                          </td>
+                          <td class="align-middle text-center">
+                              <% if (btnBG=modalStatus==='disabled') continue; %>
+                              <button type="button" class="btn btn-sm btn-success p-3 px-5" data-bs-toggle="modal" data-bs-target="#confirmationModal" <%= modalStatus %>>
+                                Resolve
+                              </button>
+                          </td>
+                              
+                              <!-- Modal -->
+                              <div class="modal fade" id="confirmationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h1 class="modal-title fs-5" id="staticBackdropLabel">Update Status?</h1>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                      This will mark the surveillance status as <b><i>Resolved</i></b>.
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                      <button type="button" class="btn btn-warning" onclick="location.href='/update-surveillance?id=<%= surveillanceID %>'">Confirm</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                          
+                        </tr>
+                        <% } %>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="col-12 mt-3 align-self-end d-flex">
-          <button class="btn btn-warning" type="submit">Submit form</button>
-        </div>
-      </form>
-    </div>
+
+          
 
     <!--   Core JS Files   -->
     <script src="/assets/js/core/popper.min.js"></script>
