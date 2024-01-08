@@ -1,4 +1,4 @@
-- Academic Final Year Project for Information System Engineering
+- Academic Final Year Project for Tiroi Farm PLT
 - Some of the UI components and pages are taken from https://www.creative-tim.com/product/material-dashboard
 - Uses ExpressJS, EJS, Bootstrap, MySQL
 - Ongoing project
