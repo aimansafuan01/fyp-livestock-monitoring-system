@@ -16,7 +16,7 @@
   const currDate = new Date().toLocaleDateString('en-MY');
 
   const surveillanceBG = surveillance.length > 0 ? 'bg-gradient-danger' : 'bg-gradient-success';
-  const surveillanceIcon = surveillance.length > 0 ? 'warning' : 'nest_cam_iq_outdoor'
+  const surveillanceIcon = surveillance.length > 0 ? 'warning' : 'browse_activity'
   const surveillanceBGSize = surveillance.length > 0 ? 'p-8' : 'p-4'
 
 
@@ -144,11 +144,8 @@
     <!---------------- End BreadCrumb ------------------>
     <div class="container-fluid py-4">
       <div class="row mb-6 d-flex justify-content-center">
-        <div class="col-6 align-self-center text-center p-3 bg-gradient-success">
-          <span class="material-symbols-outlined" style="color: white; font-size:90px">
-            browse_activity
         <div class="col-6 align-self-center text-center <%= surveillanceBGSize %> <%= surveillanceBG %>">
-          <span class="material-symbols-outlined" style="color: white; font-size:60px">
+          <span class="material-symbols-outlined" style="color: white; font-size:90px">
             <%= surveillanceIcon %>
           </span>
         </div>
@@ -201,7 +198,7 @@
             <div class="card-header p-3 pt-2">
               <div
                 class="icon icon-lg icon-shape bg-gradient-dark shadow-dark text-center border-radius-xl mt-n4 position-absolute">
-                <i class="material-icons opacity-10">sell</i>
+                <i class="material-icons opacity-10">priority_high</i>
               </div>
               <div class="text-end pt-1">
                 <p class="text-sm mb-0 text-capitalize">Today's Rooster Dead</p>
