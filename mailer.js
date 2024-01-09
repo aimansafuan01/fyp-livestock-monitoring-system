@@ -44,7 +44,7 @@ export async function sendAlert (req, res) {
 
   const message = {
     from: process.env.EMAIL_USERNAME,
-    to: 'fipaba6311@watrf.com',
+    to: 'witewey879@tanlanav.com',
     subject: 'POSSIBLE OUTBREAK DETECTED',
     html: emailBody
   };

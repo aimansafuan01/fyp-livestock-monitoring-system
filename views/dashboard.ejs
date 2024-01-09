@@ -188,7 +188,7 @@
               </div>
               <div class="text-end pt-1">
                 <p class="text-sm mb-0 text-capitalize">Today's Hen Dead</p>
-                <h4 class="mb-0"><%= henDeadData[0] %></h4>
+                <h4 class="mb-0"><%= todayHenDeadData[0] %></h4>
               </div>
             </div>
           </div>
@@ -202,7 +202,7 @@
               </div>
               <div class="text-end pt-1">
                 <p class="text-sm mb-0 text-capitalize">Today's Rooster Dead</p>
-                <h4 class="mb-0"><%= roosterDeadData %></h4>
+                <h4 class="mb-0"><%= todayRoosterDeadData %></h4>
               </div>
             </div>
           </div>
@@ -303,7 +303,7 @@
             </div>
             <div class="card-body">
               <h6 class="mb-0 "> Eggs Performance </h6>
-              <p class="text-sm "> Total chick mortality in farm </p>
+              <p class="text-sm "> Number of eggs collected monthly </p>
               <hr class="dark horizontal">
               <div class="d-flex ">
                 <i class="material-icons text-sm my-auto me-1">schedule</i>
@@ -323,25 +323,12 @@
   <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/chartjs.min.js"></script>
 
-  <%
-    const eggsCollectedArray = weeklyEggsData.map(entry => entry.numEggs);
-    const chickDeadArray = weeklyChickDead.map(entry => entry.totalDeadChick);
-    const chickenDeadByDay = weeklyChickenDead.reduce((acc, entry) => {
-    acc[entry.dayOfTheWeek] = (acc[entry.dayOfTheWeek] || 0) + entry.totalDeadHen + entry.totalDeadRooster;
-    return acc;
-    }, {});
-    const chickenDeadArray = Object.values(chickenDeadByDay)
-    const numOfChickenArray = numOfChicken.map(chicken => [chicken.totalHens, chicken.totalRoosters]);
-    const chickenArray = numOfChickenArray.flat();
-    const monthlyEggArray = monthlyEggs.map(entry => entry.numEggs);
-  %>
   <script>
     var ctx = document.getElementById("chart-bars").getContext("2d");
-
     new Chart(ctx, {
       type: "bar",
       data: {
-        labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
         datasets: [{
           label: "Number of Eggs",
           tension: 0.4,
@@ -349,7 +336,7 @@
           borderRadius: 4,
           borderSkipped: false,
           backgroundColor: "rgba(255, 255, 255, .8)",
-          data: [<%= eggsCollectedArray %>],
+          data: [<%= numEggsCurrWeekData %>],
           maxBarThickness: 6,
         },],
       },
@@ -422,7 +409,7 @@
     new Chart(ctx2, {
       type: "line",
       data: {
-        labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
         datasets: [{
           label: "Count",
           tension: 0,
@@ -435,7 +422,7 @@
           borderWidth: 4,
           backgroundColor: "transparent",
           fill: true,
-          data: [<%= chickDeadArray %>],
+          data: [<%= numChickDeadCurrWeekData %>],
           maxBarThickness: 6,
           skipNullOrUndefined: true
         }],
@@ -517,7 +504,7 @@
           borderWidth: 4,
           backgroundColor: "transparent",
           fill: true,
-          data: [<%= chickenDeadArray %>],
+          data: [<%= numChickenDeadCurrWeekData %>],
           maxBarThickness: 6
 
         }],
@@ -582,7 +569,6 @@
       },
     });
 
-
     var ctx4 = document.getElementById("chart-bars-chicken").getContext("2d");
 
       new Chart(ctx4, {
@@ -596,9 +582,12 @@
             borderRadius: 4,
             borderSkipped: false,
             backgroundColor: "rgba(255, 255, 255, .8)",
-            data: [<%= chickenArray %>],
+            data: [<%= numOfChicken[0].totalHens %>, <%= numOfChicken[0].totalRoosters %>],
             maxBarThickness: 6,
-          },],
+          },
+          {
+            
+          }],
         },
         options: {
           responsive: true,
@@ -679,7 +668,7 @@
               borderWidth: 4,
               backgroundColor: "transparent",
               fill: true,
-              data: [<%= monthlyEggArray %>],
+              data: [<%= numEggsMonthlyData %>],
               maxBarThickness: 6
 
             }],

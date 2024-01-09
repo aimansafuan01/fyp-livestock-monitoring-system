@@ -10,7 +10,7 @@ import {
   getNumEggsInBasket, getIncubatorRecord, getHatchingDate,
   getTrayToBasketRecord, addChickToBrooder, updateIncubator,
   getTodayEgg, getTodayChickDead, getTodayChickenDead, getChickToSell,
-  getWeeklyEggs, getWeeklyChickDead, getWeeklyChickenDead,
+  getNumEggCurrWeek, getNumChickDeadCurrWeek, getNumChickenDeadCurrWeek,
   getNumberOfChicken, getNumEggsMonthly, updateBrooderMR, getSurveillance,
   submitSurveillanceRecord, getRecordSurveillance, updateSurveillanceStatus,
   getAllRecordSurveillance, updateCoopMR, getCoopIDs, submitTransferRecord,
@@ -70,32 +70,41 @@ app.get(['/', '/login'], (req, res) => {
 
 // Dashboard
 app.get('/home', async (req, res) => {
-  const todayEgg = await getTodayEgg();
-  const todayChickDead = await getTodayChickDead();
-  const chickenDeadData = await getTodayChickenDead();
-  const chickToSellData = await getChickToSell();
-  const weeklyEggsData = await getWeeklyEggs();
-  const weeklyChickDead = await getWeeklyChickDead();
-  const weeklyChickenDead = await getWeeklyChickenDead();
   const numOfChicken = await getNumberOfChicken();
-  const monthlyEggs = await getNumEggsMonthly();
-  const roosterDeadData = chickenDeadData.map((data) => data.todayRoosterDead);
-  const henDeadData = chickenDeadData.map((data) => data.todayRoosterDead);
-  const todayEggData = todayEgg.map((data) => data.todayEggCollected);
-  const todayChickDeadata = todayChickDead.map((data) => data.todayChickDead);  
-  
   const surveillance = await getRecordSurveillance();
+
+  const todayEgg = await getTodayEgg();
+  const todayEggData = todayEgg.map((data) => data.todayEggCollected);
+
+  const todayChickDead = await getTodayChickDead();
+  const todayChickDeadata = todayChickDead.map((data) => data.todayChickDead);
+
+  const todayChickenDeadData = await getTodayChickenDead();
+  const todayRoosterDeadData = todayChickenDeadData.map((data) => data.todayRoosterDead);
+  const todayHenDeadData = todayChickenDeadData.map((data) => data.todayRoosterDead);
+
+  const numEggCurrWeek = await getNumEggCurrWeek();
+  const numEggsCurrWeekData = numEggCurrWeek.map((data) => data.numEggs);
+
+  const numChickDeadCurrWeek = await getNumChickDeadCurrWeek();
+  const numChickDeadCurrWeekData = numChickDeadCurrWeek.map((data) => data.totalDeadChick);
+
+  const numChickenDeadCurrWeek = await getNumChickenDeadCurrWeek();
+  const numChickenDeadCurrWeekData = numChickenDeadCurrWeek.map((data) => data.totalDeadChicken);
+
+  const numEggsMonthly = await getNumEggsMonthly();
+  const numEggsMonthlyData = numEggsMonthly.map(entry => entry.numEggs);
+
   res.render('dashboard', {
     todayEggData,
     todayChickDeadata,
-    roosterDeadData,
-    henDeadData,
-    chickToSellData,
-    weeklyEggsData,
-    weeklyChickDead,
-    weeklyChickenDead,
+    todayRoosterDeadData,
+    todayHenDeadData,
+    numEggsCurrWeekData,
+    numChickDeadCurrWeekData,
+    numChickenDeadCurrWeekData,
     numOfChicken,
-    monthlyEggs,
+    numEggsMonthlyData,
     surveillance
   });
 });
@@ -180,9 +189,10 @@ app.get('/incubator/create-tray', async (req, res) => {
 app.get('/incubator/create-hatch', async (req, res) => {
   const incubatorID = req.query.id;
   const numEgg = await getNumEggsInBasket(incubatorID);
+  const numEggData = numEgg.map((data) => data.numEggs);
   const data = {
     id: incubatorID,
-    numEgg: numEgg[0].numEggs
+    numEgg: numEggData.length > 0 ? numEggData : 0
   };
 
   res.render('create-hatch-record', data);

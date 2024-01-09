@@ -152,7 +152,7 @@
     <!-- CALCULATE AVG MORTALITY FOR ALL COOP -->
     <% 
         const avgMortality=(+brooder[0]['BR1'].mortalityRate + +brooder[1]['BR2'].mortalityRate + +brooder[2]['BR3'].mortalityRate
-        + +brooder[3]['BR4'].mortalityRate + +brooder[4]['BR5'].mortalityRate + +brooder[5]['BR6'].mortalityRate) / 9;
+        + +brooder[3]['BR4'].mortalityRate + +brooder[4]['BR5'].mortalityRate + +brooder[5]['BR6'].mortalityRate) / 6;
         
         avgMortality === 0 ? avgMortality : avgMortality.toFixed(1)
     %>

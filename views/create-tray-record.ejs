@@ -145,18 +145,16 @@
     <!------------------------------- Top Navbar ----------------------->
 
     
-    <!-------------------- GET CURRENT DATE ---------------------->
+    <!-------------------- GET CURRENT DATE && DISPLAY '-' IF THERE IS NO EGG IN HATCHING BASKET ---------------------->
     <%
       const currDate = new Date().toLocaleDateString('en-MY');
-      console.log(incubatorResult);
-      console.log(numEggsInTray);
       let trayID ="-";
       let numEggs ="-";
       let dateOut ="-";
       if (numEggsInTray[0] && numEggsInTray[0].trayID !== undefined) {
         trayID = numEggsInTray[0].trayID
         numEggs = numEggsInTray[0].numEggs
-        dateOut = numEggsInTray[0].dateOut
+        dateOut = numEggsInTray[0].dateOut.toLocaleDateString('en-MY')
       }
 
     %>
@@ -216,7 +214,7 @@
                 <div class="row align-center">
                     <p class="mb-0">Origin: <b><%= trayID %></b></p>
                     <p class="mb-0">Number of Eggs: <b><%= numEggs %></b></p>
-                    <p>Date Hatch: <b><%= dateOut.toLocaleDateString('en-MY') %></b></p>
+                    <p>Date Hatch: <b><%= dateOut %></b></p>
                 </div>
               </div>
             </div>

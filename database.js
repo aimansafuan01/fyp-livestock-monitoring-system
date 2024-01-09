@@ -564,7 +564,7 @@ export async function getChickToSell () {
 }
 
 // Get Egg Collected for the week
-export async function getWeeklyEggs () {
+export async function getNumEggCurrWeek () {
   const [result] = await pool.query(`
   SELECT DATE(recorded_at) AS dayOfTheWeek, numEggs
   FROM \`record-coop\`
@@ -644,7 +644,7 @@ export async function getDailyCurrMonthEggs () {
 }
 
 // Get dead chick for the week
-export async function getWeeklyChickDead () {
+export async function getNumChickDeadCurrWeek () {
   const [result] = await pool.query(`
   SELECT
     DAYNAME(DATE(created_at)) AS dayOfTheWeek,
@@ -663,12 +663,11 @@ export async function getWeeklyChickDead () {
 }
 
 // Get dead chicken for the week
-export async function getWeeklyChickenDead () {
+export async function getNumChickenDeadCurrWeek () {
   const [result] = await pool.query(`
   SELECT
     DAYNAME(DATE(recorded_at)) AS dayOfTheWeek,
-    SUM(numDeadHen) AS totalDeadHen,
-    SUM(numDeadRooster) AS totalDeadRooster
+    SUM(numDeadHen) + SUM(numDeadRooster) AS totalDeadChicken
   FROM
     \`record-coop\`
   WHERE
