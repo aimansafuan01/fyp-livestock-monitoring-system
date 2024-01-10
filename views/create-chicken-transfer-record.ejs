@@ -149,11 +149,10 @@
     <% 
       const currDate=new Date().toLocaleDateString('en-MY'); 
       const coopIDs = data.coopIDS.map(coop => coop.coopID);
-      console.log(coopIDs)
     %>
 
       <div class="p-3 mx-5 border border-secondary rounded shadow-lg mb-4">
-        <form class="needs-validation" action="/submit-chicken-transfer-record" method="post" role="form" class="text-start">
+        <form class="needs-validation" action="/chicken/submit" method="post" role="form" class="text-start">
           <div id="formRepeat">
             <div class="row border px-2 py-2 mx-1">
               <div class="row mt-1">

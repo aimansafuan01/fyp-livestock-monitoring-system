@@ -1,55 +1,40 @@
 import express from 'express';
-import mysql2 from 'mysql2';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import session from 'express-session';
 import {
-  login, submitCoopRecord, getAllCoop, getAllBrooder,
-  submitBrooderRecord, minusBrooderNumChick, minusNumChickenCoop,
+  login,
   getAllIncubator, submitTrayRecord, updateIncubatorEgg,
   getNumEggsInBasket, getIncubatorRecord, getHatchingDate,
   getTrayToBasketRecord, addChickToBrooder, updateIncubator,
-  getTodayEgg, getTodayChickDead, getTodayChickenDead, getChickToSell,
+  getTodayEgg, getTodayChickDead, getTodayChickenDead,
   getNumEggCurrWeek, getNumChickDeadCurrWeek, getNumChickenDeadCurrWeek,
-  getNumberOfChicken, getNumEggsMonthly, updateBrooderMR, getSurveillance,
-  submitSurveillanceRecord, getRecordSurveillance, updateSurveillanceStatus,
-  getAllRecordSurveillance, updateCoopMR, getCoopIDs, submitTransferRecord,
-  addNumChickenCoop, getHealthSymptoms, getHealthStatus, submitChickenHealthRecord,
+  getNumberOfChicken, getNumEggsMonthly,
+  getRecordSurveillance, updateSurveillanceStatus,
+  getAllRecordSurveillance,
+  getHealthSymptoms, getHealthStatus, submitChickenHealthRecord,
   getChickenHealthRecord, updateChickenHealthStatus, getAllChicken, getCurrMonthEggs,
-  updateTotalEggs, getAsOfTotalEggs, getFirstDateCoopRecord, avgDailyEgg, getChickenDeadCurrMonth,
+  getAsOfTotalEggs, getFirstDateCoopRecord, avgDailyEgg, getChickenDeadCurrMonth,
   getMonthlyChickenDead, submitHatchRecord, getIncubationData, getFirstIncubationDate,
   getTotalChickenDead, getTotalIncubationData, getDailyEggsInAMonth, getDailyChickDeathInAMonth,
   getTotalChickDeathCurrMonth, getCumTotalChickDeath, submitChickenArrival, getBatchData,
   register
 } from './database.js';
 import { sendAlert } from './mailer.js';
+import CoopRoutes from './routes/coopRoutes.js';
+import ChickenRoutes from './routes/chickenRoutes.js';
+import BrooderRoutes from './routes/brooderRoutes.js';
 
 dotenv.config();
 const app = express();
 app.use('/assets', express.static('./assets/'));
 app.use(express.urlencoded({ extended: true }));
 
-// Set up MySQL connection
-const connection = mysql2.createConnection({
-  host: process.env.MYSQL_HOST,
-  user: process.env.MYSQL_USER,
-  password: process.env.MYSQL_PASSWORD,
-  database: process.env.MYSQL_DATABASE
-});
-
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true
 }));
-
-connection.connect(err => {
-  if (err) {
-    console.error('Error connecting to MySQL:', err);
-  } else {
-    console.log('Connected to MySQL database');
-  }
-});
 
 // Middleware for parsing POST request data
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -59,6 +44,15 @@ app.set('view engine', 'ejs');
 
 // Serve static assets
 app.use(express.static('public'));
+
+// Coop Routes
+app.use('/coop', CoopRoutes);
+
+// Chicken Routes
+app.use('/chicken', ChickenRoutes);
+
+// Brooder Routes
+app.use('/brooder', BrooderRoutes);
 
 // Login
 app.get(['/', '/login'], (req, res) => {
@@ -124,55 +118,11 @@ app.get('/chicken-record', (req, res) => {
   res.render('chicken-record');
 });
 
-// View Chicken Record
-app.get('/chicken/view', async (req, res) => {
-  const allCoop = await getAllCoop();
-  res.render('chicken-transfer', { allCoop });
-});
-
-// View Coop
-app.get('/coop/view', async (req, res) => {
-  const allCoop = await getAllCoop();
-  res.render('coop-record', { allCoop });
-});
-
-// View Brooder
-app.get('/brooder/view', async (req, res) => {
-  const allBrooder = await getAllBrooder();
-  res.render('brooder-record', { allBrooder });
-});
-
 // View Incubator
 app.get('/incubator/view', async (req, res) => {
   const allIncubator = await getAllIncubator();
   const hatchingDate = await getHatchingDate();
   res.render('incubator-record', { allIncubator, hatchingDate });
-});
-
-// Get Coop Record Page
-app.get('/coop/create', (req, res) => {
-  const coop = {
-    id: req.query.id
-  };
-  res.render('create-coop-record', coop);
-});
-
-// Get Chicken Record Page
-app.get('/chicken/create', async (req, res) => {
-  const coopIDS = await getCoopIDs();
-  const data = {
-    id: req.query.id,
-    coopIDS
-  };
-  res.render('create-chicken-transfer-record', { data });
-});
-
-// Get Brooder Record Page
-app.get('/brooder/create', (req, res) => {
-  const coop = {
-    id: req.query.id
-  };
-  res.render('create-brooder-record', coop);
 });
 
 // Get Incubator Tray Record Page
@@ -295,90 +245,6 @@ app.post('/submit-arrival-chicken-record', async (req, res) => {
   }
 });
 
-// Submit Coop Record
-app.post('/submit-coop-record', async (req, res) => {
-  try {
-    const coopID = req.body.coopID;
-    const numEggs = req.body.numOfEggs;
-    const numNc = req.body.numOfNC;
-    const numAccepted = req.body.acceptedEggs;
-
-    const coopData = {
-      coopID,
-      numDeadHen: req.body.numOfDeadHensR1,
-      numDeadRoosters: req.body.numOfDeadRoostersR1,
-      numEggs,
-      numNc,
-      numAccepted
-    };
-
-    const coopSurveillance = {
-      coopID,
-      brooderID: null,
-      incubatorID: null
-    };
-
-    const eggData = {
-      numEggs,
-      numNc,
-      numAccepted
-    };
-
-    const resultSubmit = await submitCoopRecord(coopData);
-    const resultUpdateCoopMR = await updateCoopMR(coopData);
-    const resultUpdate = await minusNumChickenCoop(coopData);
-    const resultUpdateEggs = await updateTotalEggs(eggData);
-    const surveillanceThreshold = await getSurveillance();
-
-    if (resultUpdateCoopMR[1] > surveillanceThreshold[0].chickenMRThreshold) {
-      await submitSurveillanceRecord(coopSurveillance);
-      sendAlert();
-    }
-    if (resultSubmit && resultUpdate && resultUpdateEggs) {
-      res.status(200)
-        .redirect('/coop/view');
-    }
-  } catch (error) {
-    console.error('Error during submitting coop record', error);
-    res.status(500)
-      .send('Internal Server Error');
-  }
-});
-
-// Submit Brooder Record
-app.post('/submit-brooder-record', async (req, res) => {
-  try {
-    const brooderData = {
-      brooderID: req.body.brooderID,
-      numDeadChick: req.body.numDeadChick
-    };
-
-    const brooderSurveillance = {
-      brooderID: req.body.brooderID,
-      incubatorID: null,
-      coopID: null
-    };
-    const resultSubmit = await submitBrooderRecord(brooderData);
-    const resultUpdateMRChick = await updateBrooderMR(brooderData);
-    const resultUpdateNumChick = await minusBrooderNumChick(brooderData);
-    const surveillanceThreshold = await getSurveillance();
-
-    if (resultUpdateMRChick[1] > surveillanceThreshold[0].chickMRThreshold) {
-      await submitSurveillanceRecord(brooderSurveillance);
-      sendAlert();
-    }
-
-    if (resultSubmit && resultUpdateNumChick && resultUpdateMRChick) {
-      res.status(200)
-        .redirect('/brooder/view');
-    }
-  } catch (error) {
-    console.error('Error during submitting brooder record', error);
-    res.status(500)
-      .send('Internal Server Error');
-  }
-});
-
 // Submit Incubator Tray Record
 app.post('/submit-tray-record', async (req, res) => {
   const trayData = {
@@ -451,46 +317,6 @@ app.post('/submit-hatch-record', async (req, res) => {
     }
   } catch (error) {
     console.error('Error during submitting hatch record', error);
-    res.status(500)
-      .send('Internal Server Error');
-  }
-});
-
-app.post('/submit-chicken-transfer-record', async (req, res) => {
-  const origin = req.body.origin;
-  const destination = req.body.destination;
-  const numOfHens = req.body.numOfHens;
-  const numOfRoosters = req.body.numOfRoosters;
-
-  const transferData = {
-    origin,
-    destination,
-    numOfHens,
-    numOfRoosters
-  };
-
-  const coopData = {
-    coopID: origin,
-    numDeadHen: numOfHens,
-    numDeadRoosters: numOfRoosters
-  };
-
-  const addData = {
-    coopID: destination,
-    numOfHens,
-    numOfRoosters
-  };
-
-  try {
-    const transferResult = await submitTransferRecord(transferData);
-    const updateNumChickenResult = await minusNumChickenCoop(coopData);
-    const addNumChickenResult = await addNumChickenCoop(addData);
-    if (transferResult && updateNumChickenResult && addNumChickenResult) {
-      res.status(200)
-        .redirect('/chicken/view');
-    }
-  } catch (error) {
-    console.error('Error during submitting transfer record', error);
     res.status(500)
       .send('Internal Server Error');
   }
