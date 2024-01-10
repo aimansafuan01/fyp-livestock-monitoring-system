@@ -34,26 +34,6 @@ export async function updateEggs (eggData) {
   return result;
 }
 
-// Update Record Surveillance Status
-export async function updateChickenHealthStatus (recordID, status) {
-  const result = await pool.query(`
-  UPDATE \`record-chicken-health\`
-  SET \`record-chicken-health\`.status = ?
-  WHERE \`record-chicken-health\`.recordHealthID = ?`, [status, recordID]);
-
-  return result;
-}
-
-// Update Record Chicken Health Status
-export async function updateSurveillanceStatus (recordID) {
-  const result = await pool.query(`
-  UPDATE \`record-surveillance\`
-  SET \`record-surveillance\`.status = 'Resolved'
-  WHERE \`record-surveillance\`.surveillanceID = ?`, [recordID]);
-
-  return result;
-}
-
 // Get All Chicken Group By Coop ID
 export async function getAllChicken () {
   const [result] = await pool.query(`
@@ -357,12 +337,7 @@ export async function getNumEggsMonthly () {
   return result;
 }
 
-// Get All Surveillance Record
-export async function getAllRecordSurveillance () {
-  const [result] = await pool.query(`
-  SELECT * FROM \`record-surveillance\` ORDER BY status DESC, created_at DESC`);
-  return result;
-}
+
 
 // Get Unresolved Surveillance Record
 export async function getRecordSurveillance () {

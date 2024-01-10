@@ -94,7 +94,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="/surveillance-record">
+          <a class="nav-link text-white" href="/surveillance/view">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">visibility</i>
             </div>
@@ -292,7 +292,7 @@
             const numHens = selectedOption.dataset.numhens;
             const recordID = selectedOption.dataset.recordid;
             const numRoosters = selectedOption.dataset.numroosters;
-            const response = await fetch(`/update-chicken-health-status?status=${updatedStatus}&numHens=${numHens}&recordID=${recordID}&numRoosters=${numRoosters}`)
+            const response = await fetch(`/chicken-health/update?status=${updatedStatus}&numHens=${numHens}&recordID=${recordID}&numRoosters=${numRoosters}`)
             
             if (response.ok) {
                 location.reload();

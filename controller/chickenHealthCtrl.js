@@ -73,3 +73,34 @@ export const submitChickenHealthForm = async (req, res) => {
       .send('Internal Server Error');
   }
 };
+
+export const updateChickenHealthRecord = async (req, res) => {
+  const recordID = req.query.recordID;
+  const status = req.query.status;
+  const numDeadHen = req.query.numHens;
+  const numDeadRoosters = req.query.numRoosters;
+  let resultMinusChicken = null;
+
+  const minusData = {
+    coopID: 'SB',
+    numDeadHen,
+    numDeadRoosters
+  };
+
+  try {
+    const resultUpdate = await ChickenHealthDB.updateChickenHealthStatus(recordID, status);
+
+    if (status !== 'Cured') {
+      resultMinusChicken = await CoopDB.minusNumChickenCoop(minusData);
+    }
+
+    if (resultUpdate && resultMinusChicken) {
+      res.status(200)
+        .redirect('/chicken-health/view');
+    }
+  } catch (error) {
+    console.error('Error during updating health record', error);
+    res.status(500)
+      .send('Internal Server Error');
+  }
+};

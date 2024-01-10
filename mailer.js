@@ -32,7 +32,7 @@ export async function sendAlert (req, res) {
         button: {
           color: '#fb8c00',
           text: 'Go To Dashboard',
-          link: 'http://localhost:3000/surveillance-record'
+          link: 'http://localhost:3000/surveillance/view'
         }
       },
       outro: 'If you have any trouble accessing the dashboard, please call 911'

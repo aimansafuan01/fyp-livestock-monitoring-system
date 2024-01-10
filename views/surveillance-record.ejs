@@ -94,7 +94,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white active bg-gradient-warning" href="/surveillance-record">
+          <a class="nav-link text-white active bg-gradient-warning" href="/surveillance/view">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">visibility</i>
             </div>
@@ -224,12 +224,11 @@
                                     </div>
                                     <div class="modal-footer">
                                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                      <button type="button" class="btn btn-warning" onclick="location.href='/update-surveillance?id=<%= surveillanceID %>'">Confirm</button>
+                                      <button type="button" class="btn btn-warning" onclick="location.href='/surveillance/update?id=<%= surveillanceID %>'">Confirm</button>
                                     </div>
                                   </div>
                                 </div>
                               </div>
-                          
                         </tr>
                         <% } %>
                       </tbody>

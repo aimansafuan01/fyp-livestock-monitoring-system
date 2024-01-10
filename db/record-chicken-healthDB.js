@@ -32,3 +32,18 @@ export async function submitChickenHealthRecord (healthRecord) {
     throw new Error('Error submitting chicken health record data to the database');
   }
 }
+
+// Update Chicken Health Record Status
+export async function updateChickenHealthStatus (recordID, status) {
+  try {
+    const result = await pool.query(`
+    UPDATE \`record-chicken-health\`
+    SET \`record-chicken-health\`.status = ?
+    WHERE \`record-chicken-health\`.recordHealthID = ?`, [status, recordID]);
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error updating chicken health status data to the database');
+  }
+}

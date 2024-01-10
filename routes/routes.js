@@ -4,6 +4,7 @@ import BrooderRoutes from './brooderRoutes.js';
 import IncubatorRoutes from './incubatorRoutes.js';
 import ChickenHealthRoutes from './chickenHealthRoutes.js';
 import ChickenBatchRoutes from './chickenBatchRoutes.js';
+import SurveillanceRoutes from './surveillanceRoutes.js';
 
 // The purpose of this file is to gather all different routes so that app.js need only 1 import route
 
@@ -13,5 +14,6 @@ export {
   BrooderRoutes,
   IncubatorRoutes,
   ChickenHealthRoutes,
-  ChickenBatchRoutes
+  ChickenBatchRoutes,
+  SurveillanceRoutes
 };

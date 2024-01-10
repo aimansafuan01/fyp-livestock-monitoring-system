@@ -7,9 +7,7 @@ import {
   getTodayEgg, getTodayChickDead, getTodayChickenDead,
   getNumEggCurrWeek, getNumChickDeadCurrWeek, getNumChickenDeadCurrWeek,
   getNumberOfChicken, getNumEggsMonthly,
-  getRecordSurveillance, updateSurveillanceStatus,
-  getAllRecordSurveillance,
-  updateChickenHealthStatus, getAllChicken, getCurrMonthEggs,
+  getRecordSurveillance, getAllChicken, getCurrMonthEggs,
   getAsOfTotalEggs, getFirstDateCoopRecord, avgDailyEgg, getChickenDeadCurrMonth,
   getMonthlyChickenDead, getIncubationData, getFirstIncubationDate,
   getTotalChickenDead, getTotalIncubationData, getDailyEggsInAMonth, getDailyChickDeathInAMonth,
@@ -47,11 +45,17 @@ app.use('/chicken-transfer', Routes.ChickenTransferRoutes);
 // Brooder Routes
 app.use('/brooder', Routes.BrooderRoutes);
 
+// Incubator Routes
+app.use('/incubator', Routes.IncubatorRoutes);
+
 // Chicken Health Routes
 app.use('/chicken-health', Routes.ChickenHealthRoutes);
 
 // Chicken Batch Routes
 app.use('/chicken-batch', Routes.ChickenBatchRoutes);
+
+// Surveillance Routes
+app.use('/surveillance', Routes.SurveillanceRoutes);
 
 // Login
 app.get(['/', '/login'], (req, res) => {
@@ -110,65 +114,6 @@ app.get('/register', (req, res) => {
 // Daily Record
 app.get('/daily-record', (req, res) => {
   res.render('daily-record');
-});
-
-// Create Chicken Record
-app.get('/chicken-record', (req, res) => {
-  res.render('chicken-record');
-});
-
-// Get surveillance Record Page
-app.get('/surveillance-record', async (req, res) => {
-  const recordSurveillanceData = await getAllRecordSurveillance();
-
-  res.render('surveillance-record', { recordSurveillanceData });
-});
-
-// Update Surveillance Status
-app.get('/update-surveillance', async (req, res) => {
-  try {
-    const id = req.query.id;
-    const result = await updateSurveillanceStatus(id);
-    if (result) {
-      res.status(200)
-        .redirect('/home');
-    }
-  } catch (error) {
-    console.error('Error during updating coop record', error);
-    res.status(500)
-      .send('Internal Server Error');
-  }
-});
-
-app.get('/update-chicken-health-status', async (req, res) => {
-  const recordID = req.query.recordID;
-  const status = req.query.status;
-  const numDeadHen = req.query.numHens;
-  const numDeadRoosters = req.query.numRoosters;
-  let resultMinusChicken = null;
-
-  const minusData = {
-    coopID: 'SB',
-    numDeadHen,
-    numDeadRoosters
-  };
-
-  try {
-    const resultUpdate = await updateChickenHealthStatus(recordID, status);
-
-    if (status !== 'Cured') {
-      resultMinusChicken = await minusNumChickenCoop(minusData);
-    }
-
-    if (resultUpdate && resultMinusChicken) {
-      res.status(200)
-        .redirect('/chicken-health/view');
-    }
-  } catch (error) {
-    console.error('Error during updating health record', error);
-    res.status(500)
-      .send('Internal Server Error');
-  }
 });
 
 // Get Data for Report
