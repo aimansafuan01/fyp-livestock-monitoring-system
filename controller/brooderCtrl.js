@@ -1,5 +1,6 @@
 import * as BrooderDB from '../db/brooderDB.js';
 import * as SurveillanceDB from '../db/surveillanceDB.js';
+import * as RecordBroderDB from '../db/record-brooderDB.js';
 import { sendAlert } from '../mailer.js';
 
 export const getAllBrooderPage = async (req, res) => {
@@ -35,7 +36,7 @@ export const submitBrooderForm = async (req, res) => {
       incubatorID: null,
       coopID: null
     };
-    await BrooderDB.submitBrooderRecord(brooderData);
+    await RecordBroderDB.submitBrooderRecord(brooderData);
     const resultUpdateMRChick = await BrooderDB.updateBrooderMR(brooderData);
     await BrooderDB.minusBrooderNumChick(brooderData);
     const surveillanceThreshold = await SurveillanceDB.getSurveillance();

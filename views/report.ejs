@@ -2,15 +2,19 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-  <link rel="stylesheet" type="text/css"
-    href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="../../assets/img/apple-icon.png">
   <link rel="icon" type="image/png" href="../../assets/img/favicon.png">
+  <title>
+    Tiroi Farm PLT
+  </title>
+  <!--     Fonts and icons     -->
+  <link rel="stylesheet" type="text/css"
+    href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" />
   <!-- Nucleo Icons -->
-  <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
-  <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
+  <link href="/assets/css/nucleo-icons.css" rel="stylesheet" />
+  <link href="/assets/css/nucleo-svg.css" rel="stylesheet" />
   <!-- Font Awesome Icons -->
   <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
   <!-- Material Icons -->
@@ -18,129 +22,219 @@
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
   <!-- CSS Files -->
-  <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.1.0" rel="stylesheet" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <title>Tiroi Farm PLT</title>
+  <link id="pagestyle" href="/assets/css/material-dashboard.css?v=3.1.0" rel="stylesheet" />
+  <!-- Nepcha Analytics (nepcha.com) -->
+  <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
+  <!-- <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script> -->
 </head>
-<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-<body class="ms-7 me-7">
+
+<body class="g-sidenav-show  bg-gray-200">
+  <aside
+  class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-gradient-dark"
+    id="sidenav-main">
+    <div class="sidenav-header">
+      <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
+      aria-hidden="true" id="iconSidenav"></i>
+      <a class="navbar-brand m-0" href=" https://demos.creative-tim.com/material-dashboard/pages/dashboard "
+      target="_blank">
+      <img src="../assets/img/logo-ct.png" class="navbar-brand-img h-100" alt="main_logo">
+      <span class="ms-1 font-weight-bold text-white">Tiroi Farm PLT</span>
+    </a>
+  </div>
+  <hr class="horizontal light mt-0 mb-2">
+  <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link text-white" href="/dashboard/view">
+          <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+            <i class="material-icons opacity-10">dashboard</i>
+          </div>
+          <span class="nav-link-text ms-1">Dashboard</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-white " href="/daily-record">
+          <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+            <i class="material-icons opacity-10">inventory</i>
+          </div>
+            <span class="nav-link-text ms-1">Daily Record</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white " href="/chicken-health/view">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-icons opacity-10">receipt_long</i>
+            </div>
+            <span class="nav-link-text ms-1">Chicken Health Record</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white " href="/chicken-batch/view">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-icons opacity-10">add</i>
+            </div>
+            <span class="nav-link-text ms-1">Batch Chicken Record</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white " href="/surveillance/view">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-icons opacity-10">visibility</i>
+            </div>
+            <span class="nav-link-text ms-1">Surveillance Record</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white active bg-gradient-warning" href="/report/view">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-icons opacity-10">summarize</i>
+            </div>
+            <span class="nav-link-text ms-1">Generate Report</span>
+          </a>
+        </li>
+        <li class="nav-item mt-3">
+          <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">Account pages</h6>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white " href="/register">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-icons opacity-10">person</i>
+            </div>
+            <span class="nav-link-text ms-1">Register Employee</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </aside>
+  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
   <%
-    const today = new Date();
-    const month = today.toLocaleString('default', { month: 'long' });
-    const year = new Date().getFullYear();
-    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+  const today = new Date();
+  const month = today.toLocaleString('default', { month: 'long' });
+  const year = new Date().getFullYear();
+  const options = { day: 'numeric', month: 'long', year: 'numeric' };
     const asOfDate = new Intl.DateTimeFormat('en-MY', options).format(today);
     const numOfChickenArray = numOfChicken.map(chicken => [chicken.totalHens, chicken.totalRoosters]);
     const avgProductionRate = ((Number(avgEggDaily[0].avgDailyEgg).toFixed(2) / +numOfChicken[0].totalHens) * 100).toFixed(2);
     const monthlyEggsData = monthlyEggs.map((row) => row.numEggs);
     const avgMonthlyProductionRate = avgEggDaily.map((row) => (((Number(row.avgDailyEgg).toFixed(2) / +numOfChicken[0].totalHens)* 100).toFixed(2) ))
   %>
-  <button class="btn btn-warning m-2" id="downloadBtn">Download PDF</button>
-  <h2 class="text-center"><u>TIROI FARM PLT</u></h2>
-  <div class="row mt-3 align-middle text-center d-flex">
-    <h5>MONTHLY PRODUCTION REPORT</h5>
-    <p class="m-0">Month: <h5 class= "mb-0"> <%= month %> <%= year %></h5></p>
-    <p class="m-0">Duration: <h5 class= "mb-0">1 <%= month %> <%= year %> - <%= asOfDate %></h5></p>
-  </div>
-  <div class="row mt-4 align-items-end">
-    <h5>CHICKEN DATA AS OF <%= asOfDate %></h5>
-    <div class="col-12 col-md-4 me-7">
-      <table class="table mb-0">
-        <thead>
-          <tr>
-            <th class ="text-center">Bay</th>
-            <th class ="text-center">Hen</th>
-            <th class ="text-center">Rooster</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% for (coop of coopData) { %>
-          <tr>
-            <td class="align-middle text-center">
-              <%= coop.coopID %>
-            </td>
-            <td class="align-middle text-center">
-              <%= coop.numOfHens %>
-            </td>
-            <td class="align-middle text-center">
-              <%= coop.numOfRoosters %>
-            </td>
-          </tr>
-          <% } %>
-          <tr>
-            <td class="align-middle text-center"><b>Total</b></td>
-            <td class="align-middle text-center"><b><%= numOfChicken[0].totalHens %></b></td>
-            <td class="align-middle text-center"><b><%= numOfChicken[0].totalRoosters %></b></td>
-          </tr>
-        </tbody>
-      </table>
-      <p class="text-center">Table 1: Chicken Count in Each Coop</p>
+  <div class="container-fluid py-4">
+
+    <button class="btn btn-warning m-2" id="downloadBtn">Download PDF</button>
+    <h2 class="text-center"><u>TIROI FARM PLT</u></h2>
+    <div class="row mt-3 align-middle text-center d-flex">
+      <h5>MONTHLY PRODUCTION REPORT</h5>
+      <p class="m-0">Month: <h5 class= "mb-0"> <%= month %> <%= year %></h5></p>
+      <p class="m-0">Duration: <h5 class= "mb-0">1 <%= month %> <%= year %> - <%= asOfDate %></h5></p>
     </div>
-    <div class="col-12 col-md-6 mt-3">
-      <canvas id="chicken-count" class="chart-canvas" height="200"></canvas>
-      <p class="text-center">Figure 1: Number of Hens and Roosters at the farm</p>
+    <div class="row mt-4 align-items-end">
+      <h5>CHICKEN DATA AS OF <%= asOfDate %></h5>
+      <div class="col-12 col-md-4 me-7 mb-2">
+        <table class="table align-items-center mb-0" style="border-color:gray">
+          <thead>
+            <tr>
+              <th class ="text-center">Bay</th>
+              <th class ="text-center">Hen</th>
+              <th class ="text-center">Rooster</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for (coop of coopData) { %>
+            <tr>
+              <td class="align-middle text-center">
+                <%= coop.coopID %>
+              </td>
+              <td class="align-middle text-center">
+                <%= coop.numOfHens %>
+              </td>
+              <td class="align-middle text-center">
+                <%= coop.numOfRoosters %>
+              </td>
+            </tr>
+            <% } %>
+            <tr>
+              <td class="align-middle text-center"><b>Total</b></td>
+              <td class="align-middle text-center"><b><%= numOfChicken[0].totalHens %></b></td>
+              <td class="align-middle text-center"><b><%= numOfChicken[0].totalRoosters %></b></td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="text-center">Table 1: Chicken Count in Each Coop</p>
+      </div>
+      <div class="col-12 col-md-6 mt-3">
+        <canvas id="chicken-count" class="chart-canvas" height="200"></canvas>
+        <p class="text-center">Figure 1: Number of Hens and Roosters at the farm</p>
+      </div>
+      <div class="row">
+        <div class="col-12 mb-3">
+          <p class="mb-0">The total death count in <%= month %> as of <b><%= asOfDate %></b> is <b><%= chickenDeadData[0].totalDead %></b> (<b><%= chickenDeadData[0].numDeadRooster %></b> rooster, <b><%= chickenDeadData[0].numDeadHen %></b>
+            hens).</p>
+            <p>Total death count from start of operation until as of <b><%= asOfDate %></b> is <b><%= totalChickenDeadData[0].totalChickenDead %></b> (<b><%= totalChickenDeadData[0].totalDeadRooster %></b> rooster, <b><%= totalChickenDeadData[0].totalDeadHen %></b> hen).</p>
+        </div>
+        <div class="col-12 mb-3">
+          <canvas id="chicken-death-count" class="chart-canvas" height="50"></canvas>
+          <p class="mt-2 text-center">Figure 2: Monthly Chicken death count</p>
+        </div>
+      </div>
     </div>
     <div class="row">
+      <h5>EGG PRODUCTION AS OF <%= asOfDate %></h5>
+      <p>A total of <b><%= eggData[0].totalNumEggs %></b>  eggs produced in <b><%= month %></b>. Total number of eggs produced since 
+        <b><%= firstDateCoopRecord[0].DAY %> <%= firstDateCoopRecord[0].MONTH %> <%= firstDateCoopRecord[0].YEAR %></b> is <b><%= asOfEggData[0].totalEggCollected %></b>.
+        The daily average collected eggs in <%= month %> is <b><%= Number(avgEggDaily[0].avgDailyEgg).toFixed(2) %> </b>eggs. The average production rate in <b><%= month %></b> is <b>
+          <%= avgProductionRate %></b>.</p>
+    </div>
+    
+    <div class="row m-3">
       <div class="col-12 mb-3">
-        <p class="mb-0">The total death count in <%= month %> as of <b><%= asOfDate %></b> is <b><%= chickenDeadData[0].totalDead %></b> (<b><%= chickenDeadData[0].numDeadRooster %></b> rooster, <b><%= chickenDeadData[0].numDeadHen %></b>
-          hens).</p>
-          <p>Total death count from start of operation until as of <b><%= asOfDate %></b> is <b><%= totalChickenDeadData[0].totalChickenDead %></b> (<b><%= totalChickenDeadData[0].totalDeadRooster %></b> rooster, <b><%= totalChickenDeadData[0].totalDeadHen %></b> hen).</p>
+        <canvas id="num-egg-monthly" class="chart-canvas" height="50"></canvas>
+        <p class="mt-2 text-center">Figure 3: Number of eggs collected monthly</p>
       </div>
       <div class="col-12 mb-3">
-        <canvas id="chicken-death-count" class="chart-canvas" height="50"></canvas>
-        <p class="mt-2 text-center">Figure 2: Monthly Chicken death count</p>
+        <canvas id="production-rate-egg-monthly" class="chart-canvas" height="50"></canvas>
+        <p class="mt-2 text-center">Figure 4: Monthly production rates</p>
+      </div>
+      <div class="col-12">
+        <canvas id="daily-egg-current-month" class="chart-canvas" height="50"></canvas>
+        <p class="mt-2 text-center">Figure 5: Daily Eggs Collected</p>
       </div>
     </div>
-  </div>
-  <div class="row">
-    <h5>EGG PRODUCTION AS OF <%= asOfDate %></h5>
-    <p>A total of <b><%= eggData[0].totalNumEggs %></b>  eggs produced in <%= month %>. Total number of eggs produced since 
-      <%= firstDateCoopRecord[0].DAY %> <%= firstDateCoopRecord[0].MONTH %> <%= firstDateCoopRecord[0].YEAR %> is <b><%= asOfEggData[0].totalEggCollected %></b>.
-      The daily average collected eggs in <%= month %> is <b><%= Number(avgEggDaily[0].avgDailyEgg).toFixed(2) %> </b>eggs. The average production rate in <%= month %> is <b>
-        <%= avgProductionRate %></b>.</p>
-  </div>
   
-  <div class="row m-3">
-    <div class="col-12 mb-3">
-      <canvas id="num-egg-monthly" class="chart-canvas" height="50"></canvas>
-      <p class="mt-2 text-center">Figure 3: Number of eggs collected monthly</p>
+    <div class="row">
+      <h5>INCUBATION DATA AS OF <%= asOfDate %></h5>
+      <div class="col-12">
+        <p>A total of <b><%=incubationRecord[0].numEgg %></b> was incubated in <%= month %>. Since <b><%= firstIncubationDate[0].firstIncubationDate.toLocaleDateString('en-MY') %></b>, a total of 
+        <b><%= incubationRecord[0].numEgg %></b> eggs has been incubated. <b><%= incubationRecord[0].numHatch %> </b> eggs hatched in <%= month %> <%= year %>. <%= month %> hatching rate was 
+        <b><%= Number(incubationRecord[0].hatchRate).toFixed(2) %>%</b> (<b><%= incubationRecord[0].numHatch %></b> of <b> <%= incubationRecord[0].numNotHatch %></b>). Range of hatching rate is
+        <b><%= incubationRecord[0].minHatchRate %>%</b> to <b><%= incubationRecord[0].maxHatchRate %>%</b>. A total of <b><%= totalIncubationData[0].totalEggIncubated %></b> eggs incubated as
+        of <%= asOfDate %> with <b><%= totalIncubationData[0].totalEggHatch %></b> hatched.</p>
+      </div>
+      <div clas="col-12">
+        <canvas id="egg-incubated-egg-hatched" class="chart-canvas" height="100"></canvas>
+      </div> 
+      <p class="mt-2 text-center">Figure 6: Monthly Egg Incubated and Hatched</p>
     </div>
-    <div class="col-12 mb-3">
-      <canvas id="production-rate-egg-monthly" class="chart-canvas" height="50"></canvas>
-      <p class="mt-2 text-center">Figure 4: Monthly production rates</p>
-    </div>
-    <div class="col-12">
-      <canvas id="daily-egg-current-month" class="chart-canvas" height="50"></canvas>
-      <p class="mt-2 text-center">Figure 5: Daily Eggs Collected</p>
+    
+    <div class="row">
+      <h5>BROODER DATA AS OF <%= asOfDate %></h5>
+      <div class="col-12">
+        <p>Chick death count in <%= month %> <%= year %> is <b><%= totalChickDeathCurrMonth[0].totalDeadChick %></b>. Cumulative total for chick's death count as of <%= asOfDate %> is <b><%= cumTotalChickDeath[0].totalDeadChick %></b>.</p>
+      </div>
+      <div clas="col-12">
+        <canvas id="daily-chick-death-current-month" class="chart-canvas" height="100"></canvas>
+      </div> 
+      <p class="mt-2 text-center mb-5">Figure 7: Daily Chick Death Count</p>
     </div>
   </div>
+</body>
 
-  <div class="row">
-    <h5>INCUBATION DATA AS OF <%= asOfDate %></h5>
-    <div class="col-12">
-      <p>A total of <b><%=incubationRecord[0].numEgg %></b> was incubated in <%= month %>. Since <b><%= firstIncubationDate[0].firstIncubationDate.toLocaleDateString('en-MY') %></b>, a total of 
-      <b><%= incubationRecord[0].numEgg %></b> eggs has been incubated. <b><%= incubationRecord[0].numHatch %> </b> eggs hatched in <%= month %> <%= year %>. <%= month %> hatching rate was 
-      <b><%= Number(incubationRecord[0].hatchRate).toFixed(2) %>%</b> (<b><%= incubationRecord[0].numHatch %></b> of <b> <%= incubationRecord[0].numNotHatch %></b>). Range of hatching rate is
-      <b><%= incubationRecord[0].minHatchRate %>%</b> to <b><%= incubationRecord[0].maxHatchRate %>%</b>. A total of <b><%= totalIncubationData[0].totalEggIncubated %></b> eggs incubated as
-      of <%= asOfDate %> with <b><%= totalIncubationData[0].totalEggHatch %></b> hatched.</p>
-    </div>
-    <div clas="col-12">
-      <canvas id="egg-incubated-egg-hatched" class="chart-canvas" height="100"></canvas>
-    </div> 
-    <p class="mt-2 text-center">Figure 6: Monthly Egg Incubated and Hatched</p>
-  </div>
-  
-  <div class="row">
-    <h5>BROODER DATA AS OF <%= asOfDate %></h5>
-    <div class="col-12">
-      <p>Chick death count in <%= month %> <%= year %> is <b><%= totalChickDeathCurrMonth[0].totalDeadChick %></b>. Cumulative total for chick's death count as of <%= asOfDate %> is <b><%= cumTotalChickDeath[0].totalDeadChick %></b>.</p>
-    </div>
-    <div clas="col-12">
-      <canvas id="daily-chick-death-current-month" class="chart-canvas" height="100"></canvas>
-    </div> 
-    <p class="mt-2 text-center mb-5">Figure 7: Daily Chick Death Count</p>
-  </div>
+
+  <!--   Core JS Files   -->
+  <script src="../assets/js/core/popper.min.js"></script>
+  <script src="../assets/js/core/bootstrap.min.js"></script>
+  <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
+  <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
+  <script src="../assets/js/plugins/chartjs.min.js"></script>
   <script>
     var ctx1 = document.getElementById('chicken-count').getContext('2d');
     var myChart = new Chart(ctx1, {
@@ -373,7 +467,7 @@
       options: {
         scales: {
           y: {
-            beginAtZero: true
+            beginAtZero: true,
           }
         },
         plugins: {
@@ -428,6 +522,4 @@
       Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
   </script>
-</body>
-
 </html>

@@ -12,6 +12,18 @@ export async function getAllRecordSurveillance () {
   }
 }
 
+// Get Unresolved Surveillance Record
+export async function getRecordSurveillance () {
+  try {
+    const [result] = await pool.query(`
+    SELECT * FROM \`record-surveillance\` WHERE status = 'Unresolved'`);
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error fetching unresolved surveillance record data from the database');
+  }
+}
+
 // Update Record Surveillance Status
 export async function updateSurveillanceStatus (recordID) {
   try {

@@ -15,7 +15,7 @@ export const updateSurveillanceRecord = async (req, res) => {
     const result = await SurveillanceDB.updateSurveillanceStatus(id);
     if (result) {
       res.status(200)
-        .redirect('/home');
+        .redirect('/dashboard/view');
     }
   } catch (error) {
     console.error('Error during updating coop record', error);

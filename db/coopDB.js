@@ -57,6 +57,38 @@ export async function getCoopMR (coopID) {
   }
 }
 
+// Get number of chicken in the farm
+export async function getNumberOfChicken () {
+  try {
+    const [result] = await pool.query(`
+    SELECT
+      SUM(numOfHens) AS totalHens,
+      SUM(numOfRoosters) AS totalRoosters
+    FROM
+      coop
+  `);
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error fetching total number of hens and roosters data from the database');
+  }
+}
+
+// Get All Chicken Group By Coop ID
+export async function getAllChicken () {
+  try {
+    const [result] = await pool.query(`
+    SELECT coopID, numOfHens, numOfRoosters
+    FROM coop
+    GROUP BY coopID
+    `);
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error fetching total number of hens and roosters data from the database');
+  }
+}
+
 // Add Num Chicken in Coop
 export async function addNumChickenCoop (coopData) {
   try {
@@ -88,28 +120,6 @@ export async function minusNumChickenCoop (coopData) {
   } catch (error) {
     console.error(error);
     throw new Error('Error minus number of chicken data from the database');
-  }
-}
-
-// Submit Coop Record
-export async function submitCoopRecord (coopData) {
-  try {
-    const coopID = coopData.coopID;
-    const numDeadHen = +coopData.numDeadHen;
-    const numDeadRoosters = +coopData.numDeadRoosters;
-    const numEggs = +coopData.numEggs;
-    const numNc = +coopData.numNc;
-    const numAccepted = +coopData.numAccepted;
-
-    const resultSubmitCoop = await pool.query(`
-    INSERT INTO \`record-coop\` (coopID, numDeadHen, numDeadRooster, numEggs, numNc, numAccepted)
-    VALUES (?, ?, ?, ?, ?, ?)
-    `, [coopID, numDeadHen, numDeadRoosters, numEggs, numNc, numAccepted]);
-
-    return resultSubmitCoop;
-  } catch (error) {
-    console.error(error);
-    throw new Error('Error submitting coop record to database');
   }
 }
 

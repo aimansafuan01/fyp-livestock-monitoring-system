@@ -1,4 +1,5 @@
 import * as CoopDB from '../db/coopDB.js';
+import * as RecordCoopDB from '../db/record-coopDB.js';
 import * as EggsDB from '../db/eggsDB.js';
 import * as SurveillanceDB from '../db/surveillanceDB.js';
 import { sendAlert } from '../mailer.js';
@@ -51,7 +52,7 @@ export const submitCoopForm = async (req, res) => {
       numAccepted
     };
 
-    const resultSubmit = await CoopDB.submitCoopRecord(coopData);
+    const resultSubmit = await RecordCoopDB.submitCoopRecord(coopData);
     const resultUpdateCoopMR = await CoopDB.updateCoopMR(coopData);
     const resultUpdate = await CoopDB.minusNumChickenCoop(coopData);
     const resultUpdateEggs = await EggsDB.updateTotalEggs(eggData);

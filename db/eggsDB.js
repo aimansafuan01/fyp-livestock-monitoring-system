@@ -18,3 +18,17 @@ export async function updateTotalEggs (eggData) {
     throw new Error('Error adding total eggs data to database');
   }
 }
+
+// Get as of total eggs data
+export async function getAsOfTotalEggs () {
+  try {
+    const [result] = await pool.query(`
+    SELECT *
+    FROM eggs
+    `);
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error fetching accumulate total eggs data to date from database');
+  }
+}
