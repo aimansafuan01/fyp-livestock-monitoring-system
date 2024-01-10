@@ -9,8 +9,7 @@ import {
   getNumberOfChicken, getNumEggsMonthly,
   getRecordSurveillance, updateSurveillanceStatus,
   getAllRecordSurveillance,
-  getHealthSymptoms, getHealthStatus, submitChickenHealthRecord,
-  getChickenHealthRecord, updateChickenHealthStatus, getAllChicken, getCurrMonthEggs,
+  updateChickenHealthStatus, getAllChicken, getCurrMonthEggs,
   getAsOfTotalEggs, getFirstDateCoopRecord, avgDailyEgg, getChickenDeadCurrMonth,
   getMonthlyChickenDead, getIncubationData, getFirstIncubationDate,
   getTotalChickenDead, getTotalIncubationData, getDailyEggsInAMonth, getDailyChickDeathInAMonth,
@@ -42,14 +41,14 @@ app.use(express.static('public'));
 // Coop Routes
 app.use('/coop', Routes.CoopRoutes);
 
-// Chicken Routes
-app.use('/chicken', Routes.ChickenRoutes);
+// Chicken Transfer Routes
+app.use('/chicken-transfer', Routes.ChickenTransferRoutes);
 
 // Brooder Routes
 app.use('/brooder', Routes.BrooderRoutes);
 
 // Incubator Routes
-app.use('/incubator', Routes.IncubatorRoutes);
+app.use('/chicken-health', Routes.ChickenHealthRoutes);
 
 // Login
 app.get(['/', '/login'], (req, res) => {
@@ -122,30 +121,10 @@ app.get('/surveillance-record', async (req, res) => {
   res.render('surveillance-record', { recordSurveillanceData });
 });
 
-// Get Chicken Health Record Page
-app.get('/chicken-health-record', async (req, res) => {
-  const healthRecord = await getChickenHealthRecord();
-  const healthStatus = await getHealthStatus();
-  res.render('chicken-health-record', { healthRecord, healthStatus });
-});
-
 // Get Arrival Chicken Page
 app.get('/arrival-chicken-record', async (req, res) => {
   const batchData = await getBatchData();
   res.render('arrival-chicken-record', { batchData });
-});
-
-// Get Create Chicken Health Record Page
-app.get('/create-chicken-health-record', async (req, res) => {
-  try {
-    const coopIDs = await getCoopIDs();
-    const healthSymptoms = await getHealthSymptoms();
-    const healthStatus = await getHealthStatus();
-    res.render('create-chicken-health-record', { coopIDs, healthSymptoms, healthStatus });
-  } catch (error) {
-    res.status(500)
-      .send('Internal Server Error');
-  }
 });
 
 // Get Create Arrival Chicken Record Page
@@ -212,59 +191,6 @@ app.post('/submit-arrival-chicken-record', async (req, res) => {
   }
 });
 
-
-
-app.post('/submit-chicken-health-record', async (req, res) => {
-  const origin = req.body.origin;
-  const symptom = req.body.symptom;
-  const status = req.body.status;
-  const numOfHens = req.body.numOfHens;
-  const numOfRoosters = req.body.numOfRoosters;
-
-  const healthData = {
-    origin,
-    symptom,
-    status,
-    numOfHens,
-    numOfRoosters
-  };
-
-  const transferData = {
-    origin,
-    destination: 'SB',
-    numOfHens,
-    numOfRoosters
-  };
-
-  const minusChicken = {
-    coopID: origin,
-    numDeadHen: numOfHens,
-    numDeadRoosters: numOfRoosters
-  };
-
-  const addData = {
-    coopID: 'SB',
-    numOfHens,
-    numOfRoosters
-  };
-
-  try {
-    const healthResult = await submitChickenHealthRecord(healthData);
-    const transferResult = await submitTransferRecord(transferData);
-    const updateNumChickenResult = await minusNumChickenCoop(minusChicken);
-    const addNumChickenResult = await addNumChickenCoop(addData);
-
-    if (healthResult && transferResult && updateNumChickenResult && addNumChickenResult) {
-      res.status(200)
-        .redirect('/chicken-health-record');
-    }
-  } catch (error) {
-    console.error('Error during submitting transfer record', error);
-    res.status(500)
-      .send('Internal Server Error');
-  }
-});
-
 app.get('/update-chicken-health-status', async (req, res) => {
   const recordID = req.query.recordID;
   const status = req.query.status;
@@ -287,7 +213,7 @@ app.get('/update-chicken-health-status', async (req, res) => {
 
     if (resultUpdate && resultMinusChicken) {
       res.status(200)
-        .redirect('/chicken-health-record');
+        .redirect('/chicken-health/view');
     }
   } catch (error) {
     console.error('Error during updating health record', error);

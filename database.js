@@ -22,20 +22,7 @@ export async function login (username, password) {
 
 
 
-export async function submitChickenHealthRecord (healthRecord) {
-  const origin = healthRecord.origin;
-  const symptom = healthRecord.symptom;
-  const status = healthRecord.status;
-  const numOfHens = healthRecord.numOfHens;
-  const numOfRoosters = healthRecord.numOfRoosters;
 
-  const result = await pool.query(`
-  INSERT INTO \`record-chicken-health\` (origin, status, symptom, numOfHens, numOfRoosters)
-  VALUES (?, ?, ?, ?, ?)`,
-  [origin, status, symptom, numOfHens, numOfRoosters]);
-
-  return result;
-}
 
 export async function submitChickenArrival (batchData) {
   const { origin, numHens, numRoosters, placeTo, ageChicken } = batchData;
@@ -414,26 +401,7 @@ export async function getRecordSurveillance () {
   return result;
 }
 
-// Get chicken health symptoms
-export async function getHealthSymptoms () {
-  const [result] = await pool.query(`
-  SELECT * FROM health_symptoms`);
-  return result;
-}
 
-// Get chicken health status
-export async function getHealthStatus () {
-  const [result] = await pool.query(`
-  SELECT * FROM health_status`);
-  return result;
-}
-
-// Get chicken health record
-export async function getChickenHealthRecord () {
-  const [result] = await pool.query(`
-  SELECT * FROM \`record-chicken-health\``);
-  return result;
-}
 
 // Get first incubation date
 export async function getFirstIncubationDate () {

@@ -1,5 +1,5 @@
 import * as CoopDB from '../db/coopDB.js';
-import * as ChickenDB from '../db/chickenDB.js';
+import * as ChickenTransferDB from '../db/record-transferDB.js';
 
 export const getChickenRecordPage = async (req, res) => {
   try {
@@ -54,11 +54,11 @@ export const submitChickenTransferForm = async (req, res) => {
   };
 
   try {
-    await ChickenDB.submitTransferRecord(transferData);
+    await ChickenTransferDB.submitTransferRecord(transferData);
     await CoopDB.minusNumChickenCoop(coopData);
     await CoopDB.addNumChickenCoop(addData);
     res.status(200)
-      .redirect('/chicken/view');
+      .redirect('/chicken-transfer/view');
   } catch (error) {
     console.error(error.message);
     res.status(500)
