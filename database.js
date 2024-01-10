@@ -20,22 +20,7 @@ export async function login (username, password) {
   return rows[0];
 }
 
-// Submit Tray Record
-export async function submitTrayRecord (trayData) {
-  const incubatorID = trayData.incubatorID;
-  const trayID = trayData.trayID;
-  const dateEnter = trayData.dateIn;
-  const numEggs = trayData.numEggs;
-  const resultTray = await pool.query(`
-  INSERT INTO \`record-incubator\` (incubatorID, trayID, numEggs, dateEnter, dateMove, dateOut)
-  VALUES (?, ?, ?,
-    STR_TO_DATE(?, '%d/%m/%Y'),
-    DATE_ADD(STR_TO_DATE(?, '%d/%m/%Y'), INTERVAL 18 DAY),
-    DATE_ADD(STR_TO_DATE(?, '%d/%m/%Y'), INTERVAL 21 DAY))
-  `, [incubatorID, trayID, numEggs, dateEnter, dateEnter, dateEnter]);
 
-  return resultTray;
-}
 
 export async function submitChickenHealthRecord (healthRecord) {
   const origin = healthRecord.origin;
@@ -52,22 +37,6 @@ export async function submitChickenHealthRecord (healthRecord) {
   return result;
 }
 
-export async function submitHatchRecord (hatchData) {
-  const dateHatch = hatchData.dateHatch;
-  const numEgg = hatchData.numEgg;
-  const numHatch = hatchData.numHatch;
-  const numNotHatch = hatchData.numNotHatch;
-  const hatchRate = hatchData.hatchRate;
-  const incubatorID = hatchData.incubatorID;
-  const brooderID = hatchData.brooderID;
-
-  const [result] = await pool.query(`
-  INSERT INTO \`record-hatch\` (dateHatch, numEgg, numHatch, numNotHatch, hatchRate, incubatorID, brooderID)
-  VALUES (STR_TO_DATE(?, '%d/%m/%Y'), ?, ?, ?, ?, ?, ?)`,
-  [dateHatch, numEgg, numHatch, numNotHatch, hatchRate, incubatorID, brooderID]);
-  return result;
-}
-
 export async function submitChickenArrival (batchData) {
   const { origin, numHens, numRoosters, placeTo, ageChicken } = batchData;
 
@@ -81,41 +50,8 @@ export async function submitChickenArrival (batchData) {
 
 
 
-// Update Num Chick in Brooder after hatch
-export async function addChickToBrooder (hatchData) {
-  const brooderID = hatchData.brooderID;
-  const numChick = hatchData.numChick;
-  const result = await pool.query(`UPDATE BROODER
-  SET brooder.numChick = brooder.numChick + ${numChick}, brooder.availableChick = brooder.availableChick + ${numChick}
-  WHERE brooderID = '${brooderID}'`);
-  return result;
-}
 
 
-
-// Update Incubator
-export async function updateIncubator (incubatorData) {
-  const incubatorID = incubatorData.incubatorID;
-  const hatchingRate = +incubatorData.hatchRate;
-  const eggOut = incubatorData.eggInBasket;
-  const result = await pool.query(`UPDATE INCUBATOR
-  SET incubator.totalEggInside = incubator.totalEggInside - ?,
-  incubator.hatchingRate = ?
-  WHERE incubatorID = ?`,
-  [+eggOut, +hatchingRate, incubatorID]);
-  return result;
-}
-
-// Update Incubator Egg
-export async function updateIncubatorEgg (trayData) {
-  const incubatorID = trayData.incubatorID;
-  const numEggs = trayData.numEggs;
-
-  const result = await pool.query(`UPDATE incubator
-  SET incubator.totalEggInside = incubator.totalEggInside + ${numEggs}
-  WHERE incubatorID = '${incubatorID}'`);
-  return result;
-}
 
 // Update All Egg QTY
 export async function updateEggs (eggData) {
@@ -130,8 +66,6 @@ export async function updateEggs (eggData) {
 
   return result;
 }
-
-
 
 // Update Record Surveillance Status
 export async function updateChickenHealthStatus (recordID, status) {
@@ -215,16 +149,6 @@ export async function getChickDeadCurrMonth () {
   return result;
 }
 
-
-// Get All Incubator
-export async function getAllIncubator () {
-  const [result] = await pool.query(`
-  SELECT *
-  FROM incubator
-  `);
-  return result;
-}
-
 // Get Incubator
 export async function getIncubator (incubatorID) {
   const [result] = await pool.query(`
@@ -246,54 +170,6 @@ export async function getIncubatorHR (incubatorID) {
 }
 
 
-
-
-
-// Get Number Egg in Hatching Basket
-export async function getNumEggsInBasket (incubatorID) {
-  const [result] = await pool.query(`
-  SELECT numEggs
-  FROM \`record-incubator\`
-  WHERE dateOut = CURDATE()
-  AND incubatorID = '${incubatorID}'
-  `);
-  return result;
-}
-
-// Get tray record that is moved to hatching basket
-export async function getTrayToBasketRecord (data) {
-  const incubatorID = data.id;
-  const [result] = await pool.query(`
-    SELECT trayID, numEggs, dateOut
-    FROM \`record-incubator\`
-    WHERE dateMove = CURDATE()
-    AND incubatorID = '${incubatorID}'
-    `);
-  return result;
-}
-
-// Get record-incubator for occupied tray
-export async function getIncubatorRecord (data) {
-  const incubatorID = data.id;
-  const [result] = await pool.query(`
-  SELECT trayID, dateEnter, dateMove
-  FROM \`record-incubator\`
-  WHERE incubatorID = ?
-  AND dateMove > CURDATE()
-  ORDER BY trayID ASC;
-  `, [incubatorID]);
-  return result;
-}
-
-// Get hatching date
-export async function getHatchingDate () {
-  const [result] = await pool.query(`
-  SELECT incubatorID, dateOut
-  FROM  \`record-incubator\`
-  WHERE dateOut = CURDATE()
-  ORDER BY incubatorID`);
-  return result;
-}
 
 // Get incubation data for current month (num egg, hatch, not hatch, hatch rate)
 export async function getIncubationData () {

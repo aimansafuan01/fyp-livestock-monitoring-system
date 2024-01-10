@@ -4,9 +4,6 @@ import dotenv from 'dotenv';
 import session from 'express-session';
 import {
   login,
-  getAllIncubator, submitTrayRecord, updateIncubatorEgg,
-  getNumEggsInBasket, getIncubatorRecord, getHatchingDate,
-  getTrayToBasketRecord, addChickToBrooder, updateIncubator,
   getTodayEgg, getTodayChickDead, getTodayChickenDead,
   getNumEggCurrWeek, getNumChickDeadCurrWeek, getNumChickenDeadCurrWeek,
   getNumberOfChicken, getNumEggsMonthly,
@@ -15,15 +12,12 @@ import {
   getHealthSymptoms, getHealthStatus, submitChickenHealthRecord,
   getChickenHealthRecord, updateChickenHealthStatus, getAllChicken, getCurrMonthEggs,
   getAsOfTotalEggs, getFirstDateCoopRecord, avgDailyEgg, getChickenDeadCurrMonth,
-  getMonthlyChickenDead, submitHatchRecord, getIncubationData, getFirstIncubationDate,
+  getMonthlyChickenDead, getIncubationData, getFirstIncubationDate,
   getTotalChickenDead, getTotalIncubationData, getDailyEggsInAMonth, getDailyChickDeathInAMonth,
   getTotalChickDeathCurrMonth, getCumTotalChickDeath, submitChickenArrival, getBatchData,
   register
 } from './database.js';
-import { sendAlert } from './mailer.js';
-import CoopRoutes from './routes/coopRoutes.js';
-import ChickenRoutes from './routes/chickenRoutes.js';
-import BrooderRoutes from './routes/brooderRoutes.js';
+import * as Routes from './routes/routes.js';
 
 dotenv.config();
 const app = express();
@@ -46,13 +40,16 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
 // Coop Routes
-app.use('/coop', CoopRoutes);
+app.use('/coop', Routes.CoopRoutes);
 
 // Chicken Routes
-app.use('/chicken', ChickenRoutes);
+app.use('/chicken', Routes.ChickenRoutes);
 
 // Brooder Routes
-app.use('/brooder', BrooderRoutes);
+app.use('/brooder', Routes.BrooderRoutes);
+
+// Incubator Routes
+app.use('/incubator', Routes.IncubatorRoutes);
 
 // Login
 app.get(['/', '/login'], (req, res) => {
@@ -116,36 +113,6 @@ app.get('/daily-record', (req, res) => {
 // Create Chicken Record
 app.get('/chicken-record', (req, res) => {
   res.render('chicken-record');
-});
-
-// View Incubator
-app.get('/incubator/view', async (req, res) => {
-  const allIncubator = await getAllIncubator();
-  const hatchingDate = await getHatchingDate();
-  res.render('incubator-record', { allIncubator, hatchingDate });
-});
-
-// Get Incubator Tray Record Page
-app.get('/incubator/create-tray', async (req, res) => {
-  const data = {
-    id: req.query.id
-  };
-  const incubatorResult = await getIncubatorRecord(data);
-  const numEggsInTray = await getTrayToBasketRecord(data);
-  res.render('create-tray-record', { data, incubatorResult, numEggsInTray });
-});
-
-// Get Incubator Hatch Record Page
-app.get('/incubator/create-hatch', async (req, res) => {
-  const incubatorID = req.query.id;
-  const numEgg = await getNumEggsInBasket(incubatorID);
-  const numEggData = numEgg.map((data) => data.numEggs);
-  const data = {
-    id: incubatorID,
-    numEgg: numEggData.length > 0 ? numEggData : 0
-  };
-
-  res.render('create-hatch-record', data);
 });
 
 // Get surveillance Record Page
@@ -245,82 +212,7 @@ app.post('/submit-arrival-chicken-record', async (req, res) => {
   }
 });
 
-// Submit Incubator Tray Record
-app.post('/submit-tray-record', async (req, res) => {
-  const trayData = {
-    incubatorID: req.body.incubatorID,
-    dateIn: req.body.dateIn,
-    trayID: req.body.trayID,
-    numEggs: req.body.numEggs
-  };
-  const resultSubmitTray = await submitTrayRecord(trayData);
-  const resultUpdateEgg = await updateIncubatorEgg(trayData);
-  if (resultSubmitTray && resultUpdateEgg) {
-    res.status(200)
-      .redirect('/incubator/view');
-  } else {
-    console.log('Something went wrong');
-  }
-});
 
-// Submit Incubator Hatch Record
-app.post('/submit-hatch-record', async (req, res) => {
-  const incubatorID = req.body.incubatorID;
-  const dateHatch = req.body.dateOut;
-  const eggInBasket = req.body.numEgg;
-  const notHatch = req.body.notHatch;
-  const brooderID = req.body.brooderID;
-  const numChick = +eggInBasket - +notHatch;
-  const hatchRate = Number((+numChick / +eggInBasket) * 100).toFixed(2);
-
-  try {
-    const brooderData = {
-      brooderID,
-      numChick
-    };
-
-    const incubatorData = {
-      incubatorID,
-      hatchRate,
-      eggInBasket
-    };
-
-    const incubatorSurveillance = {
-      coopID: null,
-      brooderID: null,
-      incubatorID
-    };
-
-    const hatchData = {
-      dateHatch,
-      numEgg: eggInBasket,
-      numHatch: numChick,
-      numNotHatch: notHatch,
-      hatchRate,
-      incubatorID,
-      brooderID
-    };
-
-    const resultChickBrooder = await addChickToBrooder(brooderData);
-    const resultUpdateIncubator = await updateIncubator(incubatorData);
-    const resultSubmitHatchRecord = await submitHatchRecord(hatchData);
-    const surveillanceThreshold = await getSurveillance();
-
-    if (hatchRate < surveillanceThreshold[0].hatchingRateThreshold) {
-      await submitSurveillanceRecord(incubatorSurveillance);
-      sendAlert();
-    }
-
-    if (resultChickBrooder && resultUpdateIncubator && resultSubmitHatchRecord) {
-      res.status(200)
-        .redirect('/incubator/view');
-    }
-  } catch (error) {
-    console.error('Error during submitting hatch record', error);
-    res.status(500)
-      .send('Internal Server Error');
-  }
-});
 
 app.post('/submit-chicken-health-record', async (req, res) => {
   const origin = req.body.origin;
