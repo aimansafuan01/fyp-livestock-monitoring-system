@@ -13,7 +13,7 @@ import {
   getAsOfTotalEggs, getFirstDateCoopRecord, avgDailyEgg, getChickenDeadCurrMonth,
   getMonthlyChickenDead, getIncubationData, getFirstIncubationDate,
   getTotalChickenDead, getTotalIncubationData, getDailyEggsInAMonth, getDailyChickDeathInAMonth,
-  getTotalChickDeathCurrMonth, getCumTotalChickDeath, submitChickenArrival, getBatchData,
+  getTotalChickDeathCurrMonth, getCumTotalChickDeath,
   register
 } from './database.js';
 import * as Routes from './routes/routes.js';
@@ -47,8 +47,11 @@ app.use('/chicken-transfer', Routes.ChickenTransferRoutes);
 // Brooder Routes
 app.use('/brooder', Routes.BrooderRoutes);
 
-// Incubator Routes
+// Chicken Health Routes
 app.use('/chicken-health', Routes.ChickenHealthRoutes);
+
+// Chicken Batch Routes
+app.use('/chicken-batch', Routes.ChickenBatchRoutes);
 
 // Login
 app.get(['/', '/login'], (req, res) => {
@@ -121,25 +124,6 @@ app.get('/surveillance-record', async (req, res) => {
   res.render('surveillance-record', { recordSurveillanceData });
 });
 
-// Get Arrival Chicken Page
-app.get('/arrival-chicken-record', async (req, res) => {
-  const batchData = await getBatchData();
-  res.render('arrival-chicken-record', { batchData });
-});
-
-// Get Create Arrival Chicken Record Page
-app.get('/create-arrival-chicken-record', async (req, res) => {
-  try {
-    const coopIDs = await getCoopIDs();
-    const coopIDData = coopIDs.map((data) => data.coopID);
-
-    res.render('create-arrival-chicken-record', { coopIDData });
-  } catch (error) {
-    res.status(500)
-      .send('Internal Server Error');
-  }
-});
-
 // Update Surveillance Status
 app.get('/update-surveillance', async (req, res) => {
   try {
@@ -151,41 +135,6 @@ app.get('/update-surveillance', async (req, res) => {
     }
   } catch (error) {
     console.error('Error during updating coop record', error);
-    res.status(500)
-      .send('Internal Server Error');
-  }
-});
-
-app.post('/submit-arrival-chicken-record', async (req, res) => {
-  const origin = req.body.origin;
-  const numHens = req.body.numHens;
-  const numRoosters = req.body.numRoosters;
-  const placeTo = req.body.placeTo;
-  const ageChicken = req.body.ageChicken;
-
-  const batchData = {
-    origin,
-    numHens,
-    numRoosters,
-    placeTo,
-    ageChicken
-  };
-
-  const coopData = {
-    coopID: placeTo,
-    numOfHens: numHens,
-    numOfRoosters: numRoosters
-  };
-
-  try {
-    const submitArrivalChickenRecord = await submitChickenArrival(batchData);
-    const updateNumChicken = await addNumChickenCoop(coopData);
-    if (submitArrivalChickenRecord && updateNumChicken) {
-      res.status(200)
-        .redirect('/arrival-chicken-record');
-    }
-  } catch (error) {
-    console.error('Error during submitting coop record', error);
     res.status(500)
       .send('Internal Server Error');
   }

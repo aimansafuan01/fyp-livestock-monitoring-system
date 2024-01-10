@@ -20,26 +20,6 @@ export async function login (username, password) {
   return rows[0];
 }
 
-
-
-
-
-export async function submitChickenArrival (batchData) {
-  const { origin, numHens, numRoosters, placeTo, ageChicken } = batchData;
-
-  const [result] = await pool.query(`
-  INSERT INTO \`record-batch\` (origin, numHens, numRoosters, placeTo, ageChicken)
-  VALUES (?, ?, ?, ?, ?)`,
-  [origin, numHens, numRoosters, placeTo, ageChicken]);
-
-  return result;
-}
-
-
-
-
-
-
 // Update All Egg QTY
 export async function updateEggs (eggData) {
   const numEggs = eggData.numEggs;
@@ -156,8 +136,6 @@ export async function getIncubatorHR (incubatorID) {
   return result;
 }
 
-
-
 // Get incubation data for current month (num egg, hatch, not hatch, hatch rate)
 export async function getIncubationData () {
   const [result] = await pool.query(`
@@ -169,14 +147,6 @@ export async function getIncubationData () {
   MONTH(created_at) = MONTH(CURDATE())
   AND YEAR(created_at) = YEAR(CURDATE())`);
   return result;
-}
-
-// Get chicken batch data
-export async function getBatchData () {
-  const [result] = await pool.query(`
-  SELECT * FROM \`record-batch\`
-  ORDER BY arrival_date`);
-  return [result];
 }
 
 // Get today's egg
@@ -400,8 +370,6 @@ export async function getRecordSurveillance () {
   SELECT * FROM \`record-surveillance\` WHERE status = 'Unresolved'`);
   return result;
 }
-
-
 
 // Get first incubation date
 export async function getFirstIncubationDate () {

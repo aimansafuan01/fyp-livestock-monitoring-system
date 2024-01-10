@@ -70,7 +70,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="/daily-record">
+          <a class="nav-link text-white " href="/daily-record">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">inventory</i>
             </div>
@@ -86,15 +86,15 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white active bg-gradient-warning" href="/arrival-chicken-record">
+          <a class="nav-link text-white active bg-gradient-warning" href="/chicken-batch/view">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">add</i>
             </div>
-            <span class="nav-link-text ms-1">Arrival Chicken Record</span>
+            <span class="nav-link-text ms-1">Batch Chicken Record</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="/surveillance-record">
+          <a class="nav-link text-white " href="/surveillance-record">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">visibility</i>
             </div>
@@ -126,137 +126,104 @@
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <!------------------------------ Left Navbar ---------------------->
 
-    <!------------------------------ Top Navbar ----------------------->
+    <!-- Top Navbar -->
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur"
       data-scroll="true">
       <div class="container-fluid py-1 px-3">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/home">Dashboard</a></li>
-            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Arrival Chicken Record</li>
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/chicken-batch/view">Batch Chicken Record</a>
+            </li>
+            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Create Batch Chicken Record</li>
           </ol>
-          <h4 class="font-weight-bolder mb-0">Arrival Chicken Record</h4>
+          <h4 class="font-weight-bolder mb-0">Create Batch Chicken Record</h4>
         </nav>
       </div>
     </nav>
-    <!------------------------------- Top Navbar ----------------------->
+    <!-- Top Navbar -->
+
     
-    <div class="row ms-2 mt-2 mb-0">
-      <div class="col-4">
-        <button type="button" class="btn btn-sm btn-warning p-4 mb-0"
-          onclick="location.href='/create-arrival-chicken-record'">
-          Create new record
-        </button>
-      </div>
-    </div>
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-12">
-          <div class="card my-4">
-            <div class="card-body px-0 pb-2">
-              <div class="table-responsive p-0">
-                <table class="table align-items-center mb-0">
-                  <thead>
-                    <tr>
-                      <th class="text-uppercase text-secondary text-lg font-weight-bolder">Batch ID</th>
-                      <th class="text-uppercase text-secondary text-lg font-weight-bolder ps-2">Origin</th>
-                      <th class="text-center text-secondary text-lg font-weight-bolder ps-2">Hens</th>
-                      <th class="text-center text-secondary text-lg font-weight-bolder ps-2">Roosters</th>
-                      <th class="text-center text-uppercase text-secondary text-lg font-weight-bolder">Place to
-                      </th>
-                      <th class="text-center text-uppercase text-secondary text-lg font-weight-bolder">Date
-                      </th>
-                      <th class="text-center text-uppercase text-secondary text-lg font-weight-bolder">Age
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                      <% for (let i=0; i<batchData.length; i++) { 
-                        const currMonth = new Date().getMonth()
-                        const currYear = new Date().getYear()
-                        const arrivalMonth = batchData[i][0].arrival_date.getMonth()
-                        const arrivalYear = batchData[i][0].arrival_date.getYear()
-                        const monthPassed = currMonth - arrivalMonth
-                        const yearPassed = currYear - arrivalYear
-                        let ageChicken = yearPassed > 0 ? (batchData[i][0].ageChicken + monthPassed) + 12*yearPassed : batchData[i][0].ageChicken + monthPassed
-                        %>
-                      <tr>
-                        <td class="align-middle text-center">
-                          <div class="d-flex px-2 py-1">
-                            <div class="justify-content-center">
-                              <h6 class="mb-0 text-md ps-2">
-                                <%= batchData[i][0].batchID %>
-                              </h6>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <p class="text-md font-weight-bold mb-0">
-                            <%= batchData[i][0].origin %>
-                          </p>
-                        </td>
-                        <td class="align-middle text-center text-sm">
-                          <p class="text-md mb-0">
-                            <%= batchData[i][0].numHens %>
-                          </p>
-                        </td>
-                        <td class="align-middle text-center text-sm">
-                          <p class="text-md mb-0">
-                            <%= batchData[i][0].numRoosters %>
-                          </p>
-                        </td>
-                        <td class="align-middle text-center text-sm">
-                          <p class="text-md mb-0">
-                          <%= batchData[i][0].placeTo %>
-                          </p>
-                        </td>
-                        <td class="align-middle text-center text-sm">
-                          <p class="text-md mb-0">
-                            <%= batchData[i][0].arrival_date.toLocaleDateString('en-MY')  %>
-                          </p>
-                          <p class="text-xs mb-0">
-                            <%= batchData[i][0].arrival_date.toLocaleTimeString('en-MY')  %>
-                          </p>
-                        </td>
-                        <td class="align-middle text-center text-sm">
-                          <p class="text-md mb-0">
-                            <%= ageChicken %>
-                          </p>
-                          <p class="text-xs text-secondary mb-0">Month</p>
-                        </td>
-                      </tr>
+    <div class="p-3 mx-5 border border-secondary rounded shadow-lg mb-4">
+      <form class="needs-validation" action="/chicken-batch/submit" method="post" role="form" class="text-start">
+        <div id="formRepeat">
+          <div class="row border px-2 py-2 mx-1">
+            <div class="row mt-1">
+              <div class="col-12 col-md-2">
+                <label for="origin" class="form-label pt-2 mb-0">Origin</label>
+                <input type="text" class="form-control text-black ps-2" name="origin">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 col-md-3 pb-2">
+                <label for="numHens" class="form-label pt-2 mb-0">Number of Hens</label>
+                <input type="number" class="form-control p-2" name="numHens"
+                  placeholder="Enter number of dead Hens" min="0" value="0">
+              </div>
+              <div class="col-12 col-md-3 pb-2">
+                <label for="numRoosters" class="form-label pt-2 mb-0">Number of Roosters</label>
+                <input type="number" class="form-control p-2" name="numRoosters"
+                  placeholder="Enter number of dead Roosters" min="0" value="0">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 col-md-4 pb-2">
+                <label for="coopID" class="form-label pt-2 mb-0">Place To</label>
+                <select class="form-select ps-2" aria-label="Default select example" name="placeTo">
+                  <option selected>Choose Destination</option>
+                  <% for (coopID of coopIDData) {%>
+                    <option value="<%= coopID %>">
+                      <%= coopID %>
+                    </option>
                     <% } %>
-                  </tbody>
-                </table>
+                </select>
+              </div>
+              <div class="col-12 col-md-2 pb-2">
+                <label for="ageChicken" class="form-label pt-2 mb-0">Age of Chicken</label>
+                <input type="number" class="form-control p-2" name="ageChicken" min="0" value="0">
               </div>
             </div>
           </div>
         </div>
-      </div>
+        <div class="col-12 mt-3 align-self-end d-flex">
+          <button class="btn btn-warning" type="submit">Submit form</button>
+        </div>
+      </form>
+    </div>
 
+    <!--   Core JS Files   -->
+    <script src="/assets/js/core/popper.min.js"></script>
+    <script src="/assets/js/core/bootstrap.min.js"></script>
+    <script src="/assets/js/plugins/perfect-scrollbar.min.js"></script>
+    <script src="/assets/js/plugins/smooth-scrollbar.min.js"></script>
+    <script src="/assets/js/plugins/chartjs.min.js"></script>
 
-
-      <!--   Core JS Files   -->
-      <script src="/assets/js/core/popper.min.js"></script>
-      <script src="/assets/js/core/bootstrap.min.js"></script>
-      <script src="/assets/js/plugins/perfect-scrollbar.min.js"></script>
-      <script src="/assets/js/plugins/smooth-scrollbar.min.js"></script>
-      <script src="/assets/js/plugins/chartjs.min.js"></script>
-
-      <script>
-        var win = navigator.platform.indexOf('Win') > -1;
-        if (win && document.querySelector('#sidenav-scrollbar')) {
-          var options = {
-            damping: '0.5'
-          }
-          Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    <script>
+      var win = navigator.platform.indexOf('Win') > -1;
+      if (win && document.querySelector('#sidenav-scrollbar')) {
+        var options = {
+          damping: '0.5'
         }
-      </script>
+        Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+      }
+    </script>
 
-      <!-- Github buttons -->
-      <script async defer src="https://buttons.github.io/buttons.js"></script>
-      <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-      <script src="../assets/js/material-dashboard.min.js?v=3.1.0"></script>
+    <!-- Add value in Total number of eggs automatically -->
+    <script>
+      document.addEventListener('input', function () {
+        var numOfEggs = document.getElementById('numOfEggs').value;
+        var numOfNC = document.getElementById('numOfNC').value;
+
+        var acceptedEggs = numOfEggs - numOfNC;
+
+        document.querySelector('input[name="acceptedEggs"]').value = acceptedEggs;
+      })
+    </script>
+
+    <!-- Github buttons -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+    <script src="../assets/js/material-dashboard.min.js?v=3.1.0"></script>
 </body>
 
 </html>
