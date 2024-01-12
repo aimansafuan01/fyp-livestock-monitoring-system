@@ -13,7 +13,7 @@ export const getRegisterPage = (req, res) => {
 };
 
 // Post Login
-export const postLoginCredentials = async (req, res) => {
+export const submitLoginCredentials = async (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
   const result = await UserDB.login(username, password);

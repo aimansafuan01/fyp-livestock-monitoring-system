@@ -3,7 +3,6 @@ import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 import session from 'express-session';
 import * as Routes from './routes/routes.js';
-import mysql2 from 'mysql2';
 
 dotenv.config();
 const app = express();
@@ -58,13 +57,6 @@ app.use('/dashboard', Routes.DashboardRoutes);
 // Daily Record
 app.get('/daily-record', (req, res) => {
   res.render('daily-record');
-});
-
-const connection = mysql2.createConnection({
-  host: process.env.MYSQL_HOST,
-  user: process.env.MYSQL_USER,
-  password: process.env.MYSQL_PASSWORD,
-  database: process.env.MYSQL_DATABASE
 });
 
 // Start the server
