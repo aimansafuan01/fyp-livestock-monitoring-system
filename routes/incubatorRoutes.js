@@ -1,0 +1,19 @@
+import express from 'express';
+import * as IncubatorCtrl from '../controller/incubatorCtrl.js';
+
+const router = express.Router();
+
+// Get Incubator Page
+router.get('/view', IncubatorCtrl.getIncubatorPage);
+
+// Get Tray Form
+router.get('/create-tray', IncubatorCtrl.getIncubatorTrayForm);
+
+// Get Hatch Form
+router.get('/create-hatch', IncubatorCtrl.getIncubatorHatchForm);
+
+router.post('/submit-tray-record', IncubatorCtrl.submitIncubatorTrayForm);
+
+router.post('/submit-hatch-record', IncubatorCtrl.submitIncubatorHatchForm);
+
+export default router;

@@ -70,7 +70,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white active bg-gradient-warning" href="/daily-record">
+          <a class="nav-link text-white " href="/daily-record">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">inventory</i>
             </div>
@@ -86,7 +86,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white " href="/chicken-batch/view">
+          <a class="nav-link text-white active bg-gradient-warning" href="/chicken-batch/view">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">add</i>
             </div>
@@ -126,41 +126,61 @@
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <!------------------------------ Left Navbar ---------------------->
 
-    <!------------------------------ Top Navbar ----------------------->
+    <!-- Top Navbar -->
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur"
       data-scroll="true">
       <div class="container-fluid py-1 px-3">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/dashboard/view">Dashboard</a></li>
-            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/daily-record">Daily Record</a></li>
-            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/brooder/view">Brooder</a></li>
-            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Brooder Record</li>
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/chicken-batch/view">Batch Chicken Record</a>
+            </li>
+            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Create Batch Chicken Record</li>
           </ol>
-          <h4 class="font-weight-bolder mb-0">Brooder Record</h4>
+          <h4 class="font-weight-bolder mb-0">Create Batch Chicken Record</h4>
         </nav>
       </div>
     </nav>
-    <!------------------------------- Top Navbar ----------------------->
+    <!-- Top Navbar -->
 
-
+    
     <div class="p-3 mx-5 border border-secondary rounded shadow-lg mb-4">
-      <form class="needs-validation" action="/brooder/submit" method="post" role="form" class="text-start">
+      <form class="needs-validation" action="/chicken-batch/submit" method="post" role="form" class="text-start">
         <div id="formRepeat">
           <div class="row border px-2 py-2 mx-1">
-            <div class="row mx-1">
-              Brooder ID
-            </div>
             <div class="row mt-1">
               <div class="col-12 col-md-2">
-                <input type="text" class="form-control text-black ps-2" name="brooderID" value="<%= id %>" readonly>
+                <label for="origin" class="form-label pt-2 mb-0">Origin</label>
+                <input type="text" class="form-control text-black ps-2" name="origin">
               </div>
             </div>
             <div class="row">
-              <div class="col pb-2">
-                <label for="numDeadChick" class="form-label pt-2 mb-0">Number of Dead Chick</label>
-                <input type="number" class="form-control p-2" name="numDeadChick"
+              <div class="col-12 col-md-3 pb-2">
+                <label for="numHens" class="form-label pt-2 mb-0">Number of Hens</label>
+                <input type="number" class="form-control p-2" name="numHens"
                   placeholder="Enter number of dead Hens" min="0" value="0">
+              </div>
+              <div class="col-12 col-md-3 pb-2">
+                <label for="numRoosters" class="form-label pt-2 mb-0">Number of Roosters</label>
+                <input type="number" class="form-control p-2" name="numRoosters"
+                  placeholder="Enter number of dead Roosters" min="0" value="0">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 col-md-4 pb-2">
+                <label for="coopID" class="form-label pt-2 mb-0">Place To</label>
+                <select class="form-select ps-2" aria-label="Default select example" name="placeTo">
+                  <option selected>Choose Destination</option>
+                  <% for (coopID of coopIDData) {%>
+                    <option value="<%= coopID %>">
+                      <%= coopID %>
+                    </option>
+                    <% } %>
+                </select>
+              </div>
+              <div class="col-12 col-md-2 pb-2">
+                <label for="ageChicken" class="form-label pt-2 mb-0">Age of Chicken</label>
+                <input type="number" class="form-control p-2" name="ageChicken" min="0" value="0">
               </div>
             </div>
           </div>
@@ -186,6 +206,18 @@
         }
         Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
       }
+    </script>
+
+    <!-- Add value in Total number of eggs automatically -->
+    <script>
+      document.addEventListener('input', function () {
+        var numOfEggs = document.getElementById('numOfEggs').value;
+        var numOfNC = document.getElementById('numOfNC').value;
+
+        var acceptedEggs = numOfEggs - numOfNC;
+
+        document.querySelector('input[name="acceptedEggs"]').value = acceptedEggs;
+      })
     </script>
 
     <!-- Github buttons -->
