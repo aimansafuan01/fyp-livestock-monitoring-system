@@ -44,6 +44,21 @@ export async function getAllBrooder () {
   }
 }
 
+// Get Available Brooder
+export async function getAvailableBrooder () {
+  try {
+    const [result] = await pool.query(`
+    SELECT brooderID
+    FROM brooder
+    WHERE numChick=0
+    `);
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error fetching available brooder data from database');
+  }
+}
+
 // Update broder mortality rate
 export async function updateBrooderMR (brooderData) {
   try {

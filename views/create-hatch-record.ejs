@@ -157,15 +157,15 @@
             <div class="row mt-1">
               <div class="col-12 col-md-2">
                 <label for="incubatorID" class="form-label pt-2 mb-0">Incubator ID</label>
-                <input type="text" class="form-control text-black ps-2" name="incubatorID" value="<%= id %>" readonly>
+                <input type="text" class="form-control text-black ps-2" name="incubatorID" value="<%= data.id %>" readonly>
               </div>
               <div class="col-12 col-md-2">
                 <label for="incubatorID" class="form-label pt-2 mb-0">Date</label>
-                <input type="text" class="form-control text-black ps-2" name="dateOut" value="<%= currDate %>" readonly>
+                <input type="text" class="form-control text-black ps-2" name="dateOut" value="<%= data.currDate %>" readonly>
               </div>
               <div class="col-12 col-md-2">
                 <label for="incubatorID" class="form-label pt-2 mb-0">Eggs in Basket</label>
-                <input type="text" class="form-control text-black ps-2" name="numEgg" value="<%= numEgg %>" readonly>
+                <input type="text" class="form-control text-black ps-2" name="numEgg" value="<%= data.numEgg %>" readonly>
               </div>
             </div>
             <div class="row mt-1">
@@ -176,13 +176,9 @@
               <div class="col-12 col-md-3">
                 <label for="brooderID" class="form-label pt-2 mb-0">Place to brooder</label>
                 <select class="form-select ps-2" name="brooderID">
-                  <option selected>Choose Brooder</option>
-                  <option value="BR1">BR1</option>
-                  <option value="BR2">BR2</option>
-                  <option value="BR3">BR3</option>
-                  <option value="BR4">BR4</option>
-                  <option value="BR5">BR5</option>
-                  <option value="BR6">BR6</option>
+                   <% for (let i=0; i<availableBrooderID.length; i++) { %>
+                  <option value="<%= availableBrooderID[i] %>"><%= availableBrooderID[i] %></option>
+                    <% } %>
                 </select>
               </div>
             </div>

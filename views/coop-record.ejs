@@ -133,9 +133,9 @@
           <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/dashboard/view">Dashboard</a></li>
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/daily-record">Daily Record</a></li>
-            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Coop</li>
+            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Chicken and Egg Record</li>
           </ol>
-          <h4 class="font-weight-bolder mb-0">Coop</h4>
+          <h4 class="font-weight-bolder mb-0">Chicken and Egg Record</h4>
         </nav>
       </div>
     </nav>
@@ -154,11 +154,9 @@
         <div class="col-12 col-md-7 mb-6 mx-auto">
           <div class="card enlargeable">
             <div class="card-header p-3 pt-2">
-              <div class="icon-xl shadow-dark text-center border-radius-xl mt-n4 position-absolute"
-                style="background-color: #65cf65 ; display: flex; align-items: center; justify-content: center;">
-                <i class="material-icons opacity-10" style="color:white">visibility</i>
+              <div class="position-absolute">
+                <h3>Overall Report</h3>
               </div>
-      
               <div class="text-end pt-1">
                 <p class="text-sm mb-0 text-capitalize">Mortality Rate</p>
                 <h2 class="mb-0"><%= avgMortality.toFixed(1) %>%</h2>
@@ -175,14 +173,13 @@
         <div class="col-12 col-md-5 mb-6 mx-auto">
           <div class="card enlargeable">
             <div class="card-header p-3 pt-2">
-              <div class="icon-xl shadow-dark text-center border-radius-xl mt-n4 position-absolute"
-                style="background-color: #ff3131 ; display: flex; align-items: center; justify-content: center;">
-                <i class="material-icons opacity-10" style="color:white">monitor_heart</i>
+              <div class="position-absolute">
+                <h3>Sick Bay Report</h3>
               </div>
       
               <div class="text-end pt-1">
                 <p class="text-sm mb-0 text-capitalize">Mortality Rate</p>
-                <h2 class="mb-0"><%= coop[9]['SB'].mortalityRate %>%</h2>
+                <h2 class="mb-0"><%= Number(coop[9]['SB'].mortalityRate).toFixed(1) %>%</h2>
               </div>
             </div>
             <hr class="dark horizontal my-0">
