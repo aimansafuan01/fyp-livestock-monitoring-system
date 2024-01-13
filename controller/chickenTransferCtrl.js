@@ -12,6 +12,26 @@ export const getChickenRecordPage = async (req, res) => {
   }
 };
 
+export const getChickenTransferRecord = async (req, res) => {
+  const coopID = req.query.id;
+  try {
+    const transferRecordData = await ChickenTransferDB.getAllChickenTransferRecord(coopID);
+    const transferIDData = transferRecordData.map((data) => data.transferID);
+    const originData = transferRecordData.map((data) => data.origin);
+    const destinationData = transferRecordData.map((data) => data.destination);
+    const transferredDateData = transferRecordData.map((data) => {
+      return data.transfered_at.toLocaleDateString('en-MY');
+    });
+    const numHensData = transferRecordData.map((data) => data.numOfHens);
+    const numRoostersData = transferRecordData.map((data) => data.numOfRoosters);
+    res.status(200)
+      .render('view-chicken-transfer', { coopID, transferIDData, originData, destinationData, transferredDateData, numHensData, numRoostersData });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
 // Get Chicken Record Page
 export const getChickenTransferForm = async (req, res) => {
   try {
