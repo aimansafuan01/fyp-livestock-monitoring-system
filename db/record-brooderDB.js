@@ -99,3 +99,19 @@ export async function getNumChickDeadCurrWeek () {
     throw new Error('Error fetching number chick dead current week data from the database');
   }
 }
+
+// Get brooder record
+export async function getBrooderRecordAll (brooderID) {
+  try {
+    const [result] = await pool.query(`
+    SELECT *
+    FROM \`record-brooder\`
+    WHERE brooderID=?
+    ORDER BY created_at`,
+    [brooderID]);
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error fetching record brooder data from the database');
+  }
+}
