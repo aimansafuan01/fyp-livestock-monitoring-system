@@ -134,9 +134,10 @@
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/dashboard/view">Dashboard</a></li>
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/daily-record">Daily Record</a></li>
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/coop/view">Coop</a></li>
-            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Coop Record</li>
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/coop/view/record?id=<%= initialCoopRecord[0].coopID %>">View Coop Record (<%= initialCoopRecord[0].coopID %>)</a></li>
+            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Edit Coop Record (<%= initialCoopRecord[0].coopID %>)</li>
           </ol>
-          <h4 class="font-weight-bolder mb-0">Coop Record</h4>
+          <h4 class="font-weight-bolder mb-0">Edit Coop Record</h4>
         </nav>
       </div>
     </nav>
@@ -144,35 +145,37 @@
 
 
     <div class="p-3 mx-5 border border-secondary rounded shadow-lg mb-4">
-      <form class="needs-validation" action="/coop/submit" method="post" role="form" class="text-start">
+      <form class="needs-validation" action="/coop/edit/record" method="post" role="form" class="text-start">
         <div id="formRepeat">
           <div class="row border px-2 py-2 mx-1">
             <div class="row mx-1">
-              Coop ID
-            </div>
-            <div class="row mt-1">
-              <div class="col-12 col-md-2">
-                <input type="text" class="form-control text-black ps-2" name="coopID" value="<%= id %>" readonly>
+              <div class="col-2 ps-0">
+                <label for="recordID">Record ID</label>
+                <input type="text" class="form-control text-black ps-2" name="recordID" id="recordID" value="<%= initialCoopRecord[0].recordID %>" readonly>
+              </div>
+              <div class="col-2 ps-0">
+                <label for="recordID">Coop ID</label>
+                <input type="text" class="form-control text-black ps-2" name="coopID" id="coopID" value="<%= initialCoopRecord[0].coopID %>" readonly>
               </div>
             </div>
             <div class="row">
               <div class="col pb-2">
-                <label for="numOfDeadHensR1" class="form-label pt-2 mb-0">Number of Dead Hens</label>
-                <input type="number" class="form-control p-2" name="numOfDeadHensR1" placeholder="Enter number of dead Hens" min="0" value="0">
+                <label for="numOfDeadHens" class="form-label pt-2 mb-0">Number of Dead Hens</label>
+                <input type="number" class="form-control p-2" name="numOfDeadHens" placeholder="Enter number of dead Hens" min="0" value="<%= initialCoopRecord[0].numDeadHen %>">
               </div>
               <div class="col pb-2">
-                <label for="numOfDeadRoostersR1" class="form-label pt-2 mb-0">Number of Dead Roosters</label>
-                <input type="number" class="form-control p-2" name="numOfDeadRoostersR1" placeholder="Enter number of dead Roosters" min="0" value="0">
+                <label for="numOfDeadRoosters" class="form-label pt-2 mb-0">Number of Dead Roosters</label>
+                <input type="number" class="form-control p-2" name="numOfDeadRoosters" placeholder="Enter number of dead Roosters" min="0" value="<%= initialCoopRecord[0].numDeadRooster %>">
               </div>
             </div>
             <div class="row">
               <div class="col pb-2">
                 <label for="numOfEggs" class="form-label pt-2 mb-0">Total Number of Collected Eggs</label>
-                <input type="number" class="form-control p-2" name="numOfEggs" id="numOfEggs" placeholder="Enter number of dead Hens" min="0" value="0">
+                <input type="number" class="form-control p-2" name="numOfEggs" id="numOfEggs" placeholder="Enter number of dead Hens" min="0" value="<%= initialCoopRecord[0].numEggs %>">
               </div>
               <div class="col pb-2">
                 <label for="numOfNC" class="form-label pt-2 mb-0">Number of NC Eggs</label>
-                <input type="number" class="form-control p-2" name="numOfNC" id="numOfNC" placeholder="Enter number of dead Hens" min="0" value="0">
+                <input type="number" class="form-control p-2" name="numOfNC" id="numOfNC" placeholder="Enter number of dead Hens" min="0" value="<%= initialCoopRecord[0].numNc %>">
               </div>
               <div class="col pb-2">
                 <label for="acceptedEggs" class="form-label pt-2 mb-0">Number of Accepted Eggs</label>
@@ -206,7 +209,18 @@
 
     <!-- Add value in Total number of eggs automatically -->
     <script>
-      document.addEventListener('input', function() {
+      document.addEventListener('DOMContentLoaded', function() {
+        var numOfEggs = document.getElementById('numOfEggs').value;
+        var numOfNC = document.getElementById('numOfNC').value;
+
+        var acceptedEggs = numOfEggs - numOfNC;
+
+        document.querySelector('input[name="acceptedEggs"]').value = acceptedEggs;
+      })
+    </script>
+
+    <script>
+      document.addEventListener('input', function () {
         var numOfEggs = document.getElementById('numOfEggs').value;
         var numOfNC = document.getElementById('numOfNC').value;
 

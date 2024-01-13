@@ -132,9 +132,9 @@
       <div class="container-fluid py-1 px-3">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-          <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/dashboard/view">Dashboard</a></li>
-          <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/daily-record">Daily Record</a></li>
-          <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/coop/view">Coop</a></li>
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/dashboard/view">Dashboard</a></li>
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/daily-record">Daily Record</a></li>
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/coop/view">Coop</a></li>
             <li class="breadcrumb-item text-sm text-dark active" aria-current="page">View Coop Record (<%= coopIDData[0] %>)</li>
           </ol>
           <h4 class="font-weight-bolder mb-0">View Coop Record</h4>
@@ -211,7 +211,7 @@
                           </div>
                         </td>
                         <td class="align-middle text-center">
-                            <button type="button" class="btn btn-sm btn-warning p-3 px-3">
+                            <button type="button" class="btn btn-sm btn-warning p-3 px-3" onclick="window.location.href='/coop/view/record/edit?id=<%= recordIDData[i] %>'">
                               Edit
                             </button>
                             <button type="button" class="btn btn-sm btn-danger p-3 px-3" data-bs-toggle="modal" data-bs-target="#confirmationModal<%= i %>">

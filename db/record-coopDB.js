@@ -22,8 +22,33 @@ export async function submitCoopRecord (coopData) {
   }
 }
 
+// Submit Edit Coop Record Form
+export async function submitEditCoopRecord (coopData) {
+  try {
+    console.log(coopData);
+    const recordID = coopData.recordID;
+    const coopID = coopData.coopID;
+    const numDeadHen = +coopData.numDeadHen;
+    const numDeadRoosters = +coopData.numDeadRoosters;
+    const numEggs = +coopData.numEggs;
+    const numNc = +coopData.numNc;
+    const numAccepted = +coopData.numAccepted;
+
+    const resultSubmitCoop = await pool.query(`
+    UPDATE \`record-coop\` 
+    SET coopID=?, numDeadHen=?, numDeadRooster=?, numEggs=?, numNc=?, numAccepted=?
+    WHERE recordID=?
+    `, [coopID, numDeadHen, numDeadRoosters, numEggs, numNc, numAccepted, recordID]);
+
+    return resultSubmitCoop;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error submitting coop record to database');
+  }
+}
+
 // Get Coop Record
-export async function getCoopRecord (coopID) {
+export async function getCoopRecordAll (coopID) {
   try {
     const [resultCoopRecord] = await pool.query(`
     SELECT *  FROM \`record-coop\`
@@ -34,6 +59,20 @@ export async function getCoopRecord (coopID) {
   } catch (error) {
     console.error(error);
     throw new Error(`Error getting coop record for ${coopID}`);
+  }
+}
+
+// Get Coop Record
+export async function getCoopRecord (recordID) {
+  try {
+    const [resultCoopRecord] = await pool.query(`
+    SELECT *  FROM \`record-coop\`
+    WHERE recordID = ?`,
+    [recordID]);
+    return resultCoopRecord;
+  } catch (error) {
+    console.error(error);
+    throw new Error(`Error getting coop record for ${recordID}`);
   }
 }
 
