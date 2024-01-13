@@ -16,12 +16,49 @@ export const getAllCoop = async (req, res) => {
   }
 };
 
-export const getCoopForm = (req, res) => {
+export const getCoopRecord = async (req, res) => {
+  const coopID = req.query.id;
+  const coopRecord = await RecordCoopDB.getCoopRecord(coopID);
+  const recordIDData = coopRecord.map((data) => data.recordID);
+  const coopIDData = coopRecord.map((data) => data.coopID);
+  const numDeadHenData = coopRecord.map((data) => data.numDeadHen);
+  const numDeadRoosterData = coopRecord.map((data) => data.numDeadRooster);
+  const numEggsData = coopRecord.map((data) => data.numEggs);
+  const numNcData = coopRecord.map((data) => data.numNc);
+  const numAcceptedData = coopRecord.map((data) => data.numAccepted);
+  const recordedAtData = coopRecord.map((data) => data.recorded_at);
+  res.status(200)
+    .render('view-coop-record', {
+      recordIDData,
+      coopIDData,
+      numDeadHenData,
+      numDeadRoosterData,
+      numEggsData,
+      numNcData,
+      numAcceptedData,
+      recordedAtData
+    });
+};
+
+export const getCoopForm = async (req, res) => {
   const coopID = {
     id: req.query.id
   };
   res.status(200)
     .render('create-coop-record', coopID);
+};
+
+export const deleteCoopRecord = async (req, res) => {
+  try {
+    console.log(req.query.id);
+    await RecordCoopDB.deleteCoopRecord(req.query.id);
+    res.status(200)
+      .redirect('/coop/view');
+  } catch (error) {
+    console.error('Error during deleting coop record', error);
+    res.status(500)
+      .send('Internal Server Error');
+  }
 };
 
 export const submitCoopForm = async (req, res) => {

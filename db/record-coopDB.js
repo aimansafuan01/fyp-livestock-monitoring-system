@@ -22,6 +22,21 @@ export async function submitCoopRecord (coopData) {
   }
 }
 
+// Get Coop Record
+export async function getCoopRecord (coopID) {
+  try {
+    const [resultCoopRecord] = await pool.query(`
+    SELECT *  FROM \`record-coop\`
+    WHERE coopID = ?
+    ORDER BY recorded_at DESC`,
+    [coopID]);
+    return resultCoopRecord;
+  } catch (error) {
+    console.error(error);
+    throw new Error(`Error getting coop record for ${coopID}`);
+  }
+}
+
 // Get number of eggs monthly
 export async function getNumEggsMonthly () {
   try {
@@ -232,5 +247,20 @@ export async function getNumChickenDeadCurrWeek () {
   } catch (error) {
     console.error(error);
     throw new Error('Error fetching number chicken dead for the current week data from the database');
+  }
+}
+
+// Delete coop record
+export async function deleteCoopRecord (id) {
+  try {
+    const [result] = await pool.query(`
+    DELETE FROM \`record-coop\`
+    WHERE recordID = ?`,
+    [id]);
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error deleting record from the database');
   }
 }

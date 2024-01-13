@@ -5,6 +5,12 @@ const router = express.Router();
 // View all coop page
 router.get('/view', CoopCtrl.getAllCoop);
 
+// View Coop Record
+router.get('/view/record', CoopCtrl.getCoopRecord);
+
+// Delete Coop Record
+router.get('/delete/record', CoopCtrl.deleteCoopRecord);
+
 // View coop record form
 router.get('/create', CoopCtrl.getCoopForm);
 
