@@ -134,59 +134,109 @@
           <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/dashboard/view">Dashboard</a></li>
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/daily-record">Daily Record</a>
-            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Chicken Transfer</li>
+            </li>
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/brooder/view">Brooder</a></li>
+            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">View Brooder Record (<%= brooderIDData[0] %>)</li>
           </ol>
-          <h4 class="font-weight-bolder mb-0">Chicken</h4>
+          <h4 class="font-weight-bolder mb-0">View Brooder Record</h4>
+          <h3 class="font-weight-bolder mb-0">
+            <%= brooderIDData[0] %>
+          </h3>
         </nav>
       </div>
     </nav>
     <!------------------------------- Top Navbar ----------------------->
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="card my-4">
+            <div class="card-body px-0 pb-2">
+              <div class="table-responsive p-0">
+                <table class="table align-items-center mb-0">
+                  <thead>
+                    <tr>
+                      <th class="text-uppercase text-secondary text-lg font-weight-bolder">Record ID</th>
+                      <th class="text-uppercase text-secondary text-lg-center font-weight-bolder">Dead Chick</th>
+                      <th class="text-center text-uppercase text-secondary text-lg-center font-weight-bolder">
+                        Date
+                      </th>
+                      <th class="text-center text-uppercase text-secondary text-lg-center font-weight-bolder">
+                        Action
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% for (let i=0; i<recordIDData.length; i++) { %>
+                      <tr>
+                        <td class="align-middle text-center">
+                          <div class="d-flex px-2 py-1">
+                            <h6 class="mb-0 text-md ps-2">
+                              <%= recordIDData[i] %>
+                            </h6>
+                          </div>
+                        </td>
+                        <td class="align-middle text-center text-md">
+                          <p class="text-md mb-0">
+                            <%= numDeadChickData[i] %>
+                          </p>
+                        </td>
+                        <td class="align-middle text-center">
+                          <div class="px-2 py-1">
+                            <h6 class="mb-0 text-md ps-2">
+                              <%= createdAtData[i] %>
+                            </h6>
+                          </div>
+                        </td>
+                        <td class="align-middle text-center">
+                          <button type="button" class="btn btn-sm btn-warning p-3 px-3"
+                            onclick="window.location.href=''">
+                            Edit
+                          </button>
+                          <button type="button" class="btn btn-sm btn-danger p-3 px-3" data-bs-toggle="modal"
+                            data-bs-target="#confirmationModal<%= i %>">
+                            Delete
+                          </button>
+                        </td>
 
-
-    <!-------------------- GET CURRENT DATE ---------------------->
-    <div class="row mt-4 m-4">
-      <% 
-        for (const data of allCoop) {
-          if (data.coopID === 'SB') {
-            continue;
-          }
-      %>
-      <div class="col-12 col-md-4 mb-5">
-        <div class="card enlargeable">
-          <div class="card-header p-3 pt-2">
-            <div class="icon-lg shadow-dark text-center border-radius-xl mt-n4 position-absolute bg-gray-200"
-              style="display: flex; align-items: center; justify-content: center;">
-              <h3 class="text-black m-0"><%= data.coopID %></h3>
+                        <!-- Modal -->
+                        <div class="modal fade" id="confirmationModal<%= i %>" data-bs-backdrop="static"
+                          data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+                          aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="staticBackdropLabel">Delete Record?</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                  aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                This will delete the record for brooder <b>
+                                  <%= brooderIDData[i] %>
+                                </b><br>
+                                Record ID: <b class="text-lg">
+                                  <%= recordIDData[i] %>
+                                </b><br>
+                                Record Date: <b class="text-lg"><%= createdAtData[i] %></b>.
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-warning"
+                                  onclick="location.href=''">Confirm</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </tr>
+                      <% } %>
+                  </tbody>
+                </table>
+              </div>
             </div>
-            <div class="text-end pt-1">
-              <p class="text-sm mb-0 text-capitalize">Ratio</p>
-              <% const ratio = +data.numOfHens / +data.numOfRoosters %>
-              <h4 class="mb-0">
-                1 : <%= ratio.toFixed(0) %>
-              </h4>
-            </div>
-          </div>
-          <hr class="dark horizontal my-0">
-          <div class="card-footer p-3">
-            <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder">
-                <%= data.numOfRoosters %>
-              </span>Roosters</p>
-            <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder">
-                <%= data.numOfHens %>
-              </span>Hens</p>
-            <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder">
-                <%= data.totalChickens %>
-              </span>Total</p>
-          </div>
-          <div class="row mx-3">
-            <a class="btn btn-warning" href="/chicken-transfer/view/id?id=<%= data.coopID %>" role="button">View Transfer Record</a>
-          </div>
-          <div class="row mx-3">
-            <a class="btn btn-warning" href="/chicken-transfer/create?id=<%= data.coopID %>" role="button">Add Transfer Record</a>
           </div>
         </div>
       </div>
-      <% } %>
+
+
 
       <!--   Core JS Files   -->
       <script src="/assets/js/core/popper.min.js"></script>
@@ -194,6 +244,9 @@
       <script src="/assets/js/plugins/perfect-scrollbar.min.js"></script>
       <script src="/assets/js/plugins/smooth-scrollbar.min.js"></script>
       <script src="/assets/js/plugins/chartjs.min.js"></script>
+      <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
+        </script>
 
       <script>
         var win = navigator.platform.indexOf('Win') > -1;

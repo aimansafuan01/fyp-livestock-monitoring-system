@@ -22,6 +22,60 @@ export async function submitCoopRecord (coopData) {
   }
 }
 
+// Submit Edit Coop Record Form
+export async function submitEditCoopRecord (coopData) {
+  try {
+    console.log(coopData);
+    const recordID = coopData.recordID;
+    const coopID = coopData.coopID;
+    const numDeadHen = +coopData.numDeadHen;
+    const numDeadRoosters = +coopData.numDeadRoosters;
+    const numEggs = +coopData.numEggs;
+    const numNc = +coopData.numNc;
+    const numAccepted = +coopData.numAccepted;
+
+    const resultSubmitCoop = await pool.query(`
+    UPDATE \`record-coop\` 
+    SET coopID=?, numDeadHen=?, numDeadRooster=?, numEggs=?, numNc=?, numAccepted=?
+    WHERE recordID=?
+    `, [coopID, numDeadHen, numDeadRoosters, numEggs, numNc, numAccepted, recordID]);
+
+    return resultSubmitCoop;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error submitting coop record to database');
+  }
+}
+
+// Get Coop Record
+export async function getCoopRecordAll (coopID) {
+  try {
+    const [resultCoopRecord] = await pool.query(`
+    SELECT *  FROM \`record-coop\`
+    WHERE coopID = ?
+    ORDER BY recorded_at DESC`,
+    [coopID]);
+    return resultCoopRecord;
+  } catch (error) {
+    console.error(error);
+    throw new Error(`Error getting coop record for ${coopID}`);
+  }
+}
+
+// Get Coop Record
+export async function getCoopRecord (recordID) {
+  try {
+    const [resultCoopRecord] = await pool.query(`
+    SELECT *  FROM \`record-coop\`
+    WHERE recordID = ?`,
+    [recordID]);
+    return resultCoopRecord;
+  } catch (error) {
+    console.error(error);
+    throw new Error(`Error getting coop record for ${recordID}`);
+  }
+}
+
 // Get number of eggs monthly
 export async function getNumEggsMonthly () {
   try {
@@ -232,5 +286,20 @@ export async function getNumChickenDeadCurrWeek () {
   } catch (error) {
     console.error(error);
     throw new Error('Error fetching number chicken dead for the current week data from the database');
+  }
+}
+
+// Delete coop record
+export async function deleteCoopRecord (id) {
+  try {
+    const [result] = await pool.query(`
+    DELETE FROM \`record-coop\`
+    WHERE recordID = ?`,
+    [id]);
+
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error deleting record from the database');
   }
 }

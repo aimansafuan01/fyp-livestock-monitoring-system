@@ -15,6 +15,25 @@ export const getAllBrooderPage = async (req, res) => {
   }
 };
 
+export const getBrooderRecordAll = async (req, res) => {
+  try {
+    const brooderRecordData = await RecordBroderDB.getBrooderRecordAll(req.query.id);
+    const recordIDData = brooderRecordData.map((data) => data.recordID);
+    const numDeadChickData = brooderRecordData.map((data) => data.numDeadChick);
+    const brooderIDData = brooderRecordData.map((data) => data.brooderID);
+    const createdAtData = brooderRecordData.map((data) => {
+      return data.created_at.toLocaleDateString('en-MY');
+    });
+
+    res.status(200)
+      .render('view-brooder-record', { recordIDData, numDeadChickData, createdAtData, brooderIDData });
+  } catch (error) {
+    console.error(error);
+    res.status(500)
+      .send('Internal Server Error');
+  }
+};
+
 export const getBrooderForm = async (req, res) => {
   const coop = {
     id: req.query.id
