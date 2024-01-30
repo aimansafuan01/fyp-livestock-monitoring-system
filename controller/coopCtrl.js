@@ -7,8 +7,31 @@ import { sendAlert } from '../mailer.js';
 export const getAllCoop = async (req, res) => {
   try {
     const allCoop = await CoopDB.getAllCoop();
+    const coopRecordFilledData = await RecordCoopDB.getCoopRecordExistToday();
+    const coopRecordFilledArr = coopRecordFilledData.map((data) => data.COOPID);
+    const coopID = allCoop.map((data) => data.coopID);
+    const numOfHens = allCoop.map((data) => data.numOfHens);
+    const numOfRoosters = allCoop.map((data) => data.numOfRoosters);
+    const mortalityRate = allCoop.map((data) => data.mortalityRate);
+    const totalChickensInEachCoop = allCoop.map((data) => data.totalChickens);
+    const avgMortalityRate = mortalityRate.reduce((accumulator, currentVal) => +accumulator + +currentVal, 0) / mortalityRate.length;
+    const totalChicken = totalChickensInEachCoop.reduce((accumulator, currentVal) => +accumulator + +currentVal, 0);
+    const totalHens = numOfHens.reduce((accumulator, currentVal) => +accumulator + +currentVal, 0);
+    const totalRoosters = numOfRoosters.reduce((accumulator, currentVal) => +accumulator + +currentVal, 0);
+
     res.status(200)
-      .render('coop-record', { allCoop });
+      .render('coop-record', {
+        coopID,
+        numOfHens,
+        numOfRoosters,
+        mortalityRate,
+        totalChickensInEachCoop,
+        avgMortalityRate,
+        totalChicken,
+        totalHens,
+        totalRoosters,
+        coopRecordFilledArr
+      });
   } catch (error) {
     console.error(error.message);
     res.status(500)
@@ -73,7 +96,6 @@ export const getEditCoopForm = async (req, res) => {
 
 export const deleteCoopRecord = async (req, res) => {
   try {
-    console.log(req.query.id);
     await RecordCoopDB.deleteCoopRecord(req.query.id);
     res.status(200)
       .redirect('/coop/view');
