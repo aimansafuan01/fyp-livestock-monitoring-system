@@ -310,12 +310,13 @@ export async function getCoopRecordExistToday () {
     const [result] = await pool.query(`
     SELECT COOPID FROM \`RECORD-COOP\`
     WHERE YEAR(RECORDED_AT) = YEAR(curdate())
+    AND MONTH(RECORDED_AT) = MONTH(curdate())
     AND WEEK(RECORDED_AT) = WEEK(curdate())
     AND DATE(recorded_at) = CURDATE()
     `);
     return result;
   } catch (error) {
     console.error(error);
-    throw new Error('Error deleting record from the database');
+    throw new Error('Error fetching filled coop record data from the database');
   }
 }

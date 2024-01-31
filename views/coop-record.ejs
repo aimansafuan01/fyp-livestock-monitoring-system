@@ -186,6 +186,8 @@
       <div class="row">
         <%
           for (let i=0; i<coopID.length-1; i++) {
+            let flag = ""
+            coopRecordFilledArr.includes(coopID[i]) ? flag="disabled" : "" 
         %>
         <div class="col-12 col-md-4 mb-5">
           <div class="card enlargeable">
@@ -206,14 +208,10 @@
               <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder"><%= totalChickensInEachCoop[i] %> </span>Total</p>
             </div>
             <div class="row mx-3">
-              <a class="btn btn-warning" href="/coop/view/record?id=<%= coopID[i] %>" role="button">View Record</a>
+              <a class="btn btn-warning" href="/coop/view/record?id=<%= coopID[i] %>" role="button">View Coop Record</a>
             </div>
             <div class="row mx-3">
-              <%
-                let flag = ""
-                coopRecordFilledArr.includes(coopID[i]) ? flag="disabled" : "" 
-              %>
-              <a class="btn btn-warning <%= flag %>" href="/coop/create?id=<%= coopID[i] %>" role="button">Add New Record</a>
+              <a class="btn btn-warning <%= flag %>" href="/coop/create?id=<%= coopID[i] %>" role="button">Create Daily Record</a>
             </div>
           </div>
         </div>

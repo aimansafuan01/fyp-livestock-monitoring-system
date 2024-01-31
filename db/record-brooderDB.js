@@ -115,3 +115,20 @@ export async function getBrooderRecordAll (brooderID) {
     throw new Error('Error fetching record brooder data from the database');
   }
 }
+
+// Get Brooder that record exist for the day
+export async function getBrooderHasBeenRecorded () {
+  try {
+    const [result] = await pool.query(`
+    SELECT brooderID from \`record-brooder\`
+    WHERE YEAR(created_at) = YEAR(CURDATE())
+    AND MONTH(created_at) = MONTH(CURDATE())
+    AND WEEK(created_at) = WEEK(CURDATE())
+    AND DATE(created_at) = CURDATE()
+    `);
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error fetching filled brooder record data from the database');
+  }
+}

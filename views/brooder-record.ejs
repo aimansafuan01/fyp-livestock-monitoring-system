@@ -142,45 +142,6 @@
     </nav>
     <!-- End Breadrumb -->
 
-    <!-- CREATE ARRAY OF INDIVIDUAL COOP USING COOPID AS ITS KEY
-          Eg: { 'BR1': { mortalityRate: value1, numChick: value2 }
-          To Access: brooder[index]['brooderID']  -->
-    <% 
-        const brooder=allBrooder.map(obj=> ({ [obj.brooderID]: obj }));     
-    %>
-
-    <!-- CALCULATE AVG MORTALITY FOR ALL COOP -->
-    <% 
-        const avgMortality=(+brooder[0]['BR1'].mortalityRate + +brooder[1]['BR2'].mortalityRate + +brooder[2]['BR3'].mortalityRate
-        + +brooder[3]['BR4'].mortalityRate + +brooder[4]['BR5'].mortalityRate + +brooder[5]['BR6'].mortalityRate) / 6;
-        
-        avgMortality === 0 ? avgMortality : avgMortality.toFixed(1)
-    %>
-
-      <!-- CALCULATE CHICK AGE -->
-    <%  
-        const calcAge = (index, id) => {
-          let currDate = new Date();
-          let insertedAt = new Date(brooder[index][id].inserted_at);
-          let timeDiff = currDate - insertedAt;
-          let age = Math.floor(timeDiff / (1000 * 60 * 60 * 24))
-          return age === 0 ? 1 : age;
-        }
-    %>
-        <!-- TOTAL CALCULATION FOR ALL BROODER -->
-    <%
-            let totalChick = 0;
-            let totalChickAvailable = 0;
-            let totalChickBlocked = 0;
-            brooder.forEach(brooderObject => {
-              const [brooderID, brooderData] = Object.entries(brooderObject)[0];
-              totalChick += brooderData.numChick;
-              totalChickAvailable += brooderData.availableChick;
-              totalChickBlocked += brooderData.blockedChick;
-            })
-    %>
-
-
         <div class="container-fluid py-4 mb-3">
           <div class="row">
             <div class="col-12 col-md-7 mb-6 mx-auto">
@@ -194,259 +155,65 @@
                   <div class="text-end pt-1">
                     <p class="text-sm mb-0 text-capitalize">Average Mortality Rate</p>
                     <h2 class="mb-0">
-                      <%= avgMortality.toFixed(2) %>%
+                      <%= avgMortalityRate %>%
                     </h2>
                   </div>
                 </div>
                 <hr class="dark horizontal my-0">
                 <div class="card-footer p-3">
                   <p class="mb-0"><span class="text-capitalize text-lg font-weight-bolder"><%= totalChickAvailable %> </span>Total Chick Available</p>
-                  <p class="mb-0"><span class="text-capitalize text-lg font-weight-bolder"><%= totalChickBlocked %> </span>Total Chick Blocked</p>
-                  <p class="mb-0"><span class="text-capitalize text-lg font-weight-bolder"><%= totalChick %> </span>Total Chick</p>
+                  <p class="mb-0"><span class="text-capitalize text-lg font-weight-bolder"><%= totalBlockedChick %> </span>Total Chick Blocked</p>
+                  <p class="mb-0"><span class="text-capitalize text-lg font-weight-bolder"><%= totalNumChick %> </span>Total Chick</p>
                 </div>
               </div>
             </div>
           </div>
 
           <div class="row">
+            <% 
+              for (let i=0; i<brooderID.length; i++) { 
+                let flag="";
+                filledRecordBrooderData.includes(brooderID[i]) ? flag="disabled" : flag="";
+            %>
             <div class="col-12 col-md-4 mb-5">
               <div class="card enlargeable">
                 <div class="card-header p-3 pt-2">
                   <div class="icon-lg shadow-dark text-center border-radius-xl mt-n4 position-absolute bg-gray-200"
                     style="display: flex; align-items: center; justify-content: center;">
-                    <h3 class="text-black m-0">BR1</h3>
+                    <h3 class="text-black m-0"><%= brooderID[i] %></h3>
                   </div>
                   <div class="text-end pt-1">
                     <p class="text-sm mb-0 text-capitalize">Mortality Rate</p>
                     <h4 class="mb-0">
-                      <%= brooder[0]['BR1'].mortalityRate %>%
+                      <%= mortalityRate[i] %>%
                     </h4>
                     <p class="text-sm mb-0 text-capitalize">Age</p>
                     <h5 class="mb-0">
-                      <%= calcAge(0, 'BR1') %> day
+                      <%= ageChick[i] %> day
                     </h5>
                   </div>
                 </div>
                 <hr class="dark horizontal my-0">
                 <div class="card-footer p-3">
                   <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder">
-                    <%= brooder[0]['BR1'].numChick %>
+                    <%= numChick[i] %>
                   </span>Number of Chick</p>
                   <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder">
-                      <%= +brooder[0]['BR1'].availableChick %>
+                      <%= +availableChick[i] %>
                     </span>Available Chick</p>
                   <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder">
-                      <%= brooder[0]['BR1'].blockedChick %>
+                      <%= blockedChick[i] %>
                     </span>Blocked Chick</p>
                 </div>
                 <div class="row mx-3">
-                  <a class="btn btn-warning" href="/brooder/view/record?id=BR1" role="button">View Record</a>
+                  <a class="btn btn-warning" href="/brooder/view/record?id=<%= brooderID[i] %>" role="button">View Brooder Record</a>
                 </div>
                 <div class="row mx-3">
-                  <a class="btn btn-warning" href="/brooder/create?id=BR1" role="button">Add Record</a>
+                  <a class="btn btn-warning <%= flag %>" href="/brooder/create?id=<%= brooderID[i] %>" role="button">Create Daily Record</a>
                 </div>
               </div>
             </div>
-
-            <div class="col-12 col-md-4 mb-5">
-              <div class="card enlargeable">
-                <div class="card-header p-3 pt-2">
-                  <div class="bg-gray-200 icon-lg shadow-dark text-center border-radius-xl mt-n4 position-absolute"
-                    style="display: flex; align-items: center; justify-content: center;">
-                    <h3 class="text-black m-0">BR2</h3>
-                  </div>
-                  <div class="text-end pt-1">
-                    <p class="text-sm mb-0 text-capitalize">Mortality Rate</p>
-                    <h4 class="mb-0">
-                      <%= brooder[1]['BR2'].mortalityRate %>%
-                    </h4>
-                    <p class="text-sm mb-0 text-capitalize">Age</p>
-                    <h5 class="mb-0">
-                      <%= calcAge(1, 'BR2') %> day
-                    </h5>
-                  </div>
-                </div>
-                <hr class="dark horizontal my-0">
-                <div class="card-footer p-3">
-                  <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder">
-                      <%= brooder[1]['BR2'].numChick %>
-                    </span>Number of Chick</p>
-                  <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder">
-                      <%= +brooder[1]['BR2'].availableChick %>
-                    </span>Available Chick</p>
-                  <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder">
-                      <%= brooder[1]['BR2'].blockedChick %>
-                    </span>Blocked Chick</p>
-                </div>
-                <div class="row mx-3">
-                  <a class="btn btn-warning" href="/brooder/view/record?id=BR2" role="button">View Record</a>
-                </div>
-                <div class="row mx-3">
-                  <a class="btn btn-warning" href="/brooder/create?id=BR2" role="button">Add Record</a>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-12 col-md-4 mb-5">
-              <div class="card enlargeable">
-                <div class="card-header p-3 pt-2">
-                  <div class="bg-gray-200 icon-lg shadow-dark text-center border-radius-xl mt-n4 position-absolute"
-                    style="display: flex; align-items: center; justify-content: center;">
-                    <h3 class="text-black m-0">BR3</h3>
-                  </div>
-
-                  <div class="text-end pt-1">
-                    <p class="text-sm mb-0 text-capitalize">Mortality Rate</p>
-                    <h4 class="mb-0">
-                      <%= brooder[2]['BR3'].mortalityRate %>%
-                    </h3>
-                    <p class="text-sm mb-0 text-capitalize">Age</p>
-                    <h5 class="mb-0">
-                      <%= calcAge(2, 'BR3') %> day
-                    </h5>
-                  </div>
-                </div>
-                <hr class="dark horizontal my-0">
-                <div class="card-footer p-3">
-                  <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder">
-                      <%= brooder[2]['BR3'].numChick %>
-                    </span>Number of Chick</p>
-                  <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder">
-                      <%= +brooder[2]['BR3'].availableChick %>
-                    </span>Available Chick</p>
-                  <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder">
-                      <%= brooder[2]['BR3'].blockedChick %>
-                    </span>Blocked Chick</p>
-                </div>
-                <div class="row mx-3">
-                  <a class="btn btn-warning" href="/brooder/view/record?id=BR3" role="button">View Record</a>
-                </div>
-                <div class="row mx-3">
-                  <a class="btn btn-warning" href="/brooder/create?id=BR3" role="button">Add Record</a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-12 col-md-4 mb-5">
-              <div class="card enlargeable">
-                <div class="card-header p-3 pt-2">
-                  <div class="bg-gray-200 icon-lg shadow-dark text-center border-radius-xl mt-n4 position-absolute"
-                    style="display: flex; align-items: center; justify-content: center;">
-                    <h3 class="text-black m-0">
-                      BR4
-                    </h3>
-                  </div>
-                  <div class="text-end pt-1">
-                    <p class="text-sm mb-0 text-capitalize">Mortality Rate</p>
-                    <h4 class="mb-0">
-                      <%= brooder[3]['BR4'].mortalityRate %>%
-                    </h4>
-                    <p class="text-sm mb-0 text-capitalize">Age</p>
-                    <h5 class="mb-0">
-                      <%= calcAge(3, 'BR4') %> day
-                    </h5>
-                  </div>
-                </div>
-                <hr class="dark horizontal my-0">
-                <div class="card-footer p-3">
-                  <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder">
-                      <%= brooder[3]['BR4'].numChick %>
-                    </span>Number of Chick</p>
-                  <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder">
-                      <%= +brooder[3]['BR4'].availableChick %>
-                    </span>Available Chick </p>
-                  <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder">
-                      <%= brooder[3]['BR4'].blockedChick %>
-                    </span>Blocked Chick</p>
-                </div>
-                <div class="row mx-3">
-                  <a class="btn btn-warning" href="/brooder/view/record?id=BR4" role="button">View Record</a>
-                </div>
-                <div class="row mx-3">
-                  <a class="btn btn-warning" href="/brooder/create?id=BR4" role="button">Add Record</a>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-12 col-md-4 mb-5">
-              <div class="card enlargeable">
-                <div class="card-header p-3 pt-2">
-                  <div class="bg-gray-200 icon-lg shadow-dark text-center border-radius-xl mt-n4 position-absolute"
-                    style="display: flex; align-items: center; justify-content: center;">
-                    <h3 class="text-black m-0">BR5</h3>
-                  </div>
-                  <div class="text-end pt-1">
-                    <p class="text-sm mb-0 text-capitalize">Mortality Rate</p>
-                    <h4 class="mb-0">
-                      <%= brooder[4]['BR5'].mortalityRate %>%
-                    </h4>
-                    <p class="text-sm mb-0 text-capitalize">Age</p>
-                    <h5 class="mb-0">
-                      <%= calcAge(4, 'BR5') %> day
-                    </h5>
-                  </div>
-                </div>
-                <hr class="dark horizontal my-0">
-                <div class="card-footer p-3">
-                  <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder">
-                      <%= brooder[4]['BR5'].numChick %>
-                    </span>Number of Chick</p>
-                  <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder">
-                      <%= +brooder[4]['BR5'].availableChick %>
-                    </span>Available Chick</p>
-                  <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder">
-                      <%= brooder[4]['BR5'].blockedChick %>
-                    </span>Blocked Chick</p>
-                </div>
-                <div class="row mx-3">
-                  <a class="btn btn-warning" href="/brooder/view/record?id=BR5" role="button">View Record</a>
-                </div>
-                <div class="row mx-3">
-                  <a class="btn btn-warning" href="/brooder/create?id=BR5" role="button">Add Record</a>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-12 col-md-4 mb-5">
-              <div class="card enlargeable">
-                <div class="card-header p-3 pt-2">
-                  <div class="bg-gray-200 icon-lg shadow-dark text-center border-radius-xl mt-n4 position-absolute"
-                    style="display: flex; align-items: center; justify-content: center;">
-                    <h3 class="text-black m-0">BR6</h3>
-                  </div>
-
-                  <div class="text-end pt-1">
-                    <p class="text-sm mb-0 text-capitalize">Mortality Rate</p>
-                    <h4 class="mb-0">
-                      <%= brooder[5]['BR6'].mortalityRate %>%
-                    </h4>
-                    <p class="text-sm mb-0 text-capitalize">Age</p>
-                    <h5 class="mb-0">
-                      <%= calcAge(5, 'BR6') %> day
-                    </h5>
-                  </div>
-                </div>
-                <hr class="dark horizontal my-0">
-                <div class="card-footer p-3">
-                  <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder">
-                      <%= brooder[5]['BR6'].numChick %>
-                    </span>Number of Chick</p>
-                  <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder">
-                      <%= +brooder[5]['BR6'].availableChick %>
-                    </span>Available Chick</p>
-                  <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder">
-                      <%= brooder[5]['BR6'].blockedChick %>
-                    </span>Blocked Chick</p>
-                </div>
-                <div class="row mx-3">
-                  <a class="btn btn-warning" href="/brooder/view/record?id=BR6" role="button">View Record</a>
-                </div>
-                <div class="row mx-3">
-                  <a class="btn btn-warning" href="/brooder/create?id=BR6" role="button">Add Record</a>
-                </div>
-              </div>
-            </div>
+            <% } %>
           </div>
 
           <!--   Core JS Files   -->
