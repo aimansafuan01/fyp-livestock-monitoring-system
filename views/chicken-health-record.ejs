@@ -239,22 +239,13 @@
                             <%= healthRecord[i].status %>
                           </span>
                         </td>
-                        <% if (healthRecord[i].status !== 'Moved to SB') { continue; } %>
+                        <% if (healthRecord[i].status !== 'Moved to SB') { continue } %>
                         <td class="align-middle text-center">
-                          <select class="form-select ps-2 updateStatus" aria-label="Default select example" name="status" id="updateStatus__<%= healthRecord[i].recordHealthID %>">
-                            <option selected>Update Chicken Health Status</option>
-                            <% for (status of healthStatus) {
-                              if (status.status === 'Moved to SB') { continue; } 
-                            %>
-                            <option value="<%= status.status %>" 
-                              data-numHens="<%= healthRecord[i].numOfHens %>"
-                              data-recordid="<%= healthRecord[i].recordHealthID %>"
-                              data-numRoosters="<%= healthRecord[i].numOfRoosters %>"><%= status.status %></option>
-                            <% } %>
-                          </select>
+                          <button type="button" class="btn btn-sm btn-warning p-3 px-4" onclick="window.location.href='/chicken-health/view/edit?id=<%= healthRecord[i].recordHealthID %>'">
+                            UPDATE
+                          </button>
                         </td>
-                      </tr>
-                      <% } %>
+                    <% } %>      
                   </tbody>
                 </table>
               </div>
@@ -280,26 +271,6 @@
           }
           Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
         }
-      </script>
-
-      <script>
-        document.addEventListener('DOMContentLoaded', () => {
-          document.body.addEventListener('change', async (event) => {
-            if (event.target.classList.contains('updateStatus')) {
-            const selectElement = event.target;
-            const selectedOption = selectElement.options[selectElement.selectedIndex];
-            const updatedStatus = selectedOption.value;
-            const numHens = selectedOption.dataset.numhens;
-            const recordID = selectedOption.dataset.recordid;
-            const numRoosters = selectedOption.dataset.numroosters;
-            const response = await fetch(`/chicken-health/update?status=${updatedStatus}&numHens=${numHens}&recordID=${recordID}&numRoosters=${numRoosters}`)
-            
-            if (response.ok) {
-                location.reload();
-              }
-          }
-          })
-        })
       </script>
 
       <!-- Github buttons -->

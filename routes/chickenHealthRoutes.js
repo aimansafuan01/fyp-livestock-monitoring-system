@@ -13,6 +13,6 @@ router.get('/create', ChickenHealthCtrl.getChickenHealthForm);
 router.post('/submit', ChickenHealthCtrl.submitChickenHealthForm);
 
 // Update chicken health record
-router.get('/update', ChickenHealthCtrl.updateChickenHealthRecord);
+router.get('/view/edit', ChickenHealthCtrl.updateChickenHealthRecord);
 
 export default router;

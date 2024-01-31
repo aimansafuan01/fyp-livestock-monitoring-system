@@ -4,7 +4,23 @@ import pool from './database.js';
 export async function getChickenHealthRecord () {
   try {
     const [result] = await pool.query(`
-    SELECT * FROM \`record-chicken-health\``);
+    SELECT * FROM \`record-chicken-health\`
+    ORDER BY status DESC, created_at
+    `);
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error fetching chicken health record data from the database');
+  }
+}
+
+// Get one chicken health record
+export async function getSingleChickenHealthRecord (id) {
+  try {
+    const [result] = await pool.query(`
+    SELECT * FROM \`record-chicken-health\`
+    WHERE recordHealthID = ?
+    `, [id]);
     return result;
   } catch (error) {
     console.error(error);

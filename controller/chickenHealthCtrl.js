@@ -7,9 +7,8 @@ import { getHealthSymptoms } from '../db/health_symptomsDB.js';
 // Get Chicken Health Record Page
 export const getChickenHealthRecordPage = async (req, res) => {
   const healthRecord = await ChickenHealthDB.getChickenHealthRecord();
-  const healthStatus = await getHealthStatus();
   res.status(200)
-    .render('chicken-health-record', { healthRecord, healthStatus });
+    .render('chicken-health-record', { healthRecord });
 };
 
 // Get Create Chicken Health Record Page
@@ -75,32 +74,40 @@ export const submitChickenHealthForm = async (req, res) => {
 };
 
 export const updateChickenHealthRecord = async (req, res) => {
-  const recordID = req.query.recordID;
-  const status = req.query.status;
-  const numDeadHen = req.query.numHens;
-  const numDeadRoosters = req.query.numRoosters;
-  let resultMinusChicken = null;
-
-  const minusData = {
-    coopID: 'SB',
-    numDeadHen,
-    numDeadRoosters
-  };
-
+  const recordID = req.query.id;
   try {
-    const resultUpdate = await ChickenHealthDB.updateChickenHealthStatus(recordID, status);
-
-    if (status !== 'Cured') {
-      resultMinusChicken = await CoopDB.minusNumChickenCoop(minusData);
-    }
-
-    if (resultUpdate && resultMinusChicken) {
-      res.status(200)
-        .redirect('/chicken-health/view');
-    }
+    const recordData = await ChickenHealthDB.getSingleChickenHealthRecord(recordID);
+    const healthStatus = await getHealthStatus();
+    res.render('edit-chicken-health-record', { recordData, healthStatus });
   } catch (error) {
-    console.error('Error during updating health record', error);
-    res.status(500)
-      .send('Internal Server Error');
+
   }
+  // const recordID = req.query.recordID;
+  // const status = req.query.status;
+  // const numDeadHen = req.query.numHens;
+  // const numDeadRoosters = req.query.numRoosters;
+  // let resultMinusChicken = null;
+
+  // const minusData = {
+  //   coopID: 'SB',
+  //   numDeadHen,
+  //   numDeadRoosters
+  // };
+
+  // try {
+  //   const resultUpdate = await ChickenHealthDB.updateChickenHealthStatus(recordID, status);
+
+  //   if (status !== 'Cured') {
+  //     resultMinusChicken = await CoopDB.minusNumChickenCoop(minusData);
+  //   }
+
+  //   if (resultUpdate && resultMinusChicken) {
+  //     res.status(200)
+  //       .redirect('/chicken-health/view');
+  //   }
+  // } catch (error) {
+  //   console.error('Error during updating health record', error);
+  //   res.status(500)
+  //     .send('Internal Server Error');
+  // }
 };
