@@ -11,6 +11,7 @@ export const getChickenBatchPage = async (req, res) => {
     const numRoosters = batchData.map((data) => data.numRoosters);
     const placeTo = batchData.map((data) => data.placeTo);
     const arrivalDate = batchData.map((data) => data.arrival_date);
+    const batchNumber = batchData.map((data) => data.batchNumber);
 
     const ageChicken = batchData.map((data) => {
       const initialAge = data.ageChicken;
@@ -32,7 +33,7 @@ export const getChickenBatchPage = async (req, res) => {
     });
 
     res.status(200)
-      .render('chicken-batch', { batchIds, origins, numHens, numRoosters, placeTo, ageChicken, arrivalDate });
+      .render('chicken-batch', { batchIds, origins, numHens, numRoosters, placeTo, ageChicken, arrivalDate, batchNumber });
   } catch (error) {
     res.status(500)
       .send('Internal Server Error');
@@ -43,9 +44,11 @@ export const getChickenBatchPage = async (req, res) => {
 export const getChickenBatchForm = async (req, res) => {
   try {
     const coopIDs = await CoopDB.getCoopIDs();
+    const batchNumbers = await ChickenBatchDB.getBatchNumberToday();
     const coopIDData = coopIDs.map((data) => data.coopID);
+    const batchNumber = batchNumbers.map((data) => data.batchNumber);
     res.status(200)
-      .render('create-batch-chicken-record', { coopIDData });
+      .render('create-batch-chicken-record', { coopIDData, batchNumber });
   } catch (error) {
     res.status(500)
       .send('Internal Server Error');
@@ -58,13 +61,15 @@ export const submitChickenBatchForm = async (req, res) => {
   const numRoosters = req.body.numRoosters;
   const placeTo = req.body.placeTo;
   const ageChicken = req.body.ageChicken;
+  const batchNumber = req.body.batchNumber;
 
   const batchData = {
     origin,
     numHens,
     numRoosters,
     placeTo,
-    ageChicken
+    ageChicken,
+    batchNumber
   };
 
   const coopData = {
