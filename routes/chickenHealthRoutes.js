@@ -12,7 +12,10 @@ router.get('/create', ChickenHealthCtrl.getChickenHealthForm);
 // Submit chicken health record form
 router.post('/submit', ChickenHealthCtrl.submitChickenHealthForm);
 
-// Update chicken health record
-router.get('/view/edit', ChickenHealthCtrl.updateChickenHealthRecord);
+// Get update chicken health record form
+router.get('/view/edit', ChickenHealthCtrl.getChickenHealthRecord);
+
+// Submit updated chicken health record form
+router.post('/edit/record', ChickenHealthCtrl.submitUpdateChickenHealthForm);
 
 export default router;

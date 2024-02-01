@@ -158,10 +158,11 @@
                 <table class="table align-items-center mb-0">
                   <thead>
                     <tr>
-                      <th class="text-uppercase text-secondary text-lg font-weight-bolder">Record ID</th>
+                      <th class="text-uppercase text-secondary text-lg font-weight-bolder">ID</th>
+                      <th class="text-uppercase  text-secondary text-lg font-weight-bolder">Ref. ID</th>
                       <th class="text-uppercase text-secondary text-lg font-weight-bolder ps-2">Origin</th>
-                      <th class="text-center text-secondary text-lg font-weight-bolder ps-2">Hens</th>
-                      <th class="text-center text-secondary text-lg font-weight-bolder ps-2">Roosters</th>
+                      <th class="text-uppercase text-center text-secondary text-lg font-weight-bolder ps-2">Hens</th>
+                      <th class="text-uppercase text-center text-secondary text-lg font-weight-bolder ps-2">Roosters</th>
                       <th class="text-center text-uppercase text-secondary text-lg font-weight-bolder">Symptoms
                       </th>
                       <th class="text-center text-uppercase text-secondary text-lg font-weight-bolder">Date
@@ -198,6 +199,15 @@
                             <div class="justify-content-center">
                               <h6 class="mb-0 text-md ps-2">
                                 <%= healthRecord[i].recordHealthID %>
+                              </h6>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="align-middle text-center">
+                          <div class="d-flex px-2 py-1">
+                            <div class="justify-content-center">
+                              <h6 class="mb-0 text-md ps-2">
+                                <%= healthRecord[i].referenceID === null ? '-' : healthRecord[i].referenceID %>
                               </h6>
                             </div>
                           </div>
@@ -239,7 +249,7 @@
                             <%= healthRecord[i].status %>
                           </span>
                         </td>
-                        <% if (healthRecord[i].status !== 'Moved to SB') { continue } %>
+                        <% if (healthRecord[i].status !== 'Moved to SB' || healthRecord[i].numOfRoosters === 0 && healthRecord[i].numOfHens === 0 ) { continue } %>
                         <td class="align-middle text-center">
                           <button type="button" class="btn btn-sm btn-warning p-3 px-4" onclick="window.location.href='/chicken-health/view/edit?id=<%= healthRecord[i].recordHealthID %>'">
                             UPDATE

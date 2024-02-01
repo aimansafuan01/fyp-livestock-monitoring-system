@@ -150,7 +150,6 @@
               <div class="row mt-1">
                 <div class="col-12 col-md-2">
                   <select class="form-select ps-2" name="origin">
-                    <option selected>Choose Origin</option>
                     <% for (coopID of coopIDs) { if (coopID.coopID ==='SB') { continue; } %>
                       <option value="<%= coopID.coopID %>">
                         <%= coopID.coopID %>
@@ -160,7 +159,6 @@
                 </div>
                 <div class="col-12 col-md-2">
                   <select class="form-select ps-2" name="symptom">
-                    <option selected>Symptom</option>
                     <% for (symptom of healthSymptoms) { %>
                       <option value="<%= symptom.symptom %>">
                         <%= symptom.symptom %>
@@ -170,7 +168,6 @@
                 </div>
                 <div class="col-12 col-md-2">
                   <select class="form-select ps-2" name="status">
-                    <option selected>Status</option>
                     <% for (status of healthStatus) { %>
                       <option value="<%= status.status %>">
                         <%= status.status %>
