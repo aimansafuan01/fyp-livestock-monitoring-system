@@ -6,8 +6,37 @@ import { sendAlert } from '../mailer.js';
 export const getAllBrooderPage = async (req, res) => {
   try {
     const allBrooder = await BrooderDB.getAllBrooder();
+    const filledRecordBrooder = await RecordBroderDB.getBrooderHasBeenRecorded();
+    const numChick = allBrooder.map((data) => data.numChick);
+    const brooderID = allBrooder.map((data) => data.brooderID);
+    const blockedChick = allBrooder.map((data) => data.blockedChick);
+    const availableChick = allBrooder.map((data) => data.availableChick);
+    const mortalityRate = allBrooder.map((data) => data.mortalityRate);
+    const filledRecordBrooderData = filledRecordBrooder.map((data) => data.brooderID);
+    const avgMortalityRate = (mortalityRate.reduce((accumulator, currentValue) => +accumulator + +currentValue, 0) / mortalityRate.length).toFixed(2);
+    const totalNumChick = numChick.reduce((accumulator, currentValue) => +accumulator + +currentValue, 0);
+    const totalChickAvailable = availableChick.reduce((accumulator, currentValue) => +accumulator + +currentValue, 0);
+    const totalBlockedChick = blockedChick.reduce((accumulator, currentValue) => +accumulator + +currentValue, 0);
+    const ageChick = allBrooder.map((data) => {
+      const timeDiff = new Date() - new Date(data.inserted_at);
+      const age = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+      return age;
+    });
     res.status(200)
-      .render('brooder-record', { allBrooder });
+      .render('brooder-record', {
+        allBrooder,
+        filledRecordBrooderData,
+        numChick,
+        brooderID,
+        blockedChick,
+        availableChick,
+        mortalityRate,
+        avgMortalityRate,
+        totalChickAvailable,
+        totalNumChick,
+        totalBlockedChick,
+        ageChick
+      });
   } catch (error) {
     console.error(error);
     res.status(500)

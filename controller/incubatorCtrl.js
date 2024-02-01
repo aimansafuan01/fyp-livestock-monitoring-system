@@ -2,12 +2,14 @@ import * as IncubatorDB from '../db/incubatorDB.js';
 import * as BrooderDB from '../db/brooderDB.js';
 import * as RecordIncubatorDB from '../db/record-incubatorDB.js';
 import * as SurveillanceDB from '../db/surveillanceDB.js';
+import * as trayDB from '../db/trayDB.js';
 import { sendAlert } from '../mailer.js';
 
 // View Incubator
 export const getIncubatorPage = async (req, res) => {
   const allIncubator = await IncubatorDB.getAllIncubator();
   const hatchingDate = await IncubatorDB.getHatchingDate();
+
   res.status(200)
     .render('incubator-record', { allIncubator, hatchingDate });
 };
@@ -19,21 +21,27 @@ export const getIncubatorTrayForm = async (req, res) => {
   };
   const incubatorResult = await IncubatorDB.getIncubatorRecord(data);
   const numEggsInTray = await RecordIncubatorDB.getTrayToBasketRecord(data);
+  const trayList = await trayDB.getAllTray();
+  const occupiedTray = incubatorResult.map((data) => data.trayID);
+  const trayListArr = trayList.map((data) => data.trayID);
+  const filteredTrayListArr = trayListArr.filter(element => !occupiedTray.includes(element));
+
   res.status(200)
-    .render('create-tray-record', { data, incubatorResult, numEggsInTray });
+    .render('create-tray-record', { data, incubatorResult, numEggsInTray, filteredTrayListArr });
 };
 
 // Get Incubator Hatch Record Page
 export const getIncubatorHatchForm = async (req, res) => {
   const incubatorID = req.query.id;
   const numEgg = await RecordIncubatorDB.getNumEggsInBasket(incubatorID);
+  const availableBrooder = await BrooderDB.getAvailableBrooder();
   const numEggData = numEgg.map((data) => data.numEggs);
+  const availableBrooderID = availableBrooder.map((data) => data.brooderID);
   const data = {
     id: incubatorID,
     numEgg: numEggData.length > 0 ? numEggData : 0
   };
-
-  res.render('create-hatch-record', data);
+  res.render('create-hatch-record', { data, availableBrooderID });
 };
 
 // Submit Incubator Tray Record

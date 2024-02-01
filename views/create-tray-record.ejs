@@ -156,7 +156,6 @@
         numEggs = numEggsInTray[0].numEggs
         dateOut = numEggsInTray[0].dateOut.toLocaleDateString('en-MY')
       }
-
     %>
 
     <div class="p-3 mx-5 border border-secondary rounded shadow-lg mb-4">
@@ -177,13 +176,9 @@
               <div class="col-12 col-md-3">
                 <label for="trayID" class="form-label pt-2 mb-0">Tray Placement:</label>
                 <select class="form-select ps-2" name="trayID">
-                  <option selected>Choose Incubator Row</option>
-                  <option value="TR1">TR1</option>
-                  <option value="TR2">TR2</option>
-                  <option value="TR3">TR3</option>
-                  <option value="TR4">TR4</option>
-                  <option value="TR5">TR5</option>
-                  <option value="TR6">TR6</option>
+                  <% for (let i=0; i<filteredTrayListArr.length; i++) { %>
+                  <option value="<%= filteredTrayListArr[i] %>"><%= filteredTrayListArr[i] %></option>
+                  <% } %>
                 </select>
               </div>
               <div class="col-12 col-md-2">
@@ -214,7 +209,7 @@
                 <div class="row align-center">
                     <p class="mb-0">Origin: <b><%= trayID %></b></p>
                     <p class="mb-0">Number of Eggs: <b><%= numEggs %></b></p>
-                    <p>Date Hatch: <b><%= dateOut %></b></p>
+                    <p>Transfer Date: <b><%= dateOut %></b></p>
                 </div>
               </div>
             </div>

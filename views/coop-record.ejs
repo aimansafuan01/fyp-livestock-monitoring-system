@@ -133,316 +133,90 @@
           <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/dashboard/view">Dashboard</a></li>
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/daily-record">Daily Record</a></li>
-            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Coop</li>
+            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Chicken and Egg Record</li>
           </ol>
-          <h4 class="font-weight-bolder mb-0">Coop</h4>
+          <h4 class="font-weight-bolder mb-0">Chicken and Egg Record</h4>
         </nav>
       </div>
     </nav>
     <!-- End Breadrumb -->
-
-    <!-- CREATE ARRAY OF INDIVIDUAL COOP USING COOPID AS ITS KEY -->
-    <% const coop=allCoop.map(obj=> ({ [obj.coopID]: obj })); %>
-
-    <% const avgMortality = (+coop[0]['R1'].mortalityRate + +coop[1]['R2'].mortalityRate 
-    + +coop[2]['R3'].mortalityRate + +coop[3]['R4'].mortalityRate + +coop[4]['R5'].mortalityRate 
-    + +coop[5]['R6'].mortalityRate + +coop[6]['R7'].mortalityRate + +coop[7]['R8'].mortalityRate 
-    + +coop[8]['R9'].mortalityRate) / 9 %>
 
     <div class="container-fluid py-4 mb-3">
       <div class="row">
         <div class="col-12 col-md-7 mb-6 mx-auto">
           <div class="card enlargeable">
             <div class="card-header p-3 pt-2">
-              <div class="icon-xl shadow-dark text-center border-radius-xl mt-n4 position-absolute"
-                style="background-color: #65cf65 ; display: flex; align-items: center; justify-content: center;">
-                <i class="material-icons opacity-10" style="color:white">visibility</i>
+              <div class="position-absolute">
+                <h3>Overall Report</h3>
               </div>
-      
               <div class="text-end pt-1">
                 <p class="text-sm mb-0 text-capitalize">Mortality Rate</p>
-                <h2 class="mb-0"><%= avgMortality.toFixed(1) %>%</h2>
+                <h2 class="mb-0"><%= avgMortalityRate.toFixed(2) %>%</h2>
               </div>
             </div>
             <hr class="dark horizontal my-0">
             <div class="card-footer p-3">
-              <p class="mb-0"><span class="text-capitalize text-lg font-weight-bolder">38 </span>Total Roosters</p>
-              <p class="mb-0"><span class="text-capitalize text-lg font-weight-bolder">462 </span>Total Hens</p>
-              <p class="mb-0"><span class="text-capitalize text-lg font-weight-bolder">500 </span>Total Chicken</p>
+              <p class="mb-0"><span class="text-capitalize text-lg font-weight-bolder"><%= totalRoosters %> </span>Total Roosters</p>
+              <p class="mb-0"><span class="text-capitalize text-lg font-weight-bolder"><%= totalHens %></span>Total Hens</p>
+              <p class="mb-0"><span class="text-capitalize text-lg font-weight-bolder"><%= totalChicken %></span>Total Chicken</p>
             </div>
           </div>
         </div>
         <div class="col-12 col-md-5 mb-6 mx-auto">
           <div class="card enlargeable">
             <div class="card-header p-3 pt-2">
-              <div class="icon-xl shadow-dark text-center border-radius-xl mt-n4 position-absolute"
-                style="background-color: #ff3131 ; display: flex; align-items: center; justify-content: center;">
-                <i class="material-icons opacity-10" style="color:white">monitor_heart</i>
+              <div class="position-absolute">
+                <h3>Sick Bay Report</h3>
               </div>
       
               <div class="text-end pt-1">
                 <p class="text-sm mb-0 text-capitalize">Mortality Rate</p>
-                <h2 class="mb-0"><%= coop[9]['SB'].mortalityRate %>%</h2>
+                <h2 class="mb-0"><%= Number(mortalityRate[9]).toFixed(2) %>%</h2>
               </div>
             </div>
             <hr class="dark horizontal my-0">
             <div class="card-footer p-3">
-              <p class="mb-0"><span class="text-capitalize text-lg font-weight-bolder"><%= coop[9]['SB'].numOfRoosters %> </span>Roosters</p>
-              <p class="mb-0"><span class="text-capitalize text-lg font-weight-bolder"><%= coop[9]['SB'].numOfHens %> </span>Hens</p>
-              <p class="mb-0"><span class="text-capitalize text-lg font-weight-bolder"><%= coop[9]['SB'].totalChickens %> </span>Total Chicken</p>
+              <p class="mb-0"><span class="text-capitalize text-lg font-weight-bolder"><%= numOfRoosters[9] %> </span>Roosters</p>
+              <p class="mb-0"><span class="text-capitalize text-lg font-weight-bolder"><%= numOfHens[9] %> </span>Hens</p>
+              <p class="mb-0"><span class="text-capitalize text-lg font-weight-bolder"><%= totalChickensInEachCoop[9] %> </span>Total Chicken</p>
             </div>
           </div>
         </div>
       </div>
-      
       <div class="row">
+        <%
+          for (let i=0; i<coopID.length-1; i++) {
+            let flag = ""
+            coopRecordFilledArr.includes(coopID[i]) ? flag="disabled" : "" 
+        %>
         <div class="col-12 col-md-4 mb-5">
           <div class="card enlargeable">
             <div class="card-header p-3 pt-2">
               <div class="icon-lg shadow-dark text-center border-radius-xl mt-n4 position-absolute bg-gray-200"
-                style="display: flex; align-items: center; justify-content: center;">
-                <h3 class="text-black m-0">R1</h3>
+              style="display: flex; align-items: center; justify-content: center;">
+                <h3 class="text-black m-0"><%= coopID[i] %></h3>
               </div>
               <div class="text-end pt-1">
                 <p class="text-sm mb-0 text-capitalize">Mortality Rate</p>
-                <h4 class="mb-0"><%= coop[0]['R1'].mortalityRate %>%</h4>
+                <h4 class="mb-0"><%= mortalityRate[i] %>%</h4>
               </div>
             </div>
             <hr class="dark horizontal my-0">
             <div class="card-footer p-3">
-              <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder"><%= coop[0]['R1'].numOfRoosters %> </span>Roosters</p>
-              <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder"><%= coop[0]['R1'].numOfHens %> </span>Hens</p>
-              <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder"><%= +coop[0]['R1'].totalChickens %> </span>Total</p>
+              <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder"><%= numOfRoosters[i] %> </span>Roosters</p>
+              <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder"><%= numOfHens[i] %> </span>Hens</p>
+              <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder"><%= totalChickensInEachCoop[i] %> </span>Total</p>
             </div>
             <div class="row mx-3">
-              <a class="btn btn-warning" href="/coop/view/record?id=R1" role="button">View Record</a>
+              <a class="btn btn-warning" href="/coop/view/record?id=<%= coopID[i] %>" role="button">View Coop Record</a>
             </div>
             <div class="row mx-3">
-              <a class="btn btn-warning" href="/coop/create?id=R1" role="button">Add New Record</a>
+              <a class="btn btn-warning <%= flag %>" href="/coop/create?id=<%= coopID[i] %>" role="button">Create Daily Record</a>
             </div>
           </div>
         </div>
+      <% } %>
         
-        <div class="col-12 col-md-4 mb-5">
-          <div class="card enlargeable">
-            <div class="card-header p-3 pt-2">
-              <div class="bg-gray-200 icon-lg shadow-dark text-center border-radius-xl mt-n4 position-absolute"
-                style="display: flex; align-items: center; justify-content: center;">
-                <h3 class="text-black m-0">R2</h3>
-              </div>
-              <div class="text-end pt-1">
-                <p class="text-sm mb-0 text-capitalize">Mortality Rate</p>
-                <h4 class="mb-0"><%= coop[1]['R2'].mortalityRate %>%</h4>
-              </div>
-            </div>
-            <hr class="dark horizontal my-0">
-            <div class="card-footer p-3">
-              <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder"><%= coop[1]['R2'].numOfRoosters %> </span>Roosters</p>
-              <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder"><%= coop[1]['R2'].numOfHens %> </span>Hens</p>
-              <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder"><%= +coop[1]['R2'].totalChickens %> </span>Total</p>
-            </div>
-              <div class="row mx-3">
-                <a class="btn btn-warning" href="/coop/view/record?id=R2" role="button">View Record</a>
-              </div>
-            <div class="row mx-3">
-              <a class="btn btn-warning" href="/coop/create?id=R2" role="button">Add Record</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-12 col-md-4 mb-5">
-          <div class="card enlargeable">
-            <div class="card-header p-3 pt-2">
-              <div class="bg-gray-200 icon-lg shadow-dark text-center border-radius-xl mt-n4 position-absolute"
-                style="display: flex; align-items: center; justify-content: center;">
-                <h3 class="text-black m-0">R3</h3>
-              </div>
-        
-              <div class="text-end pt-1">
-                <p class="text-sm mb-0 text-capitalize">Mortality Rate</p>
-                <h4 class="mb-0"><%= coop[2]['R3'].mortalityRate %>%</h4>
-              </div>
-            </div>
-            <hr class="dark horizontal my-0">
-            <div class="card-footer p-3">
-              <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder"><%= coop[2]['R3'].numOfRoosters %> </span>Roosters</p>
-              <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder"><%= coop[2]['R3'].numOfHens %> </span>Hens</p>
-              <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder"><%= +coop[2]['R3'].totalChickens %> </span>Total</p>
-            </div>
-              <div class="row mx-3">
-                <a class="btn btn-warning" href="/coop/view/record?id=R3" role="button">View Record</a>
-              </div>
-            <div class="row mx-3">
-              <a class="btn btn-warning" href="/coop/create?id=R3" role="button">Add Record</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12 col-md-4 mb-5">
-          <div class="card enlargeable">
-            <div class="card-header p-3 pt-2">
-              <div class="bg-gray-200 icon-lg shadow-dark text-center border-radius-xl mt-n4 position-absolute"
-                style="display: flex; align-items: center; justify-content: center;">
-                <h3 class="text-black m-0"><%= coop[3]['R4'].coopID %></h3>
-              </div>
-              <div class="text-end pt-1">
-                <p class="text-sm mb-0 text-capitalize">Mortality Rate</p>
-                <h4 class="mb-0"><%= coop[3]['R4'].mortalityRate %>%</h4>
-              </div>
-            </div>
-            <hr class="dark horizontal my-0">
-            <div class="card-footer p-3">
-              <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder"><%= coop[3]['R4'].numOfRoosters %> </span>Roosters</p>
-              <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder"><%= coop[3]['R4'].numOfHens %> </span>Hens</p>
-              <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder"><%= +coop[3]['R4'].totalChickens %> </span>Total </p>
-            </div>
-              <div class="row mx-3">
-                <a class="btn btn-warning" href="/coop/view/record?id=R4" role="button">View Record</a>
-              </div>
-            <div class="row mx-3">
-              <a class="btn btn-warning" href="/coop/create?id=R4" role="button">Add Record</a>
-            </div>
-          </div>
-        </div>
-        
-        <div class="col-12 col-md-4 mb-5">
-          <div class="card enlargeable">
-            <div class="card-header p-3 pt-2">
-              <div class="bg-gray-200 icon-lg shadow-dark text-center border-radius-xl mt-n4 position-absolute"
-                style="display: flex; align-items: center; justify-content: center;">
-                <h3 class="text-black m-0">R5</h3>
-              </div>
-              <div class="text-end pt-1">
-                <p class="text-sm mb-0 text-capitalize">Mortality Rate</p>
-                <h4 class="mb-0"><%= coop[4]['R5'].mortalityRate %>%</h4>
-              </div>
-            </div>
-            <hr class="dark horizontal my-0">
-            <div class="card-footer p-3">
-              <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder"><%= coop[4]['R5'].numOfRoosters %> </span>Roosters</p>
-              <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder"><%= coop[4]['R5'].numOfHens %> </span>Hens</p>
-              <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder"><%= +coop[4]['R5'].totalChickens %> </span>Total</p>
-            </div>
-              <div class="row mx-3">
-                <a class="btn btn-warning" href="/coop/view/record?id=R5" role="button">View Record</a>
-              </div>
-            <div class="row mx-3">
-              <a class="btn btn-warning" href="/coop/create?id=R5" role="button">Add Record</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-12 col-md-4 mb-5">
-          <div class="card enlargeable">
-            <div class="card-header p-3 pt-2">
-              <div class="bg-gray-200 icon-lg shadow-dark text-center border-radius-xl mt-n4 position-absolute"
-                style="display: flex; align-items: center; justify-content: center;">
-                <h3 class="text-black m-0">R6</h3>
-              </div>
-        
-              <div class="text-end pt-1">
-                <p class="text-sm mb-0 text-capitalize">Mortality Rate</p>
-                <h4 class="mb-0"><%= coop[5]['R6'].mortalityRate %>%</h4>
-              </div>
-            </div>
-            <hr class="dark horizontal my-0">
-            <div class="card-footer p-3">
-              <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder"><%= coop[5]['R6'].numOfRoosters %> </span>Roosters</p>
-              <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder"><%= coop[5]['R6'].numOfHens %> </span>Hens</p>
-              <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder"><%= +coop[5]['R6'].totalChickens %> </span>Total</p>
-            </div>
-              <div class="row mx-3">
-                <a class="btn btn-warning" href="/coop/view/record?id=R6" role="button">View Record</a>
-              </div>
-            <div class="row mx-3">
-              <a class="btn btn-warning" href="/coop/create?id=R6" role="button">Add Record</a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-12 col-md-4 mb-5">
-          <div class="card enlargeable">
-            <div class="card-header p-3 pt-2">
-              <div class="bg-gray-200 icon-lg shadow-dark text-center border-radius-xl mt-n4 position-absolute"
-                style="display: flex; align-items: center; justify-content: center;">
-                <h3 class="text-black m-0">R7</h3>
-              </div>
-              <div class="text-end pt-1">
-                <p class="text-sm mb-0 text-capitalize">Mortality Rate</p>
-                <h4 class="mb-0"><%= coop[6]['R7'].mortalityRate %>%</h4>
-              </div>
-            </div>
-            <hr class="dark horizontal my-0">
-            <div class="card-footer p-3">
-              <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder"><%= coop[6]['R7'].numOfRoosters %> </span>Roosters</p>
-              <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder"><%= coop[6]['R7'].numOfHens %> </span>Hens</p>
-              <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder"><%= +coop[6]['R7'].totalChickens %> </span>Total</p>
-            </div>
-              <div class="row mx-3">
-                <a class="btn btn-warning" href="/coop/view/record?id=R7" role="button">View Record</a>
-              </div>
-            <div class="row mx-3">
-              <a class="btn btn-warning" href="/coop/create?id=R7" role="button">Add Record</a>
-            </div>
-          </div>
-        </div>
-        
-        <div class="col-12 col-md-4 mb-5">
-          <div class="card enlargeable">
-            <div class="card-header p-3 pt-2">
-              <div class="bg-gray-200 icon-lg shadow-dark text-center border-radius-xl mt-n4 position-absolute"
-                style="display: flex; align-items: center; justify-content: center;">
-                <h3 class="text-black m-0">R8</h3>
-              </div>
-              <div class="text-end pt-1">
-                <p class="text-sm mb-0 text-capitalize">Mortality Rate</p>
-                <h4 class="mb-0"><%= coop[7]['R8'].mortalityRate %>%</h4>
-              </div>
-            </div>
-            <hr class="dark horizontal my-0">
-            <div class="card-footer p-3">
-              <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder"><%= coop[7]['R8'].numOfRoosters %> </span>Roosters</p>
-              <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder"><%= coop[7]['R8'].numOfHens %> </span>Hens</p>
-              <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder"><%= +coop[7]['R8'].totalChickens %> </span>Total</p>
-            </div>
-              <div class="row mx-3">
-                <a class="btn btn-warning" href="/coop/view/record?id=R8" role="button">View Record</a>
-              </div>
-            <div class="row mx-3">
-              <a class="btn btn-warning" href="/coop/create?id=R8" role="button">Add Record</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-12 col-md-4 mb-5">
-          <div class="card enlargeable">
-            <div class="card-header p-3 pt-2">
-              <div class="bg-gray-200 icon-lg shadow-dark text-center border-radius-xl mt-n4 position-absolute"
-                style="display: flex; align-items: center; justify-content: center;">
-                <h3 class="text-black m-0">R9</h3>
-              </div>
-        
-              <div class="text-end pt-1">
-                <p class="text-sm mb-0 text-capitalize">Mortality Rate</p>
-                <h4 class="mb-0"><%= coop[8]['R9'].mortalityRate %>%</h4>
-              </div>
-            </div>
-            <hr class="dark horizontal my-0">
-            <div class="card-footer p-3">
-              <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder"><%= coop[8]['R9'].numOfRoosters %> </span>Roosters</p>
-              <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder"><%= coop[8]['R9'].numOfHens %> </span>Hens</p>
-              <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder"><%= +coop[8]['R9'].totalChickens %> </span>Total</p>
-            </div>
-              <div class="row mx-3">
-                <a class="btn btn-warning" href="/coop/view/record?id=R9" role="button">View Record</a>
-              </div>
-            <div class="row mx-3">
-              <a class="btn btn-warning" href="/coop/create?id=R9" role="button">Add Record</a>
-            </div>
-          </div>
-        </div>
       </div>
 
   <!--   Core JS Files   -->
