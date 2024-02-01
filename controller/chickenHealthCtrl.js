@@ -7,9 +7,8 @@ import { getHealthSymptoms } from '../db/health_symptomsDB.js';
 // Get Chicken Health Record Page
 export const getChickenHealthRecordPage = async (req, res) => {
   const healthRecord = await ChickenHealthDB.getChickenHealthRecord();
-  const healthStatus = await getHealthStatus();
   res.status(200)
-    .render('chicken-health-record', { healthRecord, healthStatus });
+    .render('chicken-health-record', { healthRecord });
 };
 
 // Get Create Chicken Health Record Page
@@ -74,33 +73,95 @@ export const submitChickenHealthForm = async (req, res) => {
   }
 };
 
-export const updateChickenHealthRecord = async (req, res) => {
-  const recordID = req.query.recordID;
-  const status = req.query.status;
-  const numDeadHen = req.query.numHens;
-  const numDeadRoosters = req.query.numRoosters;
-  let resultMinusChicken = null;
-
-  const minusData = {
-    coopID: 'SB',
-    numDeadHen,
-    numDeadRoosters
-  };
-
+export const getChickenHealthRecord = async (req, res) => {
+  const recordID = req.query.id;
   try {
-    const resultUpdate = await ChickenHealthDB.updateChickenHealthStatus(recordID, status);
-
-    if (status !== 'Cured') {
-      resultMinusChicken = await CoopDB.minusNumChickenCoop(minusData);
-    }
-
-    if (resultUpdate && resultMinusChicken) {
-      res.status(200)
-        .redirect('/chicken-health/view');
-    }
+    const recordData = await ChickenHealthDB.getSingleChickenHealthRecord(recordID);
+    const healthStatus = await getHealthStatus();
+    const coopIDs = await CoopDB.getCoopIDs();
+    res.status(200)
+      .render('edit-chicken-health-record', { recordData, healthStatus, coopIDs });
   } catch (error) {
-    console.error('Error during updating health record', error);
+    console.error('Error during fetching update chicken health record form', error);
     res.status(500)
       .send('Internal Server Error');
   }
 };
+
+export const submitUpdateChickenHealthForm = async (req, res) => {
+  const recordID = req.body.recordID;
+  const referenceID = recordID;
+  const origin = req.body.origin;
+  const numOfHens = req.body.numOfHens;
+  const numOfRoosters = req.body.numOfRoosters;
+  const status = req.body.status;
+  const symptom = req.body.symptom;
+  const coopID = req.body.transferTo;
+
+  const healthRecord = {
+    recordID,
+    origin,
+    numOfHens,
+    numOfRoosters,
+    status,
+    referenceID,
+    symptom
+  };
+
+  const addCoopData = {
+    coopID,
+    numOfHens,
+    numOfRoosters
+  };
+
+  const minusCoopData = {
+    coopID,
+    numDeadHen: numOfHens,
+    numDeadRoosters: numOfRoosters
+  };
+
+  try {
+    await ChickenHealthDB.submitChickenHealthRecord(healthRecord);
+    await ChickenHealthDB.updateChickenHealthRecord(healthRecord);
+    if (coopID !== null) {
+      status !== 'Cured'
+        ? await CoopDB.minusNumChickenCoop(minusCoopData)
+        : await CoopDB.addNumChickenCoop(addCoopData);
+    }
+    res.status(200)
+      .redirect('/chicken-health/view');
+  } catch (error) {
+    console.error('Error during updating chicken health record form', error);
+    res.status(500)
+      .send('Internal Server Error');
+  }
+};
+
+// const recordID = req.query.recordID;
+// const status = req.query.status;
+// const numDeadHen = req.query.numHens;
+// const numDeadRoosters = req.query.numRoosters;
+// let resultMinusChicken = null;
+
+// const minusData = {
+//   coopID: 'SB',
+//   numDeadHen,
+//   numDeadRoosters
+// };
+
+// try {
+//   const resultUpdate = await ChickenHealthDB.updateChickenHealthStatus(recordID, status);
+
+//   if (status !== 'Cured') {
+//     resultMinusChicken = await CoopDB.minusNumChickenCoop(minusData);
+//   }
+
+//   if (resultUpdate && resultMinusChicken) {
+//     res.status(200)
+//       .redirect('/chicken-health/view');
+//   }
+// } catch (error) {
+//   console.error('Error during updating health record', error);
+//   res.status(500)
+//     .send('Internal Server Error');
+// }

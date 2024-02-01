@@ -40,11 +40,11 @@
   <!-- Nepcha Analytics (nepcha.com) -->
   <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
   <!-- <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script> -->
+  <base href="http://localhost:3000/">
 </head>
 
 
 <!------------------------------ Left Navbar ---------------------->
-
 <body class="g-sidenav-show  bg-gray-200">
   <aside
     class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3   bg-gradient-dark"
@@ -70,7 +70,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="/daily-record">
+          <a class="nav-link text-white active bg-gradient-warning" href="/daily-record">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">inventory</i>
             </div>
@@ -78,7 +78,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white active bg-gradient-warning" href="/chicken-health/view">
+          <a class="nav-link text-white " href="/chicken-health/view">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">receipt_long</i>
             </div>
@@ -124,9 +124,9 @@
     </div>
   </aside>
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-    <!------------------------------ Left Navbar ---------------------->
+<!------------------------------ Left Navbar ---------------------->
 
-    <!------------------------------ Top Navbar ----------------------->
+    <!-- Top Navbar -->
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur"
       data-scroll="true">
       <div class="container-fluid py-1 px-3">
@@ -134,87 +134,108 @@
           <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/dashboard/view">Dashboard</a></li>
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/chicken-health/view">Chicken Health</a></li>
-            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Chicken Health Record</li>
+            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Update Chicken Health Record (<%= recordData[0].recordHealthID %>)</li>
           </ol>
-          <h4 class="font-weight-bolder mb-0">Chicken Health Record</h4>
+          <h4 class="font-weight-bolder mb-0">Update Chicken Health Record</h4>
         </nav>
       </div>
     </nav>
-    <!------------------------------- Top Navbar ----------------------->
+    <!-- Top Navbar -->
 
-      <div class="p-3 mx-5 border border-secondary rounded shadow-lg mb-4">
-        <form class="needs-validation" action="/chicken-health/submit" method="post" role="form"
-          class="text-start">
-          <div id="formRepeat">
-            <div class="row border px-2 py-2 mx-1">
-              <div class="row mt-1">
-                <div class="col-12 col-md-2">
-                  <select class="form-select ps-2" name="origin">
-                    <% for (coopID of coopIDs) { if (coopID.coopID ==='SB') { continue; } %>
-                      <option value="<%= coopID.coopID %>">
-                        <%= coopID.coopID %>
-                      </option>
-                      <% } %>
-                  </select>
-                </div>
-                <div class="col-12 col-md-2">
-                  <select class="form-select ps-2" name="symptom">
-                    <% for (symptom of healthSymptoms) { %>
-                      <option value="<%= symptom.symptom %>">
-                        <%= symptom.symptom %>
-                      </option>
-                      <% } %>
-                  </select>
-                </div>
-                <div class="col-12 col-md-2">
-                  <select class="form-select ps-2" name="status">
-                    <% for (status of healthStatus) { %>
-                      <option value="<%= status.status %>">
-                        <%= status.status %>
-                      </option>
-                      <% } %>
-                  </select>
-                </div>
+    <div class="p-3 mx-5 border border-secondary rounded shadow-lg mb-4">
+      <form class="needs-validation" action="/chicken-health/edit/record" method="post" role="form" class="text-start">
+        <div id="formRepeat">
+          <div class="row border px-2 py-2 mx-1">
+            <div class="row mx-1">
+              <div class="col-2 ps-0">
+                <label for="recordID">Record ID</label>
+                <input type="text" class="form-control text-black ps-2" name="recordID" id="recordID" value="<%= recordData[0].recordHealthID %>" readonly>
               </div>
-              <div class="row mt-1">
-                <div class="col-12 col-md-3">
-                  <label for="trayPlacement" class="form-label pt-2 mb-0">Number of Hens</label>
-                  <input type="number" class="form-control text-black ps-2" name="numOfHens" min="0" value="0">
-                </div>
-                <div class="col-12 col-md-3">
-                  <label for="trayPlacement" class="form-label pt-2 mb-0">Number of Roosters</label>
-                  <input type="number" class="form-control text-black ps-2" name="numOfRoosters" min="0" value="0">
-                </div>
+              <div class="col-2 ps-0">
+                <label for="origin">Origin</label>
+                <input type="text" class="form-control text-black ps-2" name="origin" id="origin" value="<%= recordData[0].origin %>" readonly>
               </div>
-              <div class="col-12 mt-3 align-self-end d-flex">
-                <button class="btn btn-warning" type="submit">Submit form</button>
+              <div class="col-2 ps-0">
+                <label for="symptom">Symptom</label>
+                <input type="text" class="form-control text-black ps-2" name="symptom" id="symptom" value="<%= recordData[0].symptom %>" readonly>
               </div>
             </div>
+            <div class="row">
+              <div class="col pb-2">
+                <label for="numOfHens" class="form-label pt-2 mb-0">Number of Hens</label>
+                <input type="number" class="form-control p-2" name="numOfHens" placeholder="Enter number of  Hens" min="0" max="<%= recordData[0].numOfHens %>" value="<%= recordData[0].numOfHens %>">
+              </div>
+              <div class="col pb-2">
+                <label for="numOfRoosters" class="form-label pt-2 mb-0">Number of Roosters</label>
+                <input type="number" class="form-control p-2" name="numOfRoosters" placeholder="Enter number of  Roosters" min="0" max="<%= recordData[0].numOfRoosters %>" value="<%= recordData[0].numOfRoosters %>">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col pb-2">
+                <label for="status" class="form-label pt-2 mb-0">Status</label>
+                <select class="form-select ps-2" name="status" id="status">
+                  <% for (status of healthStatus) { 
+                    if (status.status === 'Moved to SB') {continue}
+                  %>
+                    <option value="<%= status.status %>">
+                      <%= status.status %>
+                    </option>
+                    <% } %>
+                </select>
+              </div>
+            </div>
+            <div class="row" id="hidden" style="display: none">
+              <div class="col pb-2">
+                <label for="transferTo" class="form-label pt-2 mb-0">Transfer to</label>
+                <select class="form-select ps-2" name="transferTo" id="transferTo">
+                  <% for (coopID of coopIDs) { if (coopID.coopID==='SB' ) { continue; } %>
+                    <option value="<%= coopID.coopID %>">
+                      <%= coopID.coopID %>
+                    </option>
+                  <% } %>
+                  </select>
+              </div>
+            </div>
+            <div class="col-12 mt-3 align-self-end d-flex">
+              <button class="btn btn-warning" type="submit">Submit form</button>
+            </div>
           </div>
-        </form>
-      </div>
+        </div>
+      </form>
+    </div>
 
-      <!--   Core JS Files   -->
-      <script src="/assets/js/core/popper.min.js"></script>
-      <script src="/assets/js/core/bootstrap.min.js"></script>
-      <script src="/assets/js/plugins/perfect-scrollbar.min.js"></script>
-      <script src="/assets/js/plugins/smooth-scrollbar.min.js"></script>
-      <script src="/assets/js/plugins/chartjs.min.js"></script>
-
-      <script>
-        var win = navigator.platform.indexOf('Win') > -1;
-        if (win && document.querySelector('#sidenav-scrollbar')) {
-          var options = {
-            damping: '0.5'
-          }
-          Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    <!--   Core JS Files   -->
+    <script src="/assets/js/core/popper.min.js"></script>
+    <script src="/assets/js/core/bootstrap.min.js"></script>
+    <script src="/assets/js/plugins/perfect-scrollbar.min.js"></script>
+    <script src="/assets/js/plugins/smooth-scrollbar.min.js"></script>
+    <script src="/assets/js/plugins/chartjs.min.js"></script>
+    
+    <script>
+      var win = navigator.platform.indexOf('Win') > -1;
+      if (win && document.querySelector('#sidenav-scrollbar')) {
+        var options = {
+          damping: '0.5'
         }
-      </script>
+        Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+      }
+    </script>
 
-      <!-- Github buttons -->
-      <script async defer src="https://buttons.github.io/buttons.js"></script>
-      <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-      <script src="../assets/js/material-dashboard.min.js?v=3.1.0"></script>
+    <script>
+      document.getElementById('status').addEventListener('change', function handleChange(e) {
+        const hidden = document.getElementById('hidden');
+        if (event.target.value == 'Cured') {
+          hidden.style.display = 'block'
+        } else {
+          hidden.style.display = 'none'
+        }
+      })
+    </script>
+
+    <!-- Github buttons -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+    <script src="../assets/js/material-dashboard.min.js?v=3.1.0"></script>
 </body>
 
 </html>
