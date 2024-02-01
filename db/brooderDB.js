@@ -112,3 +112,16 @@ export async function minusBrooderNumChick (brooderData) {
     throw new Error('Error updating number of chick in brooder to database');
   }
 }
+
+// Get Number of Chick in Each Brooder
+export async function getNumChickInEachBrooder () {
+  try {
+    const [result] = await pool.query(`
+    SELECT brooderID, numChick
+    FROM BROODER`);
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error fetching brooder data from database');
+  }
+}

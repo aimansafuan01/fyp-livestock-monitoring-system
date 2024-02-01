@@ -160,7 +160,7 @@
               </div>
               <div class="text-end pt-1">
                 <p class="text-sm mb-0 text-capitalize">Today's Egg Collected</p>
-                <h4 class="mb-0"><%= todayEggData %></h4>
+                <h4 class="mb-0"><%= todayEggData[0] ?? 'No Record' %></h4>
               </div>
             </div>
           </div>
@@ -174,7 +174,7 @@
               </div>
               <div class="text-end pt-1">
                 <p class="text-sm mb-0 text-capitalize">Today's Chick Dead</p>
-                <h4 class="mb-0"><%= todayChickDeadata[0] %></h4>
+                <h4 class="mb-0"><%= todayChickDeadata[0] ?? 'No Record' %></h4>
               </div>
             </div>
           </div>
@@ -188,7 +188,7 @@
               </div>
               <div class="text-end pt-1">
                 <p class="text-sm mb-0 text-capitalize">Today's Hen Dead</p>
-                <h4 class="mb-0"><%= todayHenDeadData[0] %></h4>
+                <h4 class="mb-0"><%= todayHenDeadData[0] ?? 'No Record' %></h4>
               </div>
             </div>
           </div>
@@ -202,7 +202,7 @@
               </div>
               <div class="text-end pt-1">
                 <p class="text-sm mb-0 text-capitalize">Today's Rooster Dead</p>
-                <h4 class="mb-0"><%= todayRoosterDeadData %></h4>
+                <h4 class="mb-0"><%= todayRoosterDeadData[0] ?? 'No Record' %></h4>
               </div>
             </div>
           </div>
@@ -314,6 +314,50 @@
           </div>
         </div>
       </div>
+      <div class="row mt-4">
+        <div class="col-6 mb-4">
+          <div class="card z-index-2 ">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+              <div class="bg-gradient-secondary shadow-secondary border-radius-lg py-3 pe-1">
+                <div class="chart">
+                  <canvas id="chart-bars-chicken-in-each-coop" class="chart-canvas" height="170"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <h6 class="mb-0 ">Number of Chicken In Coop</h6>
+              <p class="text-sm ">Total number of hens and roosters in each coop</p>
+              <hr class="dark horizontal">
+              <div class="d-flex ">
+                <i class="material-icons text-sm my-auto me-1">schedule</i>
+                <p class="mb-0 text-sm">updated as of <%= currDate %>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 mb-4">
+          <div class="card z-index-2 ">
+            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
+              <div class="bg-gradient-secondary shadow-secondary border-radius-lg py-3 pe-1">
+                <div class="chart">
+                  <canvas id="chart-bars-chick-in-each-brooder" class="chart-canvas" height="170"></canvas>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <h6 class="mb-0 ">Number of Chick in Brooder</h6>
+              <p class="text-sm ">Total number of chick in each brooder</p>
+              <hr class="dark horizontal">
+              <div class="d-flex ">
+                <i class="material-icons text-sm my-auto me-1">schedule</i>
+                <p class="mb-0 text-sm">updated as of <%= currDate %>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   
   <!--   Core JS Files   -->
@@ -374,7 +418,8 @@
                 style: 'normal',
                 lineHeight: 2
               },
-              color: "#fff"
+              color: "#fff",
+              stepSize: 50
             },
           },
           x: {
@@ -542,7 +587,9 @@
                 style: 'normal',
                 lineHeight: 2
               },
-            }
+              stepSize: 1
+            },
+            min: 0
           },
           x: {
             grid: {
@@ -584,9 +631,6 @@
             backgroundColor: "rgba(255, 255, 255, .8)",
             data: [<%= numOfChicken[0].totalHens %>, <%= numOfChicken[0].totalRoosters %>],
             maxBarThickness: 6,
-          },
-          {
-            
           }],
         },
         options: {
@@ -732,6 +776,177 @@
             },
           },
         });
+
+        var ctx6 = document.getElementById("chart-bars-chicken-in-each-coop").getContext("2d");
+
+        var coopID = <%- JSON.stringify(coopIDData) %>
+
+          new Chart(ctx6, {
+            type: "bar",
+            data: {
+              labels: coopID,
+              datasets: [{
+                label: "Hen Count",
+                tension: 0.4,
+                borderWidth: 0,
+                borderRadius: 4,
+                borderSkipped: false,
+                backgroundColor: "rgba(255, 255, 255, .8)",
+                data: [<%= numOfHenData %>],
+                maxBarThickness: 6,
+              },{
+                label: "Rooster Count",
+                tension: 0.4,
+                borderWidth: 0,
+                borderRadius: 4,
+                borderSkipped: false,
+                backgroundColor: "rgba(255, 255, 255, .8)",
+                data: [<%= numOfRoosterData %>],
+                maxBarThickness: 6,
+              }],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  display: false,
+                }
+              },
+              interaction: {
+                intersect: false,
+                mode: 'index',
+              },
+              scales: {
+                y: {
+                  grid: {
+                    drawBorder: false,
+                    display: true,
+                    drawOnChartArea: true,
+                    drawTicks: false,
+                    borderDash: [5, 5],
+                    color: 'rgba(255, 255, 255, .2)'
+                  },
+                  ticks: {
+                    suggestedMin: 0,
+                    suggestedMax: 500,
+                    beginAtZero: true,
+                    padding: 10,
+                    font: {
+                      size: 14,
+                      weight: 300,
+                      family: "Roboto",
+                      style: 'normal',
+                      lineHeight: 2
+                    },
+                    color: "#fff"
+                  },
+                },
+                x: {
+                  grid: {
+                    drawBorder: false,
+                    display: true,
+                    drawOnChartArea: true,
+                    drawTicks: false,
+                    borderDash: [5, 5],
+                    color: 'rgba(255, 255, 255, .2)'
+                  },
+                  ticks: {
+                    display: true,
+                    color: '#f8f9fa',
+                    padding: 10,
+                    font: {
+                      size: 14,
+                      weight: 300,
+                      family: "Roboto",
+                      style: 'normal',
+                      lineHeight: 2
+                    },
+                  }
+                },
+              },
+            },
+          });
+
+          var ctx7 = document.getElementById("chart-bars-chick-in-each-brooder").getContext("2d");
+          var brooderID = <%- JSON.stringify(brooderIDData) %>
+            new Chart(ctx7, {
+              type: "bar",
+              data: {
+                labels: brooderID,
+                datasets: [{
+                  label: "Count",
+                  tension: 0.4,
+                  borderWidth: 0,
+                  borderRadius: 4,
+                  borderSkipped: false,
+                  backgroundColor: "rgba(255, 255, 255, .8)",
+                  data: [<%= numChickData %>],
+                  maxBarThickness: 6,
+                }],
+              },
+              options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                  legend: {
+                    display: false,
+                  }
+                },
+                interaction: {
+                  intersect: false,
+                  mode: 'index',
+                },
+                scales: {
+                  y: {
+                    grid: {
+                      drawBorder: false,
+                      display: true,
+                      drawOnChartArea: true,
+                      drawTicks: false,
+                      borderDash: [5, 5],
+                      color: 'rgba(255, 255, 255, .2)'
+                    },
+                    ticks: {
+                      suggestedMin: 0,
+                      suggestedMax: 500,
+                      beginAtZero: true,
+                      padding: 10,
+                      font: {
+                        size: 14,
+                        weight: 300,
+                        family: "Roboto",
+                        style: 'normal',
+                        lineHeight: 2
+                      },
+                      color: "#fff"
+                    },
+                  },
+                  x: {
+                    grid: {
+                      drawBorder: false,
+                      display: true,
+                      drawOnChartArea: true,
+                      drawTicks: false,
+                      borderDash: [5, 5],
+                      color: 'rgba(255, 255, 255, .2)'
+                    },
+                    ticks: {
+                      display: true,
+                      color: '#f8f9fa',
+                      padding: 10,
+                      font: {
+                        size: 14,
+                        weight: 300,
+                        family: "Roboto",
+                        style: 'normal',
+                        lineHeight: 2
+                      },
+                    }
+                  },
+                },
+              },
+            });
   </script>
   <script>
     var win = navigator.platform.indexOf('Win') > -1;
