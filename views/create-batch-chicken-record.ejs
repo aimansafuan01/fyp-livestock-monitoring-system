@@ -153,6 +153,17 @@
                 <label for="origin" class="form-label pt-2 mb-0">Origin</label>
                 <input type="text" class="form-control text-black ps-2" name="origin">
               </div>
+              <div class="col-12 col-md-2">
+                <label for="batchNumber" class="form-label pt-2 mb-0">Batch Number</label>
+                <input type="text" class="form-control text-black ps-2" name="batchNumber" list="batchNum">
+                <datalist id="batchNum">
+                  <% 
+                    for (batchNum of batchNumber) { 
+                  %>
+                  <option value="<%= batchNum %>"></option>
+                  <% } %>
+                </datalist>
+              </div>
             </div>
             <div class="row">
               <div class="col-12 col-md-3 pb-2">

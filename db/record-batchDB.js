@@ -26,3 +26,16 @@ export async function submitChickenArrival (batchData) {
     throw new Error('Error submitting chicken batch data to the database');
   }
 }
+
+export async function getBatchNumberToday () {
+  try {
+    const [result] = await pool.query(`
+    SELECT batchNumber 
+    FROM \`record-batch\`
+    `);
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error fetching chicken batch number from the database');
+  }
+}
