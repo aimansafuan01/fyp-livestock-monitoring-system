@@ -5,11 +5,12 @@ export async function submitBrooderRecord (brooderData) {
   try {
     const brooderID = brooderData.brooderID;
     const numDeadChick = +brooderData.numDeadChick;
+    const numChickSold = +brooderData.numChickSold;
 
     const result = await pool.query(`
-    INSERT INTO \`record-brooder\` (brooderID, numDeadChick)
-    VALUES (?, ?)
-    `, [brooderID, numDeadChick]);
+    INSERT INTO \`record-brooder\` (brooderID, numDeadChick, numChickSold)
+    VALUES (?, ?, ?)
+    `, [brooderID, numDeadChick, numChickSold]);
     return result;
   } catch (error) {
     console.error(error);
