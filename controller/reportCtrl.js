@@ -1,5 +1,6 @@
 import * as RecordCoopDB from '../db/record-coopDB.js';
 import * as CoopDB from '../db/coopDB.js';
+import * as BrooderDB from '../db/brooderDB.js';
 import * as RecordHatchDB from '../db/record-hatchDB.js';
 import * as RecordBroderDB from '../db/record-brooderDB.js';
 import * as EggsDB from '../db/eggsDB.js';
@@ -23,6 +24,7 @@ export const getReportPage = async (req, res) => {
   const dailyChickDeathInAMonth = await RecordBroderDB.getDailyChickDeathInAMonth();
   const totalChickDeathCurrMonth = await RecordBroderDB.getTotalChickDeathCurrMonth();
   const cumTotalChickDeath = await RecordBroderDB.getCumTotalChickDeath();
+  const brooderIDs = await BrooderDB.getBrooderIDs();
   const dailyEggsAMonthData = dailyEggsAMonth.map(data => data.numEggs);
   const monthlyEggsData = monthlyEggs.map((data) => data.numEggs);
   const monthlyHensDeadData = monthlyChickenDead.map((data) => data.numDeadHen);
@@ -48,6 +50,7 @@ export const getReportPage = async (req, res) => {
       totalIncubationData,
       dailyChickDeathInAMonthData,
       totalChickDeathCurrMonth,
-      cumTotalChickDeath
+      cumTotalChickDeath,
+      brooderIDs
     });
 };

@@ -26,6 +26,20 @@
   <!-- Nepcha Analytics (nepcha.com) -->
   <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
   <!-- <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script> -->
+  <style>
+@page { size: auto;  margin-top: 0mm; margin-bottom: 0mm; }
+
+@media print {
+    /* Hide the custom print button when printing */
+    .print-button {
+        display: none !important;
+    }
+}
+
+.print-button {
+    display: block; /* Initially show the button */
+}
+</style>
 </head>
 
 <body class="g-sidenav-show  bg-gray-200">
@@ -120,7 +134,7 @@
   %>
   <div class="container-fluid py-4">
 
-    <button class="btn btn-warning m-2" id="downloadBtn">Download PDF</button>
+    <button class="btn btn-warning m-2 print-button" id="print-button" onclick="printPage()">Download PDF</button>
     <h2 class="text-center"><u>TIROI FARM PLT</u></h2>
     <div class="row mt-3 align-middle text-center d-flex">
       <h5>MONTHLY PRODUCTION REPORT</h5>
@@ -167,9 +181,9 @@
       </div>
       <div class="row">
         <div class="col-12 mb-3">
-          <p class="mb-0">The total death count in <%= month %> as of <b><%= asOfDate %></b> is <b><%= chickenDeadData[0].totalDead %></b> (<b><%= chickenDeadData[0].numDeadRooster %></b> rooster, <b><%= chickenDeadData[0].numDeadHen %></b>
+          <p class="mb-0">The total death count in <%= month %> as of <b><%= asOfDate %></b> is <b><%= chickenDeadData[0].totalDead ?? '[ No Record ]' %></b> (<b><%= chickenDeadData[0].numDeadRooster ?? '[ No Record ]'%></b> rooster, <b><%= chickenDeadData[0].numDeadHen ?? '[ No Record ]'%></b>
             hens).</p>
-            <p>Total death count from start of operation until as of <b><%= asOfDate %></b> is <b><%= totalChickenDeadData[0].totalChickenDead %></b> (<b><%= totalChickenDeadData[0].totalDeadRooster %></b> rooster, <b><%= totalChickenDeadData[0].totalDeadHen %></b> hen).</p>
+            <p>Total death count from start of operation until as of <b><%= asOfDate %></b> is <b><%= totalChickenDeadData[0].totalChickenDead ?? '[ No Record ]' %></b> (<b><%= totalChickenDeadData[0].totalDeadRooster ?? '[ No Record ]' %></b> rooster, <b><%= totalChickenDeadData[0].totalDeadHen ?? '[ No Record ]' %></b> hen).</p>
         </div>
         <div class="col-12 mb-3">
           <canvas id="chicken-death-count" class="chart-canvas" height="50"></canvas>
@@ -179,10 +193,10 @@
     </div>
     <div class="row">
       <h5>EGG PRODUCTION AS OF <%= asOfDate %></h5>
-      <p>A total of <b><%= eggData[0].totalNumEggs %></b>  eggs produced in <b><%= month %></b>. Total number of eggs produced since 
-        <b><%= firstDateCoopRecord[0].DAY %> <%= firstDateCoopRecord[0].MONTH %> <%= firstDateCoopRecord[0].YEAR %></b> is <b><%= asOfEggData[0].totalEggCollected %></b>.
-        The daily average collected eggs in <%= month %> is <b><%= Number(avgEggDaily[0].avgDailyEgg).toFixed(2) %> </b>eggs. The average production rate in <b><%= month %></b> is <b>
-          <%= avgProductionRate %></b>.</p>
+      <p>A total of <b><%= eggData[0].totalNumEggs ?? '[ No Record ]' %></b>  eggs produced in <b><%= month %></b>. Total number of eggs produced since 
+        <b><%= firstDateCoopRecord[0].DAY %> <%= firstDateCoopRecord[0].MONTH %> <%= firstDateCoopRecord[0].YEAR %></b> is <b><%= asOfEggData[0].totalEggCollected ?? '[ No Record ]'%></b>.
+        The daily average collected eggs in <%= month %> is <b><%= Number(avgEggDaily[0].avgDailyEgg).toFixed(2) ?? '[ No Record ]'%> </b>eggs. The average production rate in <b><%= month %></b> is <b>
+          <%= avgProductionRate ?? '[ No Record ]' %></b>.</p>
     </div>
     
     <div class="row m-3">
@@ -203,11 +217,11 @@
     <div class="row">
       <h5>INCUBATION DATA AS OF <%= asOfDate %></h5>
       <div class="col-12">
-        <p>A total of <b><%=incubationRecord[0].numEgg %></b> was incubated in <%= month %>. Since <b><%= firstIncubationDate[0].firstIncubationDate.toLocaleDateString('en-MY') %></b>, a total of 
-        <b><%= incubationRecord[0].numEgg %></b> eggs has been incubated. <b><%= incubationRecord[0].numHatch %> </b> eggs hatched in <%= month %> <%= year %>. <%= month %> hatching rate was 
-        <b><%= Number(incubationRecord[0].hatchRate).toFixed(2) %>%</b> (<b><%= incubationRecord[0].numHatch %></b> of <b> <%= incubationRecord[0].numNotHatch %></b>). Range of hatching rate is
-        <b><%= incubationRecord[0].minHatchRate %>%</b> to <b><%= incubationRecord[0].maxHatchRate %>%</b>. A total of <b><%= totalIncubationData[0].totalEggIncubated %></b> eggs incubated as
-        of <%= asOfDate %> with <b><%= totalIncubationData[0].totalEggHatch %></b> hatched.</p>
+        <p>A total of <b><%=incubationRecord[0].numEgg ?? '[ No Record ]'%></b> was incubated in <%= month %>. Since <b><%= firstIncubationDate[0].firstIncubationDate.toLocaleDateString('en-MY') %></b>, a total of 
+        <b><%= incubationRecord[0].numEgg ?? '[ No Record ]' %></b> eggs has been incubated. <b><%= incubationRecord[0].numHatch ?? '[ No Record ]' %> </b> eggs hatched in <%= month %> <%= year %>. <%= month %> hatching rate was 
+        <b><%= Number(incubationRecord[0].hatchRate).toFixed(2) %>%</b> (<b><%= incubationRecord[0].numHatch ?? '[ No Record ]'%></b> of <b> <%= incubationRecord[0].numNotHatch ?? '[ No Record ]' %></b>). Range of hatching rate is
+        <b><%= incubationRecord[0].minHatchRate ?? '[ No Record ]' %>%</b> to <b><%= incubationRecord[0].maxHatchRate ?? '[ No Record ]' %>%</b>. A total of <b><%= totalIncubationData[0].totalEggIncubated ?? '[ No Record ]' %></b> eggs incubated as
+        of <%= asOfDate %> with <b><%= totalIncubationData[0].totalEggHatch ?? '[ No Record ]' %></b> hatched.</p>
       </div>
       <div clas="col-12">
         <canvas id="egg-incubated-egg-hatched" class="chart-canvas" height="100"></canvas>
@@ -218,7 +232,7 @@
     <div class="row">
       <h5>BROODER DATA AS OF <%= asOfDate %></h5>
       <div class="col-12">
-        <p>Chick death count in <%= month %> <%= year %> is <b><%= totalChickDeathCurrMonth[0].totalDeadChick %></b>. Cumulative total for chick's death count as of <%= asOfDate %> is <b><%= cumTotalChickDeath[0].totalDeadChick %></b>.</p>
+        <p>Chick death count in <%= month %> <%= year %> is <b><%= totalChickDeathCurrMonth[0].totalDeadChick ?? '[ No Record ]' %></b>. Cumulative total for chick's death count as of <%= asOfDate %> is <b><%= cumTotalChickDeath[0].totalDeadChick ?? '[ No Record ]'%></b>.</p>
       </div>
       <div clas="col-12">
         <canvas id="daily-chick-death-current-month" class="chart-canvas" height="100"></canvas>
@@ -262,9 +276,8 @@
         },
       },
     });
-  </script>
 
-  <script>
+
     var ctx2 = document.getElementById('chicken-death-count').getContext('2d');
     var myChart = new Chart(ctx2, {
       type: 'line',
@@ -298,9 +311,8 @@
         },
       }
     });
-  </script>
 
-  <script>
+
     var ctx3 = document.getElementById('num-egg-monthly').getContext('2d');
       var myChart = new Chart(ctx3, {
         type: 'line',
@@ -327,9 +339,8 @@
           },
         }
       });
-  </script>
-  
-  <script>
+
+
     var ctx4 = document.getElementById('production-rate-egg-monthly').getContext('2d');
       var myChart = new Chart(ctx4, {
         type: 'line',
@@ -356,26 +367,22 @@
           },
         }
       });
-  </script>
 
-  <script>
+    // Get date daily in 'DD/MM/YYYY' format
+    var currentDate = new Date();
+    var currentMonth = currentDate.getMonth();
+    var currentYear = currentDate.getFullYear();
+    var daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+    var labelsDate = [];
+    for (let day = 1; day <= daysInMonth; day++) {
+      labelsDate.push(`${day.toString().padStart(2, '0')}/${(currentMonth + 1).toString().padStart(2, '0')}/${currentYear.toString()}`)
+    }
+
     var ctx5 = document.getElementById('daily-egg-current-month').getContext('2d');
       var myChart = new Chart(ctx5, {
         type: 'line',
         data: {
-          labels: [
-            '01/01/2024', '02/01/2024', '03/01/2024',
-            '04/01/2024', '05/01/2024', '06/01/2024',
-            '07/01/2024', '08/01/2024', '09/01/2024',
-            '10/01/2024', '11/01/2024', '12/01/2024',
-            '13/01/2024', '14/01/2024', '15/01/2024',
-            '16/01/2024', '17/01/2024', '18/01/2024',
-            '19/01/2024', '20/01/2024', '21/01/2024',
-            '22/01/2024', '23/01/2024', '24/01/2024',
-            '25/01/2024', '26/01/2024', '27/01/2024',
-            '28/01/2024', '29/01/2024', '30/01/2024',
-            '31/01/2024'
-          ],
+          labels: labelsDate,
           datasets: [{
             label: 'Number of eggs',
             data: [<%= dailyEggsAMonthData %>],
@@ -397,9 +404,8 @@
           },
         }
       });
-  </script>
 
-  <script>
+
     var ctx6 = document.getElementById('egg-incubated-egg-hatched').getContext('2d');
     var myChart = new Chart(ctx6, {
         type: 'bar',
@@ -436,26 +442,13 @@
           },
         },
       });
-  </script>
 
-  <script>
+
     var ctx7 = document.getElementById('daily-chick-death-current-month').getContext('2d');
     var myChart = new Chart(ctx7, {
       type: 'line',
       data: {
-        labels: [
-          '01/01/2024', '02/01/2024', '03/01/2024',
-          '04/01/2024', '05/01/2024', '06/01/2024',
-          '07/01/2024', '08/01/2024', '09/01/2024',
-          '10/01/2024', '11/01/2024', '12/01/2024',
-          '13/01/2024', '14/01/2024', '15/01/2024',
-          '16/01/2024', '17/01/2024', '18/01/2024',
-          '19/01/2024', '20/01/2024', '21/01/2024',
-          '22/01/2024', '23/01/2024', '24/01/2024',
-          '25/01/2024', '26/01/2024', '27/01/2024',
-          '28/01/2024', '29/01/2024', '30/01/2024',
-          '31/01/2024'
-        ],
+        labels: labelsDate, //Code can be found above ctx5
         datasets: [{
           label: 'Number of dead chick',
           data: [<%= dailyChickDeathInAMonthData %>],
@@ -477,41 +470,29 @@
         },
       }
     });
+
+    
   </script>
 
 <script>
-  document.getElementById('downloadBtn').addEventListener('click', function () {
-    var pdf = new window.jspdf.jsPDF({
-      orientation: 'portrait',
+  function printPage() {
+    // Hide the print button
+    var printButton = document.querySelector('.print-button');
+    printButton.style.display = 'none';
+
+    // Add event listener for beforeprint to show the button again
+    window.addEventListener('beforeprint', function () {
+      printButton.style.display = 'none';
     });
-    var canvas = document.getElementById('chicken-count');
 
-    // Get the current image data URL from the canvas
-    var dataURL = canvas.toDataURL();
+     window.addEventListener('afterprint', function () {
+      printButton.style.display = 'block';
+    });
 
-    // Create an Image object and set the data URL as its source
-    var img = new Image();
-    img.src = dataURL;
-
-    // Set the resolution (DPI) for the image (optional, adjust as needed)
-    var dpi = 300; // Example: 300 dots per inch
-
-    // Calculate the width and height based on the desired DPI
-    var imgWidth = canvas.width * 0.2; // Adjust this factor based on your needs
-    var imgHeight = canvas.height * 0.2; // Adjust this factor based on your needs
-
-    // Add the image to the PDF with improved resolution
-    pdf.setFontSize(15);
-    pdf.setFont('arial');
-    pdf.text("This is an example report that was generated", 70, 10);
-    pdf.addImage(img, 'PNG', 25, 25, imgWidth, imgHeight, 'eggGraph', 'NONE');
-
-    // Save the PDF
-    pdf.save('report.pdf');
-  });
+    // Call window.print()
+    window.print();
+  }
 </script>
-
-
 
   <script>
     var win = navigator.platform.indexOf('Win') > -1;

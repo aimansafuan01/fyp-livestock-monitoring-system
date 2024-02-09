@@ -30,6 +30,19 @@ export async function getBrooderMR (brooderID) {
   }
 }
 
+// Get Brooder ID
+export async function getBrooderIDs () {
+  try {
+    const result = await pool.query(`
+    SELECT brooderID from brooder
+    `);
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error fetching brooder ID from database');
+  }
+}
+
 // Get All Brooder
 export async function getAllBrooder () {
   try {
