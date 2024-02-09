@@ -159,11 +159,11 @@
             <div class="row">
               <div class="col-6 pb-2">
                 <label for="numDeadChick" class="form-label pt-2 mb-0">Number of Dead Chick</label>
-                <input type="number" class="form-control p-2" name="numDeadChick" id="numDeadChick" min="0" value="0">
+                <input type="number" class="form-control p-2" name="numDeadChick" id="numDeadChick" min="0" value="0" required>
               </div>
               <div class="col-6 pb-2">
                 <label for="numChickSold" class="form-label pt-2 mb-0">Number of Chick Sold</label>
-                <input type="number" class="form-control p-2" name="numChickSold" id="numChickSold" min="0" max="<%= brooderData.numChick %>" placeholder="<%= brooderData.numChick %>">
+                <input type="number" class="form-control p-2" name="numChickSold" id="numChickSold" min="0" max="<%= brooderData.numChick %>" placeholder="<%= brooderData.numChick %>" required>
               </div>
             </div>
           </div>

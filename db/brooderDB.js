@@ -85,7 +85,7 @@ export async function updateBrooderMR (brooderData) {
     const { numChick } = numChickQuery[0];
     const { mortalityRate } = currMRQuery[0];
 
-    const updatedMR = ((+numDeadChick / +numChick) * 100) + +mortalityRate;
+    const updatedMR = numChick !== 0 ? ((+numDeadChick / +numChick) * 100) + (+mortalityRate) : 0;
 
     const result = await pool.query(`
     UPDATE brooder
