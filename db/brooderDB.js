@@ -33,7 +33,7 @@ export async function getBrooderMR (brooderID) {
 // Get Brooder ID
 export async function getBrooderIDs () {
   try {
-    const result = await pool.query(`
+    const [result] = await pool.query(`
     SELECT brooderID from brooder
     `);
     return result;

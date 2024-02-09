@@ -239,6 +239,11 @@
       </div> 
       <p class="mt-2 text-center mb-5">Figure 7: Daily Chick Death Count</p>
     </div>
+      <div clas="col-12">
+        <canvas id="num-chick-and-dead-each-brooder" class="chart-canvas" height="100"></canvas>
+      </div> 
+      <p class="mt-2 text-center mb-5">Figure 8: Total Number of Chick and Chick Dead in Each Brooder in <%= month %></p>
+    </div>
   </div>
 </body>
 
@@ -277,7 +282,7 @@
       },
     });
 
-
+    
     var ctx2 = document.getElementById('chicken-death-count').getContext('2d');
     var myChart = new Chart(ctx2, {
       type: 'line',
@@ -471,7 +476,46 @@
       }
     });
 
-    
+    var ctx = document.getElementById('num-chick-and-dead-each-brooder').getContext('2d');
+      var myCh7art = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: <%- JSON.stringify(brooderIDData) %>,
+          datasets: [
+            {
+              label: 'Total Number of Chick',
+              data: [1340, 1200, 1520, 1257, 1300, 1442],
+              backgroundColor: 'rgba(255, 241, 0, 0.2)',
+              borderColor: 'rgba(255, 241, 0, 1)',
+              borderWidth: 1,
+              barPercentage: 1,
+              categoryPercentage: 0.8,
+            },
+            {
+              label: 'Total Dead',
+              data: [120, 100, 78, 114, 120, 87],
+              backgroundColor: 'rgba(232, 64, 64, 0.2)',
+              borderColor: 'rgba(232, 64, 64, 1)',
+              borderWidth: 1,
+              barPercentage: 1,
+              categoryPercentage: 0.8,
+            }
+          ]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            },
+          },
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top'
+            }
+          },
+        },
+      });
   </script>
 
 <script>

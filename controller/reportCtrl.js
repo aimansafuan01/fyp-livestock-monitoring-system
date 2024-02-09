@@ -25,6 +25,7 @@ export const getReportPage = async (req, res) => {
   const totalChickDeathCurrMonth = await RecordBroderDB.getTotalChickDeathCurrMonth();
   const cumTotalChickDeath = await RecordBroderDB.getCumTotalChickDeath();
   const brooderIDs = await BrooderDB.getBrooderIDs();
+  const brooderIDData = brooderIDs.map(data => data.brooderID);
   const dailyEggsAMonthData = dailyEggsAMonth.map(data => data.numEggs);
   const monthlyEggsData = monthlyEggs.map((data) => data.numEggs);
   const monthlyHensDeadData = monthlyChickenDead.map((data) => data.numDeadHen);
@@ -51,6 +52,6 @@ export const getReportPage = async (req, res) => {
       dailyChickDeathInAMonthData,
       totalChickDeathCurrMonth,
       cumTotalChickDeath,
-      brooderIDs
+      brooderIDData
     });
 };
