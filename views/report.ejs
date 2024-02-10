@@ -484,28 +484,43 @@
           datasets: [
             {
               label: 'Total Number of Chick',
-              data: [1340, 1200, 1520, 1257, 1300, 1442],
+              data: <%- JSON.stringify(totalNumHatchData) %>,
               backgroundColor: 'rgba(255, 241, 0, 0.2)',
               borderColor: 'rgba(255, 241, 0, 1)',
               borderWidth: 1,
               barPercentage: 1,
               categoryPercentage: 0.8,
+              stack: 'unstacked'
             },
             {
               label: 'Total Dead',
-              data: [120, 100, 78, 114, 120, 87],
+              data: <%- JSON.stringify(totalNumDeadData) %>,
               backgroundColor: 'rgba(232, 64, 64, 0.2)',
               borderColor: 'rgba(232, 64, 64, 1)',
               borderWidth: 1,
               barPercentage: 1,
               categoryPercentage: 0.8,
+              stack: 'stacked'
+            },
+            {
+              label: 'Total Sold',
+              data: <%- JSON.stringify(totalNumSoldData)%>,
+              backgroundColor: 'rgba(39, 245, 88, 0.2)',
+              borderColor: 'rgba(39, 245, 88, 1)',
+              borderWidth: 1,
+              barPercentage: 1,
+              categoryPercentage: 0.8,
+              stack: 'stacked'
             }
           ]
         },
         options: {
           scales: {
+            x: {
+              stacked: true,
+            },
             y: {
-              beginAtZero: true
+              beginAtZero: true,
             },
           },
           plugins: {

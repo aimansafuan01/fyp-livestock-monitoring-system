@@ -25,12 +25,18 @@ export const getReportPage = async (req, res) => {
   const totalChickDeathCurrMonth = await RecordBroderDB.getTotalChickDeathCurrMonth();
   const cumTotalChickDeath = await RecordBroderDB.getCumTotalChickDeath();
   const brooderIDs = await BrooderDB.getBrooderIDs();
+  const totalNumChick = await RecordHatchDB.getTotalChickInBrooder();
+  const totalNumChickDeadAndSold = await RecordBroderDB.getTotalChickDeadAndSoldInBrooder();
   const brooderIDData = brooderIDs.map(data => data.brooderID);
   const dailyEggsAMonthData = dailyEggsAMonth.map(data => data.numEggs);
   const monthlyEggsData = monthlyEggs.map((data) => data.numEggs);
   const monthlyHensDeadData = monthlyChickenDead.map((data) => data.numDeadHen);
   const monthlyRoosterDeadData = monthlyChickenDead.map((data) => data.numDeadRooster);
   const dailyChickDeathInAMonthData = dailyChickDeathInAMonth.map((data) => data.numDeadChick);
+  const totalNumHatchData = totalNumChick.map(data => data.totalNumHatch);
+  const totalNumDeadData = totalNumChickDeadAndSold.map(data => data.totalNumDead);
+  const totalNumSoldData = totalNumChickDeadAndSold.map(data => data.totalNumSold);
+
   res.status(200)
     .render('report', {
       monthlyEggs,
@@ -52,6 +58,9 @@ export const getReportPage = async (req, res) => {
       dailyChickDeathInAMonthData,
       totalChickDeathCurrMonth,
       cumTotalChickDeath,
-      brooderIDData
+      brooderIDData,
+      totalNumHatchData,
+      totalNumDeadData,
+      totalNumSoldData
     });
 };
