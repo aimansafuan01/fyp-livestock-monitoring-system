@@ -161,9 +161,10 @@
                 </div>
                 <hr class="dark horizontal my-0">
                 <div class="card-footer p-3">
-                  <p class="mb-0"><span class="text-capitalize text-lg font-weight-bolder"><%= totalChickAvailable %> </span>Total Chick Available</p>
-                  <p class="mb-0"><span class="text-capitalize text-lg font-weight-bolder"><%= totalBlockedChick %> </span>Total Chick Blocked</p>
-                  <p class="mb-0"><span class="text-capitalize text-lg font-weight-bolder"><%= totalNumChick %> </span>Total Chick</p>
+                  <p class="text-sm mb-0 text-capitalize">Total Number of Chick</p>
+                  <h3 class="mb-0">
+                    <%= totalNumChick %>
+                  </h3>
                 </div>
               </div>
             </div>
@@ -189,21 +190,16 @@
                     </h4>
                     <p class="text-sm mb-0 text-capitalize">Age</p>
                     <h5 class="mb-0">
-                      <%= ageChick[i] %> day
+                      <%= numChick[i] === 0 ? '-': ageChick[i]+' day' %>
                     </h5>
                   </div>
                 </div>
                 <hr class="dark horizontal my-0">
                 <div class="card-footer p-3">
-                  <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder">
+                  <p class="text-sm mb-0 text-capitalize">Number of Chick</p>
+                  <h5 class="mb-0">
                     <%= numChick[i] %>
-                  </span>Number of Chick</p>
-                  <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder">
-                      <%= +availableChick[i] %>
-                    </span>Available Chick</p>
-                  <p class="mb-0"><span class="text-capita;ize text-md font-weight-bolder">
-                      <%= blockedChick[i] %>
-                    </span>Blocked Chick</p>
+                  </h5>
                 </div>
                 <div class="row mx-3">
                   <a class="btn btn-warning" href="/brooder/view/record?id=<%= brooderID[i] %>" role="button">View Brooder Record</a>

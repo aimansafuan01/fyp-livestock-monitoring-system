@@ -5,11 +5,12 @@ export async function submitBrooderRecord (brooderData) {
   try {
     const brooderID = brooderData.brooderID;
     const numDeadChick = +brooderData.numDeadChick;
+    const numChickSold = +brooderData.numChickSold;
 
     const result = await pool.query(`
-    INSERT INTO \`record-brooder\` (brooderID, numDeadChick)
-    VALUES (?, ?)
-    `, [brooderID, numDeadChick]);
+    INSERT INTO \`record-brooder\` (brooderID, numDeadChick, numChickSold)
+    VALUES (?, ?, ?)
+    `, [brooderID, numDeadChick, numChickSold]);
     return result;
   } catch (error) {
     console.error(error);
@@ -130,5 +131,26 @@ export async function getBrooderHasBeenRecorded () {
   } catch (error) {
     console.error(error);
     throw new Error('Error fetching filled brooder record data from the database');
+  }
+}
+
+// Get total number of chick placed in each brooder for current month
+export async function getTotalChickDeadAndSoldInBrooder () {
+  try {
+    const [result] = await pool.query(`
+    SELECT b.brooderID, COALESCE(SUM(rb.numDeadChick), 0) AS totalNumDead, COALESCE(SUM(rb.numChickSold), 0) AS totalNumSold
+    FROM (
+      SELECT brooderID
+      FROM brooder
+    ) b
+    LEFT JOIN \`record-brooder\` rb ON b.brooderID = rb.brooderID
+    AND YEAR(rb.created_at) = YEAR(current_date())
+    AND MONTH(rb.created_at) = MONTH(current_date())
+    GROUP BY b.brooderID;
+    `);
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error fetching total number of chick dead from the database');
   }
 }

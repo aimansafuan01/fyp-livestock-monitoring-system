@@ -46,3 +46,24 @@ export async function getTotalIncubationData () {
     throw new Error('Error fetching total incubation data from the database');
   }
 }
+
+// Get total number of chick placed in each brooder for current month
+export async function getTotalChickInBrooder () {
+  try {
+    const [result] = await pool.query(`
+    SELECT b.brooderID, COALESCE(SUM(rh.numHatch), 0) AS totalNumHatch
+    FROM (
+      SELECT DISTINCT brooderID
+      FROM brooder
+    ) b
+    LEFT JOIN \`record-hatch\` rh ON b.brooderID = rh.brooderID
+    AND YEAR(rh.created_at) = YEAR(current_date())
+    AND MONTH(rh.created_at) = MONTH(current_date())
+    GROUP BY b.brooderID;
+    `);
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error fetching total number of hatch from the database');
+  }
+}

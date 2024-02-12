@@ -80,7 +80,6 @@ export async function getAllChicken () {
     const [result] = await pool.query(`
     SELECT coopID, numOfHens, numOfRoosters
     FROM coop
-    GROUP BY coopID
     `);
     return result;
   } catch (error) {
