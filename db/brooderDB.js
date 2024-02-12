@@ -143,3 +143,18 @@ export async function getNumChickInEachBrooder () {
     throw new Error('Error fetching brooder data from database');
   }
 }
+
+// Update Brooder MR to default value
+export async function setBrooderMortalityRate (id) {
+  try {
+    const [result] = await pool.query(`
+    UPDATE BROODER
+    SET BROODER.mortalityRate = ?
+    WHERE brooderID = ?`,
+    [0.00, id]);
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error updating brooder MR to database');
+  }
+}

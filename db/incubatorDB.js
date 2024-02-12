@@ -80,3 +80,18 @@ export async function updateIncubator (incubatorData) {
     throw new Error('Error updating incubator data to the database');
   }
 }
+
+// Set Incubator Hatching Rate
+export async function setIncubatorHR (id) {
+  try {
+    const [result] = await pool.query(`
+    UPDATE INCUBATOR
+    SET INCUBATOR.hatchingRate = ?
+    WHERE incubatorID = ?`,
+    [100, id]);
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error updating incubator hatching rate');
+  }
+}
