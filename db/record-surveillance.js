@@ -25,12 +25,12 @@ export async function getRecordSurveillance () {
 }
 
 // Update Record Surveillance Status
-export async function updateSurveillanceStatus (recordID) {
+export async function updateSurveillanceStatus (recordID, action) {
   try {
     const result = await pool.query(`
     UPDATE \`record-surveillance\`
-    SET \`record-surveillance\`.status = 'Resolved'
-    WHERE \`record-surveillance\`.surveillanceID = ?`, [recordID]);
+    SET \`record-surveillance\`.status = 'Resolved', \`record-surveillance\`.action = ?
+    WHERE \`record-surveillance\`.surveillanceID = ?`, [action, recordID]);
     return result;
   } catch (error) {
     console.error(error);

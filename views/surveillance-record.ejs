@@ -40,6 +40,11 @@
   <!-- Nepcha Analytics (nepcha.com) -->
   <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
   <!-- <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script> -->
+  <style>
+    textarea {
+  resize: none;
+}
+  </style>
 </head>
 
 
@@ -219,13 +224,17 @@
                                       <h1 class="modal-title fs-5" id="staticBackdropLabel">Update Status?</h1>
                                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
+                                    <form class="needs-validation" action="/surveillance/update?id=<%= surveillanceID %>" method="post" role="form" class="text-start">
                                     <div class="modal-body">
-                                      This will mark the surveillance status as <b><i>Resolved</i></b>.
+                                      This will mark the surveillance status as <b><i>Resolved</i></b>.<br>
+                                      <label for="action" >Action Taken:</label><br>
+                                      <textarea name="action" id="action" rows="4" cols="55" spellcheck required maxlength="100"></textarea>
                                     </div>
                                     <div class="modal-footer">
                                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                      <button type="button" class="btn btn-warning" onclick="location.href='/surveillance/update?id=<%= surveillanceID %>'">Confirm</button>
+                                      <button type="submit" class="btn btn-warning">Confirm</button>
                                     </div>
+                                    </form>
                                   </div>
                                 </div>
                               </div>
