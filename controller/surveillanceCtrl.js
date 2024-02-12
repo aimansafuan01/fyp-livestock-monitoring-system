@@ -12,7 +12,8 @@ export const getSurveillanceRecordPage = async (req, res) => {
 export const updateSurveillanceRecord = async (req, res) => {
   try {
     const id = req.query.id;
-    const result = await SurveillanceDB.updateSurveillanceStatus(id);
+    const action = req.body.action;
+    const result = await SurveillanceDB.updateSurveillanceStatus(id, action);
     if (result) {
       res.status(200)
         .redirect('/dashboard/view');

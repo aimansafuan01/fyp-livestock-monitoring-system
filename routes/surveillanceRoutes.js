@@ -7,6 +7,6 @@ const router = express.Router();
 router.get('/view', SurveillanceCtrl.getSurveillanceRecordPage);
 
 // Update surveillance record page
-router.get('/update', SurveillanceCtrl.updateSurveillanceRecord);
+router.post('/update', SurveillanceCtrl.updateSurveillanceRecord);
 
 export default router;
