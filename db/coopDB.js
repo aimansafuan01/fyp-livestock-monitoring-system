@@ -145,3 +145,18 @@ export async function updateCoopMR (coopData) {
     throw new Error('Error updating coop mortality rate to database');
   }
 }
+
+// Update Coop MR to default value
+export async function setCoopMortalityRate (id) {
+  try {
+    const [result] = await pool.query(`
+    UPDATE COOP
+    SET COOP.mortalityRate = ?
+    WHERE coopID = ?`,
+    [0.00, id]);
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error updating coop MR to database');
+  }
+}

@@ -160,7 +160,9 @@
                           </th>
                           <th class="text-center text-uppercase text-secondary text-lg font-weight-bolder">Date
                           </th>
-                          <th class="text-center text-uppercase text-secondary text-lg font-weight-bolder">Action
+                          <th class=" text-uppercase text-secondary text-lg font-weight-bolder">Action
+                          </th>
+                          <th class="text-center text-uppercase text-secondary text-lg font-weight-bolder">Update
                           </th>
                         </tr>
                       </thead>
@@ -171,6 +173,8 @@
                             let status = recordSurveillanceData[i].status;
                             let badgeBG = recordSurveillanceData[i].status === 'Resolved' ? 'bg-gradient-dark' : 'bg-gradient-danger';
                             let date = recordSurveillanceData[i].created_at.toLocaleDateString('en-MY');
+                            let date_resolved = recordSurveillanceData[i].updated_at.toLocaleDateString('en-MY');
+                            let action = recordSurveillanceData[i].action
                             let origin = '-';
                             let originDesc = '-';
                             let modalStatus = recordSurveillanceData[i].status === 'Resolved' ? 'disabled' : '';
@@ -207,9 +211,16 @@
                           </td>
                           <td class="align-middle text-center">
                             <span class="text-secondary text-md font-weight-bold opacity-7"><%= date %></span>
+                            <p class="text-xs"><i>Resolved: <%= date_resolved %> </i></p>
+                          </td>
+                          <td>
+                            <p class="text-xs text-secondary mb-0">
+                              <% if (action === null) action='-' %>
+                              <%= action %>
+                            </p>
                           </td>
                           <td class="align-middle text-center">
-                              <% if (btnBG=modalStatus==='disabled') continue; %>
+                              <% if (btnBG=modalStatus==='disabled') continue %>
                               <button type="button" class="btn btn-sm btn-success p-3 px-5" data-bs-toggle="modal" data-bs-target="#confirmationModal" <%= modalStatus %>>
                                 Resolve
                               </button>
