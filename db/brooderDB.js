@@ -104,7 +104,7 @@ export async function addChickToBrooder (hatchData) {
   try {
     const brooderID = hatchData.brooderID;
     const numChick = hatchData.numChick;
-    const result = await pool.query(`UPDATE BROODER
+    const result = await pool.query(`UPDATE brooder
     SET brooder.numChick = brooder.numChick + ${numChick}
     WHERE brooderID = '${brooderID}'`);
     return result;
@@ -121,7 +121,7 @@ export async function minusBrooderNumChick (brooderData) {
     const numDeadChick = +brooderData.numDeadChick;
     const numChickSold = +brooderData.numChickSold;
     const totalMinusChick = +numDeadChick + +numChickSold;
-    const result = await pool.query(`UPDATE BROODER
+    const result = await pool.query(`UPDATE brooder
     SET brooder.numChick = brooder.numChick - ${totalMinusChick}
     WHERE brooderID = '${brooderID}'`);
     return result;
@@ -136,7 +136,7 @@ export async function getNumChickInEachBrooder () {
   try {
     const [result] = await pool.query(`
     SELECT brooderID, numChick
-    FROM BROODER`);
+    FROM brooder`);
     return result;
   } catch (error) {
     console.error(error);
@@ -148,8 +148,8 @@ export async function getNumChickInEachBrooder () {
 export async function setBrooderMortalityRate (id) {
   try {
     const [result] = await pool.query(`
-    UPDATE BROODER
-    SET BROODER.mortalityRate = ?
+    UPDATE brooder
+    SET brooder.mortalityRate = ?
     WHERE brooderID = ?`,
     [0.00, id]);
     return result;

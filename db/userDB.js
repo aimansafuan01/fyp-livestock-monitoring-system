@@ -20,7 +20,7 @@ export async function register (accountData) {
   try {
     const { username, password } = accountData;
     const [result] = await pool.query(`
-    INSERT INTO USER (username, password) VALUES (?, ?)`,
+    INSERT INTO user (username, password) VALUES (?, ?)`,
     [username, password]);
     return result;
   } catch (error) {

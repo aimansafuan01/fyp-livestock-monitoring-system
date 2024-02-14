@@ -69,7 +69,7 @@ export async function updateIncubator (incubatorData) {
     const incubatorID = incubatorData.incubatorID;
     const hatchingRate = +incubatorData.hatchRate;
     const eggOut = incubatorData.eggInBasket;
-    const result = await pool.query(`UPDATE INCUBATOR
+    const result = await pool.query(`UPDATE incubator
     SET incubator.totalEggInside = incubator.totalEggInside - ?,
     incubator.hatchingRate = ?
     WHERE incubatorID = ?`,
@@ -85,8 +85,8 @@ export async function updateIncubator (incubatorData) {
 export async function setIncubatorHR (id) {
   try {
     const [result] = await pool.query(`
-    UPDATE INCUBATOR
-    SET INCUBATOR.hatchingRate = ?
+    UPDATE incubator
+    SET incubator.hatchingRate = ?
     WHERE incubatorID = ?`,
     [100, id]);
     return result;

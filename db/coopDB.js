@@ -94,7 +94,7 @@ export async function addNumChickenCoop (coopData) {
     const coopID = coopData.coopID;
     const numOfHens = +coopData.numOfHens;
     const numOfRoosters = +coopData.numOfRoosters;
-    const result = await pool.query(`UPDATE COOP
+    const result = await pool.query(`UPDATE coop
     SET coop.numOfHens = coop.numOfHens + ?,
     coop.numOfRoosters = coop.numOfRoosters + ?
     WHERE coopID = ?`, [+numOfHens, +numOfRoosters, coopID]);
@@ -111,7 +111,7 @@ export async function minusNumChickenCoop (coopData) {
     const coopID = coopData.coopID;
     const numDeadHen = +coopData.numDeadHen ?? 0;
     const numDeadRoosters = +coopData.numDeadRoosters ?? 0;
-    const result = await pool.query(`UPDATE COOP
+    const result = await pool.query(`UPDATE coop
     SET coop.numOfHens = coop.numOfHens - ?,
     coop.numOfRoosters = coop.numOfRoosters - ?
     WHERE coopID = ?`, [+numDeadHen, +numDeadRoosters, coopID]);
@@ -150,8 +150,8 @@ export async function updateCoopMR (coopData) {
 export async function setCoopMortalityRate (id) {
   try {
     const [result] = await pool.query(`
-    UPDATE COOP
-    SET COOP.mortalityRate = ?
+    UPDATE coop
+    SET coop.mortalityRate = ?
     WHERE coopID = ?`,
     [0.00, id]);
     return result;

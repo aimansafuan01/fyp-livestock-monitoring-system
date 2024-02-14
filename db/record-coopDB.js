@@ -159,7 +159,7 @@ export async function getChickenDeadCurrMonth () {
     SELECT sum(numDeadRooster) AS numDeadRooster, 
     sum(numDeadHen) AS numDeadHen, 
     sum(numDeadHen) + sum(numDeadRooster) AS totalDead 
-    FROM \`RECORD-COOP\`
+    FROM \`record-coop\`
     WHERE MONTH(current_date()) = MONTH(recorded_at)
     AND
     YEAR(current_date()) = YEAR(recorded_at) `);
@@ -308,7 +308,7 @@ export async function deleteCoopRecord (id) {
 export async function getCoopRecordExistToday () {
   try {
     const [result] = await pool.query(`
-    SELECT COOPID FROM \`RECORD-COOP\`
+    SELECT COOPID FROM \`record-coop\`
     WHERE YEAR(RECORDED_AT) = YEAR(curdate())
     AND MONTH(RECORDED_AT) = MONTH(curdate())
     AND WEEK(RECORDED_AT) = WEEK(curdate())
