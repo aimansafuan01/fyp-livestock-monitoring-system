@@ -52,8 +52,8 @@
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
         aria-hidden="true" id="iconSidenav"></i>
-      <a class="navbar-brand m-0" href=" https://demos.creative-tim.com/material-dashboard/pages/dashboard "
-        target="_blank">
+      <a class="navbar-brand m-0" href="/dashboard/view"
+        >
         <img src="../assets/img/logo-ct.png" class="navbar-brand-img h-100" alt="main_logo">
         <span class="ms-1 font-weight-bold text-white">Tiroi Farm PLT</span>
       </a>
@@ -145,17 +145,18 @@
 
     
     <div class="p-3 mx-5 border border-secondary rounded shadow-lg mb-4">
-      <form class="needs-validation" action="/chicken-batch/submit" method="post" role="form" class="text-start">
+      <form class="needs-validation" action="/chicken-batch/submit" method="post" role="form" class="text-start" id="batchForm">
         <div id="formRepeat">
           <div class="row border px-2 py-2 mx-1">
             <div class="row mt-1">
               <div class="col-12 col-md-2">
                 <label for="origin" class="form-label pt-2 mb-0">Origin</label>
-                <input type="text" class="form-control text-black ps-2" name="origin">
+                <input type="text" class="form-control text-black ps-2" name="origin" id="origin" required>
               </div>
               <div class="col-12 col-md-2">
-                <label for="batchNumber" class="form-label pt-2 mb-0">Batch Number</label>
-                <input type="text" class="form-control text-black ps-2" name="batchNumber" list="batchNum">
+                <label for="batchNumber" class="form-label pt-2 mb-0">Batch Number</label>&nbsp;<i class="fas fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="top"
+                  data-bs-title="Choose the batch number from suggestion to refer the record to the same batch"></i>
+                <input type="text" class="form-control text-black ps-2" name="batchNumber" id="batchNumber" list="batchNum" required>
                 <datalist id="batchNum">
                   <% 
                     for (batchNum of batchNumber) { 
@@ -168,20 +169,18 @@
             <div class="row">
               <div class="col-12 col-md-3 pb-2">
                 <label for="numHens" class="form-label pt-2 mb-0">Number of Hens</label>
-                <input type="number" class="form-control p-2" name="numHens"
-                  placeholder="Enter number of dead Hens" min="0" value="0">
+                <input type="number" class="form-control p-2" name="numHens" id="numHens" placeholder="Enter number of Hens" min="0" required>
               </div>
               <div class="col-12 col-md-3 pb-2">
                 <label for="numRoosters" class="form-label pt-2 mb-0">Number of Roosters</label>
-                <input type="number" class="form-control p-2" name="numRoosters"
-                  placeholder="Enter number of dead Roosters" min="0" value="0">
+                <input type="number" class="form-control p-2" name="numRoosters" id="numRoosters"
+                  placeholder="Enter number of Roosters" min="0" required>
               </div>
             </div>
             <div class="row">
               <div class="col-12 col-md-4 pb-2">
                 <label for="coopID" class="form-label pt-2 mb-0">Place To</label>
-                <select class="form-select ps-2" aria-label="Default select example" name="placeTo">
-                  <option selected>Choose Destination</option>
+                <select class="form-select ps-2" name="placeTo" id="placeTo" required>
                   <% for (coopID of coopIDData) {%>
                     <option value="<%= coopID %>">
                       <%= coopID %>
@@ -190,19 +189,38 @@
                 </select>
               </div>
               <div class="col-12 col-md-2 pb-2">
-                <label for="ageChicken" class="form-label pt-2 mb-0">Age of Chicken</label>
-                <input type="number" class="form-control p-2" name="ageChicken" min="0" value="0">
+                <label for="ageChicken" class="form-label pt-2 mb-0">Age of Chicken (month)</label>
+                <input type="number" class="form-control p-2" name="ageChicken" id="ageChicken" min="0" placeholder="Enter age of chicken" required>
               </div>
             </div>
           </div>
         </div>
         <div class="col-12 mt-3 align-self-end d-flex">
-          <button class="btn btn-warning" type="submit">Submit form</button>
+          <button type="button" class="btn btn-sm btn-warning p-3 px-3" data-bs-toggle="modal"
+            data-bs-target="#confirmationModal" id="submitBtn">
+            Submit form
+          </button>
         </div>
+        <div class="modal fade" id="confirmationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+          aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Submit Record?</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body" id="modalBody">
+        
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-warning" action="submit">Confirm</button>
+              </div>
+            </div>
+          </div>
       </form>
     </div>
 
-    <!--   Core JS Files   -->
     <script src="/assets/js/core/popper.min.js"></script>
     <script src="/assets/js/core/bootstrap.min.js"></script>
     <script src="/assets/js/plugins/perfect-scrollbar.min.js"></script>
@@ -219,21 +237,29 @@
       }
     </script>
 
-    <!-- Add value in Total number of eggs automatically -->
     <script>
-      document.addEventListener('input', function () {
-        var numOfEggs = document.getElementById('numOfEggs').value;
-        var numOfNC = document.getElementById('numOfNC').value;
+      document.getElementById('submitBtn').addEventListener('click', function () {
 
-        var acceptedEggs = numOfEggs - numOfNC;
+        // Get the form data
+        var formData = new FormData(document.getElementById('batchForm'));
+        var origin = formData.get('origin');
+        var batchNumber = formData.get('batchNumber');
+        var numHens = formData.get('numHens');
+        var numRoosters = formData.get('numRoosters');
+        var placeTo = formData.get('placeTo');
+        var ageChicken = formData.get('ageChicken');
 
-        document.querySelector('input[name="acceptedEggs"]').value = acceptedEggs;
-      })
+        var modalBodyContent = '<h5>This will submit the following batch record:</h5><ul><li>Batch Origin: <b>' +
+          origin + '</b></li><li>Batch Number: <b>' + batchNumber + '</b></li><li>Number of Hens: <b>' +
+          numHens + '</b></li><li>Number of Roosters: <b>' + numRoosters + '</b></li><li>Place to Coop: <b>' +
+          placeTo + '</b></li><li>Age of Chicken: <b>' + ageChicken + '</b></li></ul><h5>Warning! Adding the batch record will add the number of hens and roosters to the specified coop.</h5>'
+        document.getElementById('modalBody').innerHTML = modalBodyContent;
+
+
+      });
     </script>
 
-    <!-- Github buttons -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
-    <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
     <script src="../assets/js/material-dashboard.min.js?v=3.1.0"></script>
 </body>
 
