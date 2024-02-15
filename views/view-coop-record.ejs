@@ -208,6 +208,9 @@
                             <h6 class="mb-0 text-md ps-2">
                               <%= recordedAtData[i].toLocaleDateString('en-MY') %>
                             </h6>
+                            <p class="text-xs"><i>
+                                <%= updatedAtData[i] ? 'Updated:' + updatedAtData[i].toLocaleString('en-MY') : '' %>
+                              </i></p>
                           </div>
                         </td>
                         <td class="align-middle text-center">
@@ -231,7 +234,8 @@
                               <div class="modal-body">
                                 This will delete the record for coop <b><%= coopIDData[i] %></b><br>
                                 Record ID: <b class="text-lg"><%= recordIDData[i] %></b><br>
-                                Record Date: <b class="text-lg"><%=recordedAtData[i].toLocaleDateString('en-MY')%></b>.
+                                Record Date: <b class="text-lg"><%=recordedAtData[i].toLocaleDateString('en-MY')%></b>.<br><br>
+                                <h5 class="text-justify">Warning! This will add the number of hens and roosters to the coop. Total number of eggs data will also be affected.</h5>
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

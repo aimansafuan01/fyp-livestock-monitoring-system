@@ -172,8 +172,8 @@
                             let surveillanceID = recordSurveillanceData[i].surveillanceID;
                             let status = recordSurveillanceData[i].status;
                             let badgeBG = recordSurveillanceData[i].status === 'Resolved' ? 'bg-gradient-dark' : 'bg-gradient-danger';
-                            let date = recordSurveillanceData[i].created_at.toLocaleDateString('en-MY');
-                            let date_resolved = recordSurveillanceData[i].updated_at.toLocaleDateString('en-MY');
+                            let date = recordSurveillanceData[i].created_at.toLocaleString('en-MY');
+                            let date_resolved = recordSurveillanceData[i].updated_at.toLocaleString('en-MY');
                             let action = recordSurveillanceData[i].action
                             let origin = '-';
                             let originDesc = '-';

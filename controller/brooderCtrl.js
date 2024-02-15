@@ -47,7 +47,7 @@ export const getBrooderRecordAll = async (req, res) => {
       return data.created_at.toLocaleDateString('en-MY');
     });
     const updatedAtData = brooderRecordData.map((data) => {
-      return data.updated_at ? new Date(data.updated_at).toLocaleDateString('en-MY') : '';
+      return data.updated_at ? new Date(data.updated_at).toLocaleString('en-MY') : '';
     });
 
     res.status(200)

@@ -9,11 +9,12 @@ export async function submitCoopRecord (coopData) {
     const numEggs = +coopData.numEggs;
     const numNc = +coopData.numNc;
     const numAccepted = +coopData.numAccepted;
+    const mortalityRate = +coopData.mortalityRate;
 
     const resultSubmitCoop = await pool.query(`
-    INSERT INTO \`record-coop\` (coopID, numDeadHen, numDeadRooster, numEggs, numNc, numAccepted)
-    VALUES (?, ?, ?, ?, ?, ?)
-    `, [coopID, numDeadHen, numDeadRoosters, numEggs, numNc, numAccepted]);
+    INSERT INTO \`record-coop\` (coopID, numDeadHen, numDeadRooster, numEggs, numNc, numAccepted, mortalityRate)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+    `, [coopID, numDeadHen, numDeadRoosters, numEggs, numNc, numAccepted, mortalityRate]);
 
     return resultSubmitCoop;
   } catch (error) {
@@ -25,7 +26,6 @@ export async function submitCoopRecord (coopData) {
 // Submit Edit Coop Record Form
 export async function submitEditCoopRecord (coopData) {
   try {
-    console.log(coopData);
     const recordID = coopData.recordID;
     const coopID = coopData.coopID;
     const numDeadHen = +coopData.numDeadHen;
@@ -318,5 +318,21 @@ export async function getCoopRecordExistToday () {
   } catch (error) {
     console.error(error);
     throw new Error('Error fetching filled coop record data from the database');
+  }
+}
+
+// Get previous record based on record ID
+export async function getPreviousRecord (recordID, coopID) {
+  try {
+    const [result] = await pool.query(`
+    SELECT * FROM \`record-coop\`
+    WHERE recordID < ?
+    AND coopID = ?
+    ORDER BY recordID DESC
+    LIMIT 1`, [recordID, coopID]);
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error fetching previous coop record details from database');
   }
 }

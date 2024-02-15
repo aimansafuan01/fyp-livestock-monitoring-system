@@ -51,6 +51,7 @@ export const getCoopRecordAll = async (req, res) => {
     const numNcData = coopRecord.map((data) => data.numNc);
     const numAcceptedData = coopRecord.map((data) => data.numAccepted);
     const recordedAtData = coopRecord.map((data) => data.recorded_at);
+    const updatedAtData = coopRecord.map((data) => data.updated_at);
     res.status(200)
       .render('view-coop-record', {
         recordIDData,
@@ -60,7 +61,8 @@ export const getCoopRecordAll = async (req, res) => {
         numEggsData,
         numNcData,
         numAcceptedData,
-        recordedAtData
+        recordedAtData,
+        updatedAtData
       });
   } catch (error) {
     res.status(500)
@@ -96,6 +98,22 @@ export const getEditCoopForm = async (req, res) => {
 
 export const deleteCoopRecord = async (req, res) => {
   try {
+    const recordData = await RecordCoopDB.getCoopRecord(req.query.id);
+    const { numDeadHen, numDeadRooster, coopID, numEggs, numNc, numAccepted } = recordData[0];
+    const coopData = {
+      coopID,
+      numOfHens: +numDeadHen,
+      numOfRoosters: +numDeadRooster
+    };
+
+    const eggData = {
+      numEggs,
+      numNc,
+      numAccepted
+    };
+
+    await CoopDB.addNumChickenCoop(coopData);
+    await EggsDB.minusTotalEggs(eggData);
     await RecordCoopDB.deleteCoopRecord(req.query.id);
     res.status(200)
       .redirect('/coop/view');
@@ -112,14 +130,20 @@ export const submitCoopForm = async (req, res) => {
     const numEggs = req.body.numOfEggs;
     const numNc = req.body.numOfNC;
     const numAccepted = req.body.acceptedEggs;
+    const numDeadHen = req.body.numOfDeadHens;
+    const numDeadRoosters = req.body.numOfDeadRoosters;
+    const coop = await CoopDB.getCoop(coopID);
+    const { totalChickens } = coop;
+    const mortalityRate = ((+numDeadHen + +numDeadRoosters) / +totalChickens) * 100;
 
     const coopData = {
       coopID,
-      numDeadHen: req.body.numOfDeadHensR1,
-      numDeadRoosters: req.body.numOfDeadRoostersR1,
+      numDeadHen,
+      numDeadRoosters,
       numEggs,
       numNc,
-      numAccepted
+      numAccepted,
+      mortalityRate
     };
 
     const coopSurveillance = {
@@ -164,14 +188,42 @@ export const editCoopRecord = async (req, res) => {
     const numEggs = req.body.numOfEggs;
     const numNc = req.body.numOfNC;
     const numAccepted = req.body.acceptedEggs;
-    const coopData = {
+    const totalNumDead = +numDeadHen + +numDeadRoosters;
+    const initialRecord = await RecordCoopDB.getCoopRecord(recordID);
+    const henDeadDiff = +numDeadHen - +initialRecord[0].numDeadHen;
+    const roosterDeadDiff = +numDeadRoosters - +initialRecord[0].numDeadRooster;
+    const numEggsDiff = +numEggs - +initialRecord[0].numEggs;
+    const numNCDiff = +numNc - +initialRecord[0].numNc;
+    const numAcceptedDiff = +numAccepted - +initialRecord[0].numAccepted;
+    const coopRecord = await CoopDB.getNumChickens(coopID);
+    const { totalChickens } = coopRecord[0];
+    const updatedMR = Number((+totalNumDead / (+totalChickens + +initialRecord[0].numDeadHen + +initialRecord[0].numDeadRooster)) * 100).toFixed(2);
+    let mortalityRate = 0;
+    const prevRecord = await RecordCoopDB.getPreviousRecord(recordID, coopID);
+    if (prevRecord.length !== 0) { mortalityRate = prevRecord[0].mortalityRate; }
+    const updatedCumMR = +updatedMR + +mortalityRate;
+
+    const recordData = {
       recordID,
       coopID,
       numDeadHen,
       numDeadRoosters,
       numEggs,
       numNc,
-      numAccepted
+      numAccepted,
+      mortalityRate: updatedMR
+    };
+
+    const coopData = {
+      recordID,
+      coopID,
+      numDeadHen: henDeadDiff,
+      numDeadRoosters: roosterDeadDiff
+    };
+
+    const coopMR = {
+      coopID,
+      mortalityRate: updatedCumMR
     };
 
     const coopSurveillance = {
@@ -181,25 +233,24 @@ export const editCoopRecord = async (req, res) => {
     };
 
     const eggData = {
-      numEggs,
-      numNc,
-      numAccepted
+      numEggs: numEggsDiff,
+      numNc: numNCDiff,
+      numAccepted: numAcceptedDiff
     };
 
-    const resultSubmit = await RecordCoopDB.submitEditCoopRecord(coopData);
-    const resultUpdateCoopMR = await CoopDB.updateCoopMR(coopData);
-    const resultUpdate = await CoopDB.minusNumChickenCoop(coopData);
-    const resultUpdateEggs = await EggsDB.updateTotalEggs(eggData);
+    await RecordCoopDB.submitEditCoopRecord(recordData);
+    await CoopDB.minusNumChickenCoop(coopData);
+    await EggsDB.updateTotalEggs(eggData);
+    await CoopDB.setCoopMR(coopMR);
     const surveillanceThreshold = await SurveillanceDB.getSurveillance();
 
-    if (resultUpdateCoopMR[1] > surveillanceThreshold[0].chickenMRThreshold) {
+    if (+updatedCumMR > surveillanceThreshold[0].chickenMRThreshold) {
       await SurveillanceDB.submitSurveillanceRecord(coopSurveillance);
       sendAlert();
     }
-    if (resultSubmit && resultUpdate && resultUpdateEggs) {
-      res.status(200)
-        .redirect('/coop/view');
-    }
+
+    res.status(200)
+      .redirect('/coop/view');
   } catch (error) {
     console.error('Error during submitting coop record', error);
     res.status(500)
