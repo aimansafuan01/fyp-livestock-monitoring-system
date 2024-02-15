@@ -75,17 +75,13 @@ export async function getAvailableBrooder () {
 // Update broder mortality rate
 export async function updateBrooderMR (brooderData) {
   try {
-    const { numDeadChick, brooderID } = brooderData;
-    const numChickQuery = await getNumChick(brooderID);
+    const { brooderID, mortalityRate } = brooderData;
     const currMRQuery = await getBrooderMR(brooderID);
-
-    console.log(numChickQuery);
-    console.log(currMRQuery);
+    const numChickQuery = await getNumChick(brooderID);
 
     const { numChick } = numChickQuery[0];
-    const { mortalityRate } = currMRQuery[0];
 
-    const updatedMR = numChick !== 0 ? ((+numDeadChick / +numChick) * 100) + (+mortalityRate) : 0;
+    const updatedMR = numChick !== 0 ? +mortalityRate + (+currMRQuery[0].mortalityRate) : 0;
 
     const result = await pool.query(`
     UPDATE brooder
@@ -96,6 +92,24 @@ export async function updateBrooderMR (brooderData) {
   } catch (error) {
     console.error(error);
     throw new Error('Error updating brooder mortality rate to database');
+  }
+}
+
+// Set Brooder MR
+export async function setBrooderMR (brooderData) {
+  const brooderID = brooderData.brooderID;
+  const mortalityRate = brooderData.mortalityRate;
+
+  try {
+    const [result] = await pool.query(`
+    UPDATE brooder
+    SET brooder.mortalityRate = ?
+    WHERE brooderID = ?
+    `, [mortalityRate, brooderID]);
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error setting brooder mortality rate to database');
   }
 }
 

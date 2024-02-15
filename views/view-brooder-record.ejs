@@ -191,11 +191,12 @@
                             <h6 class="mb-0 text-md ps-2">
                               <%= createdAtData[i] %>
                             </h6>
+                            <p class="text-xs"><i> <%= updatedAtData[i] ? 'Updated:'+updatedAtData[i] : '' %> </i></p>
                           </div>
                         </td>
                         <td class="align-middle text-center">
                           <button type="button" class="btn btn-sm btn-warning p-3 px-3"
-                            onclick="window.location.href=''">
+                            onclick="window.location.href='/brooder/view/record/edit?id=<%= recordIDData[i] %>'">
                             Edit
                           </button>
                           <button type="button" class="btn btn-sm btn-danger p-3 px-3" data-bs-toggle="modal"
@@ -222,12 +223,13 @@
                                 Record ID: <b class="text-lg">
                                   <%= recordIDData[i] %>
                                 </b><br>
-                                Record Date: <b class="text-lg"><%= createdAtData[i] %></b>.
+                                Record Date: <b class="text-lg"><%= createdAtData[i] %></b>.<br><br>
+                                <h6>Warning! This will add the number of chick to the brooder</h6>
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                 <button type="button" class="btn btn-warning"
-                                  onclick="location.href=''">Confirm</button>
+                                  onclick="location.href='/brooder/view/record/delete?id=<%= recordIDData[i] %>'">Confirm</button>
                               </div>
                             </div>
                           </div>

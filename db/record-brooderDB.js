@@ -6,11 +6,12 @@ export async function submitBrooderRecord (brooderData) {
     const brooderID = brooderData.brooderID;
     const numDeadChick = +brooderData.numDeadChick;
     const numChickSold = +brooderData.numChickSold;
+    const mortalityRate = +brooderData.mortalityRate;
 
     const result = await pool.query(`
-    INSERT INTO \`record-brooder\` (brooderID, numDeadChick, numChickSold)
-    VALUES (?, ?, ?)
-    `, [brooderID, numDeadChick, numChickSold]);
+    INSERT INTO \`record-brooder\` (brooderID, numDeadChick, numChickSold, mortalityRate)
+    VALUES (?, ?, ?, ?)
+    `, [brooderID, numDeadChick, numChickSold, mortalityRate]);
     return result;
   } catch (error) {
     console.error(error);
@@ -152,5 +153,62 @@ export async function getTotalChickDeadAndSoldInBrooder () {
   } catch (error) {
     console.error(error);
     throw new Error('Error fetching total number of chick dead from the database');
+  }
+}
+
+export async function getBrooderRecord (id) {
+  try {
+    const [result] = await pool.query(`
+    SELECT * FROM \`record-brooder\` WHERE recordID = ?`,
+    [id]);
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error fetching brooder record from the database');
+  }
+}
+
+export async function editBrooderRecord (brooderData) {
+  const { numDeadChick, numChickSold, recordID, mortalityRate } = brooderData;
+  try {
+    const [result] = await pool.query(`
+    UPDATE \`record-brooder\`
+    SET \`record-brooder\`.numDeadChick = ?,
+    \`record-brooder\`.numChickSold = ?,
+    \`record-brooder\`.mortalityRate = ?
+    WHERE \`record-brooder\`.recordID = ?
+    `, [numDeadChick, numChickSold, mortalityRate, recordID]);
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error updating brooder record in database');
+  }
+}
+
+export async function getPreviousRecord (recordID, brooderID) {
+  try {
+    const [result] = await pool.query(`
+    SELECT * FROM \`record-brooder\`
+    WHERE recordID < ?
+    AND brooderID = ?
+    ORDER BY recordID DESC
+    LIMIT 1`, [recordID, brooderID]);
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error fetching previous brooder record details from database');
+  }
+}
+
+export async function deleteBrooderRecord (recordID) {
+  try {
+    const [result] = await pool.query(`
+    DELETE FROM \`record-brooder\`
+    WHERE recordID = ?
+    `, [recordID]);
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw new Error('DB QUERY: Error deleting brooder record details from database');
   }
 }
