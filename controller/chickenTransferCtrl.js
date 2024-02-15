@@ -22,10 +22,13 @@ export const getChickenTransferRecord = async (req, res) => {
     const transferredDateData = transferRecordData.map((data) => {
       return data.transfered_at.toLocaleDateString('en-MY');
     });
+    const updatedAtData = transferRecordData.map((data) => {
+      return data.updated_at.toLocaleString('en-MY');
+    });
     const numHensData = transferRecordData.map((data) => data.numOfHens);
     const numRoostersData = transferRecordData.map((data) => data.numOfRoosters);
     res.status(200)
-      .render('view-chicken-transfer', { coopID, transferIDData, originData, destinationData, transferredDateData, numHensData, numRoostersData });
+      .render('view-chicken-transfer', { coopID, transferIDData, originData, destinationData, transferredDateData, numHensData, numRoostersData, updatedAtData });
   } catch (error) {
     console.error(error.message);
     res.status(500).send('Internal Server Error');
@@ -83,5 +86,88 @@ export const submitChickenTransferForm = async (req, res) => {
     console.error(error.message);
     res.status(500)
       .send('Internal Server Error');
+  }
+};
+
+export const getEditChickenTransferRecordForm = async (req, res) => {
+  const transferID = req.query.id;
+  try {
+    const transferData = await ChickenTransferDB.getTransferRecord(transferID);
+    const coopIDs = await CoopDB.getCoopIDs();
+    const coopData = coopIDs.map(data => data.coopID);
+    res.status(200)
+      .render('edit-chicken-transfer-record', { transferData, coopData });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500)
+      .send('Internal Server Error');
+  }
+};
+
+export const editChickenTransferForm = async (req, res) => {
+  const origin = req.body.origin;
+  const destination = req.body.destination;
+  const numOfHens = req.body.numOfHens;
+  const numOfRoosters = req.body.numOfRoosters;
+  const transferID = req.body.transferID;
+
+  const transferData = {
+    origin,
+    destination,
+    numOfHens,
+    numOfRoosters,
+    transferID
+  };
+
+  const coopData = {
+    coopID: destination,
+    numOfHens,
+    numOfRoosters
+  };
+  try {
+    const initialRecord = await ChickenTransferDB.getTransferRecord(transferID);
+    const { destination, numOfHens, numOfRoosters } = initialRecord[0];
+    const addData = {
+      coopID: destination,
+      numOfHens,
+      numOfRoosters
+    };
+
+    await ChickenTransferDB.editTransferRecord(transferData);
+    await CoopDB.addNumChickenCoop(addData);
+    await CoopDB.addNumChickenCoop(coopData);
+    res.status(200)
+      .redirect(`/chicken-transfer/view/id?id=${origin}`);
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error submitting edited chicken transfer record to database');
+  }
+};
+
+export const deleteChickenTransferRecord = async (req, res) => {
+  const transferID = req.query.id;
+  try {
+    const recordData = await ChickenTransferDB.getTransferRecord(transferID);
+    const { origin, destination, numOfHens, numOfRoosters } = recordData[0];
+    const addData = {
+      coopID: origin,
+      numOfHens,
+      numOfRoosters
+    };
+
+    const coopData = {
+      coopID: destination,
+      numDeadHen: numOfHens,
+      numDeadRoosters: numOfRoosters
+    };
+
+    await CoopDB.addNumChickenCoop(addData);
+    await CoopDB.minusNumChickenCoop(coopData);
+    await ChickenTransferDB.deleteTransferRecord(transferID);
+    res.status(200)
+      .redirect(`/chicken-transfer/view/id?id=${origin}`);
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error deleting chicken transfer record from database');
   }
 };

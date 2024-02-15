@@ -145,7 +145,7 @@
 
     <% console.log(brooderData) %>
     <div class="p-3 mx-5 border border-secondary rounded shadow-lg mb-4">
-      <form class="needs-validation" action="/brooder/submit" method="post" role="form" class="text-start">
+      <form class="needs-validation" action="/brooder/submit" method="post" role="form" class="text-start" id="brooderForm">
         <div id="formRepeat">
           <div class="row border px-2 py-2 mx-1">
             <div class="row mx-1">
@@ -153,24 +153,46 @@
             </div>
             <div class="row mt-1">
               <div class="col-12 col-md-2">
-                <input type="text" class="form-control text-black ps-2" name="brooderID" value="<%= brooderData.id %>" readonly>
+                <input type="text" class="form-control text-black ps-2" name="brooderID" id="brooderID" value="<%= brooderData.id %>" readonly>
               </div>
             </div>
             <div class="row">
               <div class="col-6 pb-2">
-                <label for="numDeadChick" class="form-label pt-2 mb-0">Number of Dead Chick</label>
-                <input type="number" class="form-control p-2" name="numDeadChick" id="numDeadChick" min="0" value="0" required>
+                <label for="numDeadChick" class="form-label pt-2 mb-0">Number of Dead Chick</label>&nbsp;<i class="fas fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="top"
+                  data-bs-title="The number in grey shows the maximum amount to be entered based on the total number of chick"></i>
+                <input type="number" class="form-control p-2" name="numDeadChick" id="numDeadChick" min="0" placeholder="<%= brooderData.numChick %>" required>
               </div>
               <div class="col-6 pb-2">
-                <label for="numChickSold" class="form-label pt-2 mb-0">Number of Chick Sold</label>
+                <label for="numChickSold" class="form-label pt-2 mb-0">Number of Chick Sold</label>&nbsp;<i class="fas fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="top"
+                  data-bs-title="The number of accepted eggs is calculated automatically"></i>
                 <input type="number" class="form-control p-2" name="numChickSold" id="numChickSold" min="0" max="<%= brooderData.numChick %>" placeholder="<%= brooderData.numChick %>" required>
               </div>
             </div>
           </div>
         </div>
         <div class="col-12 mt-3 align-self-end d-flex">
-          <button class="btn btn-warning" type="submit">Submit form</button>
+          <button type="button" class="btn btn-sm btn-warning p-3 px-3" data-bs-toggle="modal"
+            data-bs-target="#confirmationModal" id="submitBtn">
+            Submit form
+          </button>
         </div>
+        <div class="modal fade" id="confirmationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+          aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Submit Record?</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body" id="modalBody">
+        
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-warning" action="submit">Confirm</button>
+              </div>
+            </div>
+          </div>
       </form>
     </div>
 
@@ -199,6 +221,29 @@
         numChickSold.setAttribute('max', numChick - this.value);
         numChickSold.setAttribute('placeholder', numChick - this.value);
       })
+      numChickSold.addEventListener('input', function () {
+          numDeadChick.setAttribute('max', numChick - this.value);
+          numDeadChick.setAttribute('placeholder', numChick - this.value);
+        })
+    </script>
+
+    <!-- Populate data from form to modal -->
+    <script>
+      document.getElementById('submitBtn').addEventListener('click', function () {
+
+        // Get the form data
+        var formData = new FormData(document.getElementById('brooderForm'));
+        var brooderID = formData.get('brooderID');
+        var numDeadChick = formData.get('numDeadChick');
+        var numChickSold = formData.get('numChickSold');
+        var totalChick = parseInt(numDeadChick) + parseInt(numChickSold)
+        var modalBodyContent = '<h5>This will submit the following record:</h5><ul><li>Brooder ID: <b>' +
+          brooderID + '</b></li><li>Number of Dead Chick: <b>' + numDeadChick + '</b></li><li>Number of Chick Sold: <b>' +
+          numChickSold + '</b></li></ul>'
+        document.getElementById('modalBody').innerHTML = modalBodyContent;
+
+
+      });
     </script>
 
     <!-- Github buttons -->

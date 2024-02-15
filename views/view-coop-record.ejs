@@ -235,7 +235,12 @@
                                 This will delete the record for coop <b><%= coopIDData[i] %></b><br>
                                 Record ID: <b class="text-lg"><%= recordIDData[i] %></b><br>
                                 Record Date: <b class="text-lg"><%=recordedAtData[i].toLocaleDateString('en-MY')%></b>.<br><br>
-                                <h5 class="text-justify">Warning! This will add the number of hens and roosters to the coop. Total number of eggs data will also be affected.</h5>
+                                <h5>Warning! Deleting this record will:</h5>
+                                  <ul>
+                                    <li>Add number of hens and roosters to the coop.</li>
+                                    <li>Add total number of eggs collected, accepted and NC at the farm.</li>
+                                    <li>The mortality rate will remain unchanged.</li>
+                                  </ul>
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
