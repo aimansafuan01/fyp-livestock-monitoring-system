@@ -12,6 +12,13 @@ router.get('/view/record', BrooderCtrl.getBrooderRecordAll);
 // Get Brooder Record Page
 router.get('/create', BrooderCtrl.getBrooderForm);
 
+// Get Edit Brooder Record Page
+router.get('/view/record/edit', BrooderCtrl.getEditBrooderForm);
+
+// Submit Brooder Record Form
 router.post('/submit', BrooderCtrl.submitBrooderForm);
+
+// Submit Brooder Edit Record Form
+router.post('/edit/record', BrooderCtrl.editBrooderForm);
 
 export default router;

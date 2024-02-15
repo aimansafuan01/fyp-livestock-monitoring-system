@@ -44,7 +44,6 @@
 
 
 <!------------------------------ Left Navbar ---------------------->
-
 <body class="g-sidenav-show  bg-gray-200">
   <aside
     class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3   bg-gradient-dark"
@@ -124,9 +123,9 @@
     </div>
   </aside>
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-    <!------------------------------ Left Navbar ---------------------->
+<!------------------------------ Left Navbar ---------------------->
 
-    <!------------------------------ Top Navbar ----------------------->
+    <!-- Top Navbar -->
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur"
       data-scroll="true">
       <div class="container-fluid py-1 px-3">
@@ -136,139 +135,103 @@
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/daily-record">Daily Record</a>
             </li>
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/brooder/view">Brooder</a></li>
-            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">View Brooder Record (<%= brooderIDData[0] %>)</li>
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/brooder/view/record?id=<%= recordData[0].brooderID %>">View Brooder Record (<%= recordData[0].brooderID %>)</a></li>
+            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Edit Brooder Record (<%= recordData[0].brooderID %>)
+            </li>
           </ol>
-          <h4 class="font-weight-bolder mb-0">View Brooder Record</h4>
-          <h3 class="font-weight-bolder mb-0">
-            <%= brooderIDData[0] %>
-          </h3>
+          <h4 class="font-weight-bolder mb-0">Edit Brooder Record (<%= recordData[0].recordID %>)</h4>
         </nav>
       </div>
     </nav>
-    <!------------------------------- Top Navbar ----------------------->
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-12">
-          <div class="card my-4">
-            <div class="card-body px-0 pb-2">
-              <div class="table-responsive p-0">
-                <table class="table align-items-center mb-0">
-                  <thead>
-                    <tr>
-                      <th class="text-uppercase text-secondary text-lg font-weight-bolder">Record ID</th>
-                      <th class="text-uppercase text-secondary text-lg-center font-weight-bolder">Dead Chick</th>
-                      <th class="text-uppercase text-secondary text-lg-center font-weight-bolder">Chick Sold</th>
-                      <th class="text-center text-uppercase text-secondary text-lg-center font-weight-bolder">
-                        Date
-                      </th>
-                      <th class="text-center text-uppercase text-secondary text-lg-center font-weight-bolder">
-                        Action
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <% for (let i=0; i<recordIDData.length; i++) { %>
-                      <tr>
-                        <td class="align-middle text-center">
-                          <div class="d-flex px-2 py-1">
-                            <h6 class="mb-0 text-md ps-2">
-                              <%= recordIDData[i] %>
-                            </h6>
-                          </div>
-                        </td>
-                        <td class="align-middle text-center text-md">
-                          <p class="text-md mb-0">
-                            <%= numDeadChickData[i] %>
-                          </p>
-                        </td>
-                        <td class="align-middle text-center text-md">
-                          <p class="text-md mb-0">
-                            <%= numChickSoldData[i] %>
-                          </p>
-                        </td>
-                        <td class="align-middle text-center">
-                          <div class="px-2 py-1">
-                            <h6 class="mb-0 text-md ps-2">
-                              <%= createdAtData[i] %>
-                            </h6>
-                            <p class="text-xs"><i> <%= updatedAtData[i] ? 'Updated:'+updatedAtData[i] : '' %> </i></p>
-                          </div>
-                        </td>
-                        <td class="align-middle text-center">
-                          <button type="button" class="btn btn-sm btn-warning p-3 px-3"
-                            onclick="window.location.href='/brooder/view/record/edit?id=<%= recordIDData[i] %>'">
-                            Edit
-                          </button>
-                          <button type="button" class="btn btn-sm btn-danger p-3 px-3" data-bs-toggle="modal"
-                            data-bs-target="#confirmationModal<%= i %>">
-                            Delete
-                          </button>
-                        </td>
+    <!-- Top Navbar -->
 
-                        <!-- Modal -->
-                        <div class="modal fade" id="confirmationModal<%= i %>" data-bs-backdrop="static"
-                          data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
-                          aria-hidden="true">
-                          <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="staticBackdropLabel">Delete Record?</h1>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                  aria-label="Close"></button>
-                              </div>
-                              <div class="modal-body">
-                                This will delete the record for brooder <b>
-                                  <%= brooderIDData[i] %>
-                                </b><br>
-                                Record ID: <b class="text-lg">
-                                  <%= recordIDData[i] %>
-                                </b><br>
-                                Record Date: <b class="text-lg"><%= createdAtData[i] %></b>.
-                              </div>
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-warning"
-                                  onclick="location.href=''">Confirm</button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </tr>
-                      <% } %>
-                  </tbody>
-                </table>
+
+    <div class="p-3 mx-5 border border-secondary rounded shadow-lg mb-4">
+      <form class="needs-validation" action="/brooder/edit/record" method="post" role="form" class="text-start" id="editForm">
+        <div id="formRepeat">
+          <div class="row border px-2 py-2 mx-1">
+            <div class="row mt-1">
+              <div class="col-12 col-md-2">
+                <label for="brooderID" class="form-label pt-2 mb-0">Brooder ID</label>
+                <input type="text" class="form-control text-black ps-2" id="brooderID" name="brooderID" value="<%= recordData[0].brooderID %>"
+                  readonly>
+              </div>
+              <div class="col-12 col-md-2">
+                <label for="brooderID" class="form-label pt-2 mb-0">Record ID</label>
+                <input type="text" class="form-control text-black ps-2" id="recordID" name="recordID" value="<%= recordData[0].recordID %>"
+                  readonly>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6 pb-2">
+                <label for="numDeadChick" class="form-label pt-2 mb-0">Number of Dead Chick</label>&nbsp;<i class="fas fa-question-circle" data-bs-toggle="tooltip" 
+                data-bs-placement="top" data-bs-title="The number in grey represents the value from current record"></i>
+                <input type="number" class="form-control p-2" name="numDeadChick" id="numDeadChick" min="0" placeholder="<%= recordData[0].numDeadChick %>" required>
+              </div>
+              <div class="col-6 pb-2">
+                <label for="numChickSold" class="form-label pt-2 mb-0">Number of Chick Sold</label>&nbsp;<i class="fas fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="top"
+                  data-bs-title="The number in grey represents the value from current record"></i>
+                <input type="number" class="form-control p-2" name="numChickSold" id="numChickSold" min="0" placeholder="<%= recordData[0].numChickSold %>" required>
               </div>
             </div>
           </div>
         </div>
-      </div>
+        <div class="col-12 mt-3 align-self-end d-flex">
+          <button class="btn btn-warning" type="submit" id="editButton">Edit Record</button>
+        </div>
+      </form>
+    </div>
 
-
-
-      <!--   Core JS Files   -->
-      <script src="/assets/js/core/popper.min.js"></script>
-      <script src="/assets/js/core/bootstrap.min.js"></script>
-      <script src="/assets/js/plugins/perfect-scrollbar.min.js"></script>
-      <script src="/assets/js/plugins/smooth-scrollbar.min.js"></script>
-      <script src="/assets/js/plugins/chartjs.min.js"></script>
-      <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
-        </script>
-
-      <script>
-        var win = navigator.platform.indexOf('Win') > -1;
-        if (win && document.querySelector('#sidenav-scrollbar')) {
-          var options = {
-            damping: '0.5'
-          }
-          Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    <!--   Core JS Files   -->
+    <script src="/assets/js/core/popper.min.js"></script>
+    <script src="/assets/js/core/bootstrap.min.js"></script>
+    <script src="/assets/js/plugins/perfect-scrollbar.min.js"></script>
+    <script src="/assets/js/plugins/smooth-scrollbar.min.js"></script>
+    <script src="/assets/js/plugins/chartjs.min.js"></script>
+    
+    <script>
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    </script>
+    
+    <script>
+      var win = navigator.platform.indexOf('Win') > -1;
+      if (win && document.querySelector('#sidenav-scrollbar')) {
+        var options = {
+          damping: '0.5'
         }
-      </script>
+        Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+      }
+    </script>
 
-      <!-- Github buttons -->
-      <script async defer src="https://buttons.github.io/buttons.js"></script>
-      <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-      <script src="../assets/js/material-dashboard.min.js?v=3.1.0"></script>
+    <!-- Ensure that max value for sold is not more than after calculate minus dead chick -->
+    <script>
+      var numDeadChick = document.getElementById('numDeadChick');
+      var numChickSold = document.getElementById('numChickSold');
+      var button = document.getElementById('editButton');
+      const form = document.getElementById('editForm')
+
+      var numChick = <%= typeof brooderData.numChick !== 'undefined' ? JSON.stringify(brooderData.numChick) : '0' %>;
+      var initialNumDeadChick = <%= typeof recordData[0].numDeadChick !== 'undefined' ? JSON.stringify(recordData[0].numDeadChick) : '0' %>;
+      var initialNumChickSold = <%= typeof recordData[0].numChickSold !== 'undefined' ? JSON.stringify(recordData[0].numChickSold) : '0' %>;
+      
+      button.addEventListener('click', function(){
+        let totalInput = +numDeadChick.value + +numChickSold.value
+        let totalAvailable = +numChick + +initialNumDeadChick + +initialNumChickSold
+        if (+totalInput > +totalAvailable ) { 
+          alert(`The total of dead chick and number sold must not exceed number of chick (${totalAvailable})`);
+          event.preventDefault();
+        } else {
+          form.submit();
+        }
+        
+      })
+    </script>
+
+    <!-- Github buttons -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+    <script src="../assets/js/material-dashboard.min.js?v=3.1.0"></script>
 </body>
 
 </html>
