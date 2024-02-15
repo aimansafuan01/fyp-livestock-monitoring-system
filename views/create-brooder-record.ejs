@@ -160,7 +160,7 @@
               <div class="col-6 pb-2">
                 <label for="numDeadChick" class="form-label pt-2 mb-0">Number of Dead Chick</label>&nbsp;<i class="fas fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="top"
                   data-bs-title="The number in grey shows the maximum amount to be entered based on the total number of chick"></i>
-                <input type="number" class="form-control p-2" name="numDeadChick" id="numDeadChick" min="0" placeholder="<%= brooderData.numChick %>" required>
+                <input type="number" class="form-control p-2" name="numDeadChick" id="numDeadChick" min="0" placeholder="<%= brooderData.numChick %>" max="<%= brooderData.numChick %>" required>
               </div>
               <div class="col-6 pb-2">
                 <label for="numChickSold" class="form-label pt-2 mb-0">Number of Chick Sold</label>&nbsp;<i class="fas fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="top"

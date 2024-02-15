@@ -18,8 +18,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="apple-touch-icon" sizes="76x76" href="../../assets/img/apple-icon.png">
-  <link rel="icon" type="image/png" href="../../assets/img/favicon.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="../../../assets/img/apple-icon.png">
+  <link rel="icon" type="image/png" href="../../../assets/img/favicon.png">
   <title>
     Tiroi Farm PLT
   </title>
@@ -40,7 +40,7 @@
   <!-- Nepcha Analytics (nepcha.com) -->
   <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
   <!-- <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script> -->
-  <base href="http://localhost:3000/">
+
 </head>
 
 
@@ -54,7 +54,7 @@
         aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand m-0" href=" https://demos.creative-tim.com/material-dashboard/pages/dashboard "
         target="_blank">
-        <img src="../assets/img/logo-ct.png" class="navbar-brand-img h-100" alt="main_logo">
+        <img src="../../../assets/img/logo-ct.png" class="navbar-brand-img h-100" alt="main_logo">
         <span class="ms-1 font-weight-bold text-white">Tiroi Farm PLT</span>
       </a>
     </div>
@@ -143,7 +143,7 @@
     <!-- Top Navbar -->
 
     <div class="p-3 mx-5 border border-secondary rounded shadow-lg mb-4">
-      <form class="needs-validation" action="/chicken-health/edit/record" method="post" role="form" class="text-start">
+      <form class="needs-validation" action="/chicken-health/edit/record" method="post" role="form" class="text-start" id="updateChickenHealthForm">
         <div id="formRepeat">
           <div class="row border px-2 py-2 mx-1">
             <div class="row mx-1">
@@ -162,18 +162,20 @@
             </div>
             <div class="row">
               <div class="col pb-2">
-                <label for="numOfHens" class="form-label pt-2 mb-0">Number of Hens</label>
-                <input type="number" class="form-control p-2" name="numOfHens" placeholder="Enter number of  Hens" min="0" max="<%= recordData[0].numOfHens %>" value="<%= recordData[0].numOfHens %>">
+                <label for="numOfHens" class="form-label pt-2 mb-0">Number of Hens</label>&nbsp;<i class="fas fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="top"
+                  data-bs-title="The number in grey represent the number of hens from current health record"></i>
+                <input type="number" class="form-control p-2" name="numOfHens" id="numOfHens" min="0" max="<%= recordData[0].numOfHens %>" placeholder="<%= recordData[0].numOfHens %>" required>
               </div>
               <div class="col pb-2">
-                <label for="numOfRoosters" class="form-label pt-2 mb-0">Number of Roosters</label>
-                <input type="number" class="form-control p-2" name="numOfRoosters" placeholder="Enter number of  Roosters" min="0" max="<%= recordData[0].numOfRoosters %>" value="<%= recordData[0].numOfRoosters %>">
+                <label for="numOfRoosters" class="form-label pt-2 mb-0">Number of Roosters</label>&nbsp;<i class="fas fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="top"
+                  data-bs-title="The number in grey represent the number of roosters from current health record"></i>
+                <input type="number" class="form-control p-2" name="numOfRoosters" id="numOfRoosters" min="0" max="<%= recordData[0].numOfRoosters %>" placeholder="<%= recordData[0].numOfRoosters %>" required>
               </div>
             </div>
             <div class="row">
               <div class="col pb-2">
                 <label for="status" class="form-label pt-2 mb-0">Status</label>
-                <select class="form-select ps-2" name="status" id="status">
+                <select class="form-select ps-2" name="status" id="status" required>
                   <% for (status of healthStatus) { 
                     if (status.status === 'Moved to SB') {continue}
                   %>
@@ -197,19 +199,40 @@
               </div>
             </div>
             <div class="col-12 mt-3 align-self-end d-flex">
-              <button class="btn btn-warning" type="submit">Submit form</button>
+              <button type="button" class="btn btn-sm btn-warning p-3 px-3" data-bs-toggle="modal"
+                data-bs-target="#confirmationModal" id="submitBtn">
+                Submit form
+              </button>
             </div>
           </div>
         </div>
+        <!-- Modal -->
+        <div class="modal fade" id="confirmationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+          aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Submit Record?</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body" id="modalBody">
+        
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-warning" action="submit">Confirm</button>
+              </div>
+            </div>
+          </div>
       </form>
     </div>
 
     <!--   Core JS Files   -->
-    <script src="/assets/js/core/popper.min.js"></script>
-    <script src="/assets/js/core/bootstrap.min.js"></script>
-    <script src="/assets/js/plugins/perfect-scrollbar.min.js"></script>
-    <script src="/assets/js/plugins/smooth-scrollbar.min.js"></script>
-    <script src="/assets/js/plugins/chartjs.min.js"></script>
+    <script src="../../../assets/js/core/popper.min.js"></script>
+    <script src="../../../assets/js/core/bootstrap.min.js"></script>
+    <script src="../../../assets/js/plugins/perfect-scrollbar.min.js"></script>
+    <script src="../../../assets/js/plugins/smooth-scrollbar.min.js"></script>
+    <script src="../../../assets/js/plugins/chartjs.min.js"></script>
     
     <script>
       var win = navigator.platform.indexOf('Win') > -1;
@@ -232,10 +255,34 @@
       })
     </script>
 
+    <!-- Populate data from form to modal -->
+    <script>
+      document.getElementById('submitBtn').addEventListener('click', function () {
+
+        // Get the form data
+        var formData = new FormData(document.getElementById('updateChickenHealthForm'));
+        var recordID = formData.get('recordID');
+        var origin = formData.get('origin');
+        var symptom = formData.get('symptom');
+        var numOfHens = formData.get('numOfHens');
+        var numOfRoosters = formData.get('numOfRoosters');
+        var status = formData.get('status');
+        var transferTo = status === 'Cured' ? formData.get('transferTo') : 'N/A';
+
+        var modalBodyContent = '<h5>This will submit the following record:</h5><ul><li>Record ID: <b>' +
+          recordID + '</b></li><li>Origin: <b>' + origin + '</b></li><li>Health Symptom: <b>' + 
+          symptom + '</b></li><li>Number of Hens: <b>' + numOfHens + '</b></li><li>Number of Roosters: <b>' +
+          numOfRoosters + '</b></li><li>Updated Status: <b>' + status  + '</b></li><li>Transfer to: <b>' + transferTo + '</b></li></ul>'
+        document.getElementById('modalBody').innerHTML = modalBodyContent;
+
+      });
+    </script>
+
+
     <!-- Github buttons -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-    <script src="../assets/js/material-dashboard.min.js?v=3.1.0"></script>
+    <script src="../../../assets/js/material-dashboard.min.js?v=3.1.0"></script>
 </body>
 
 </html>

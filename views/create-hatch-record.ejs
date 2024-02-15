@@ -151,31 +151,33 @@
     %>
 
     <div class="p-3 mx-5 border border-secondary rounded shadow-lg mb-4">
-      <form class="needs-validation" action="/incubator/submit-hatch-record" method="post" role="form" class="text-start">
+      <form class="needs-validation" action="/incubator/submit-hatch-record" method="post" role="form" class="text-start" id="hatchForm">
         <div id="formRepeat">
           <div class="row border px-2 py-2 mx-1">
             <div class="row mt-1">
               <div class="col-12 col-md-2">
                 <label for="incubatorID" class="form-label pt-2 mb-0">Incubator ID</label>
-                <input type="text" class="form-control text-black ps-2" name="incubatorID" value="<%= data.id %>" readonly>
+                <input type="text" class="form-control text-black ps-2" name="incubatorID" id="incubatorID" value="<%= data.id %>" readonly>
               </div>
               <div class="col-12 col-md-2">
                 <label for="incubatorID" class="form-label pt-2 mb-0">Date</label>
-                <input type="text" class="form-control text-black ps-2" name="dateOut" value="<%= data.currDate %>" readonly>
+                <input type="text" class="form-control text-black ps-2" name="dateOut" id="dateOut" value="<%= data.currDate %>" readonly>
               </div>
               <div class="col-12 col-md-2">
-                <label for="incubatorID" class="form-label pt-2 mb-0">Eggs in Basket</label>
-                <input type="text" class="form-control text-black ps-2" name="numEgg" value="<%= data.numEgg %>" readonly>
+                <label for="incubatorID" class="form-label pt-2 mb-0">Eggs in Basket</label>&nbsp;<i class="fas fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="top"
+                  data-bs-title="The number is based on the tray record"></i>
+                <input type="text" class="form-control text-black ps-2" name="numEgg" id="numEgg" value="<%= data.numEgg %>" readonly>
               </div>
             </div>
             <div class="row mt-1">
               <div class="col-12 col-md-3">
                 <label for="trayPlacement" class="form-label pt-2 mb-0">Number Did Not Hatch</label>
-                <input type="number" class="form-control text-black ps-2" name="notHatch" min="0" value="0">
+                <input type="number" class="form-control text-black ps-2" name="notHatch" id="notHatch" min="0" placeholder="<%= data.numEgg %>" max="<%= data.numEgg %>" required>
               </div>
               <div class="col-12 col-md-3">
-                <label for="brooderID" class="form-label pt-2 mb-0">Place to brooder</label>
-                <select class="form-select ps-2" name="brooderID">
+                <label for="brooderID" class="form-label pt-2 mb-0">Place to brooder</label>&nbsp;<i class="fas fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="top"
+                  data-bs-title="Only list out available brooder"></i>
+                <select class="form-select ps-2" name="brooderID" id="brooderID">
                    <% for (let i=0; i<availableBrooderID.length; i++) { %>
                   <option value="<%= availableBrooderID[i] %>"><%= availableBrooderID[i] %></option>
                     <% } %>
@@ -183,10 +185,31 @@
               </div>
             </div>
             <div class="col-12 mt-3 align-self-end d-flex">
-              <button class="btn btn-warning" type="submit">Submit form</button>
+              <button type="button" class="btn btn-sm btn-warning p-3 px-3" data-bs-toggle="modal"
+                data-bs-target="#confirmationModal" id="submitBtn">
+                Submit form
+              </button>
             </div>
           </div>
         </div>
+        <!-- Modal -->
+        <div class="modal fade" id="confirmationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+          aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">Submit Record?</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body" id="modalBody">
+        
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-warning" action="submit">Confirm</button>
+              </div>
+            </div>
+          </div>
       </form>
     </div>
 
@@ -205,6 +228,27 @@
         }
         Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
       }
+    </script>
+
+    <!-- Populate data from form to modal -->
+    <script>
+      document.getElementById('submitBtn').addEventListener('click', function () {
+
+        // Get the form data
+        var formData = new FormData(document.getElementById('hatchForm'));
+        var incubatorID = formData.get('incubatorID');
+        var dateOut = formData.get('dateOut');
+        var numEgg = formData.get('numEgg');
+        var notHatch = formData.get('notHatch');
+        var brooderID = formData.get('brooderID');
+
+        var modalBodyContent = '<h5>This will submit the following record:</h5><ul><li>Incubator ID: <b>' +
+          incubatorID + '</b></li><li>Date Hatch: <b>' + dateOut + '</b></li><li>Number of Eggs in Hatching Basket: <b>' +
+          numEgg + '</b></li><li>Number Did Not Hatch: <b>' + notHatch + '</b></li><li>Place to Brooder: <b>' +
+          brooderID + '</b></li></ul>'
+        document.getElementById('modalBody').innerHTML = modalBodyContent;
+
+      });
     </script>
 
     <!-- Github buttons -->

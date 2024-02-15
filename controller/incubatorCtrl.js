@@ -39,7 +39,8 @@ export const getIncubatorHatchForm = async (req, res) => {
   const availableBrooderID = availableBrooder.map((data) => data.brooderID);
   const data = {
     id: incubatorID,
-    numEgg: numEggData.length > 0 ? numEggData : 0
+    numEgg: numEggData.length > 0 ? numEggData : 0,
+    currDate: new Date().toLocaleDateString('en-MY')
   };
   res.render('create-hatch-record', { data, availableBrooderID });
 };
@@ -66,7 +67,10 @@ export const submitIncubatorHatchForm = async (req, res) => {
   const notHatch = req.body.notHatch;
   const brooderID = req.body.brooderID;
   const numChick = +eggInBasket - +notHatch;
-  const hatchRate = Number((+numChick / +eggInBasket) * 100).toFixed(2);
+  const hatchRate = +numChick !== 0 ? Number((+numChick / +eggInBasket) * 100).toFixed(2) : 0;
+  console.log(numChick);
+  console.log(eggInBasket);
+  console.log(hatchRate);
 
   try {
     const brooderData = {
@@ -96,7 +100,7 @@ export const submitIncubatorHatchForm = async (req, res) => {
       brooderID
     };
 
-    await BrooderDB.addChickToBrooder(brooderData);
+    await BrooderDB.insertChickToBrooder(brooderData);
     await IncubatorDB.updateIncubator(incubatorData);
     await RecordIncubatorDB.submitHatchRecord(hatchData);
     const surveillanceThreshold = await SurveillanceDB.getSurveillance();
