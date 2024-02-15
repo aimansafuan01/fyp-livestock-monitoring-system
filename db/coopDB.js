@@ -45,7 +45,7 @@ export async function getNumChickens (coopID) {
 // Get Coop MR
 export async function getCoopMR (coopID) {
   try {
-    const result = await pool.query(`
+    const [result] = await pool.query(`
     SELECT mortalityRate
     FROM coop
     WHERE coopID = '${coopID}'
@@ -125,15 +125,12 @@ export async function minusNumChickenCoop (coopData) {
 // Update coop mortality rate
 export async function updateCoopMR (coopData) {
   try {
-    const { coopID, numDeadHen, numDeadRoosters } = coopData;
-    const numChicken = await getNumChickens(coopID);
+    const { coopID } = coopData;
     const currCoopMR = await getCoopMR(coopID);
 
-    const { totalChickens } = numChicken[0];
-    const { mortalityRate } = currCoopMR[0][0];
-    const totalDeadChicken = +numDeadHen + +numDeadRoosters;
+    const { mortalityRate } = currCoopMR[0];
 
-    const updatedMR = ((+totalDeadChicken / +totalChickens) * 100) + +mortalityRate;
+    const updatedMR = +coopData.mortalityRate + +mortalityRate;
     const result = await pool.query(`
     UPDATE coop
     SET coop.mortalityRate = ?
@@ -143,6 +140,23 @@ export async function updateCoopMR (coopData) {
   } catch (error) {
     console.error(error);
     throw new Error('Error updating coop mortality rate to database');
+  }
+}
+
+// Set coop mortality rate
+export async function setCoopMR (coopData) {
+  const coopID = coopData.coopID;
+  const mortalityRate = coopData.mortalityRate;
+  try {
+    const [result] = await pool.query(`
+    UPDATE coop
+    SET coop.mortalityRate = ?
+    WHERE coopID = ?`,
+    [+mortalityRate, coopID]);
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error setting coop mortality rate to database');
   }
 }
 
@@ -158,5 +172,18 @@ export async function setCoopMortalityRate (id) {
   } catch (error) {
     console.error(error);
     throw new Error('Error updating coop MR to database');
+  }
+}
+
+// Get coop details
+export async function getCoop (id) {
+  try {
+    const [result] = await pool.query(`
+    SELECT * FROM coop WHERE coopID=?`,
+    [id]);
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw new Error(`Error fetching coop ${id} detail from database`);
   }
 }

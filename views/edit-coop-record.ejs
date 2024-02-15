@@ -160,25 +160,30 @@
             </div>
             <div class="row">
               <div class="col pb-2">
-                <label for="numOfDeadHens" class="form-label pt-2 mb-0">Number of Dead Hens</label>
-                <input type="number" class="form-control p-2" name="numOfDeadHens" placeholder="Enter number of dead Hens" min="0" value="<%= initialCoopRecord[0].numDeadHen %>">
+                <label for="numOfDeadHens" class="form-label pt-2 mb-0">Number of Dead Hens</label>&nbsp;<i class="fas fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="top"
+                  data-bs-title="The number in grey represents the number of dead hen from current record"></i>
+                <input type="number" class="form-control p-2" name="numOfDeadHens" placeholder="<%= initialCoopRecord[0].numDeadHen %>" min="0">
               </div>
               <div class="col pb-2">
-                <label for="numOfDeadRoosters" class="form-label pt-2 mb-0">Number of Dead Roosters</label>
-                <input type="number" class="form-control p-2" name="numOfDeadRoosters" placeholder="Enter number of dead Roosters" min="0" value="<%= initialCoopRecord[0].numDeadRooster %>">
+                <label for="numOfDeadRoosters" class="form-label pt-2 mb-0">Number of Dead Roosters</label>&nbsp;<i class="fas fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="top"
+                  data-bs-title="The number in grey represents the number of dead roosters from current record"></i>
+                <input type="number" class="form-control p-2" name="numOfDeadRoosters" placeholder="<%= initialCoopRecord[0].numDeadRooster %>" min="0">
               </div>
             </div>
             <div class="row">
               <div class="col pb-2">
-                <label for="numOfEggs" class="form-label pt-2 mb-0">Total Number of Collected Eggs</label>
-                <input type="number" class="form-control p-2" name="numOfEggs" id="numOfEggs" placeholder="Enter number of dead Hens" min="0" value="<%= initialCoopRecord[0].numEggs %>">
+                <label for="numOfEggs" class="form-label pt-2 mb-0">Total Number of Collected Eggs</label>&nbsp;<i class="fas fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="top"
+                  data-bs-title="The number in grey represents the number of collected egg from current record"></i>
+                <input type="number" class="form-control p-2" name="numOfEggs" id="numOfEggs" placeholder="<%= initialCoopRecord[0].numEggs %>" min="0">
               </div>
               <div class="col pb-2">
-                <label for="numOfNC" class="form-label pt-2 mb-0">Number of NC Eggs</label>
-                <input type="number" class="form-control p-2" name="numOfNC" id="numOfNC" placeholder="Enter number of dead Hens" min="0" value="<%= initialCoopRecord[0].numNc %>">
+                <label for="numOfNC" class="form-label pt-2 mb-0">Number of NC Eggs</label>&nbsp;<i class="fas fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="top"
+                  data-bs-title="The number in grey represents the number of NC egg from current record"></i>
+                <input type="number" class="form-control p-2" name="numOfNC" id="numOfNC" placeholder="<%= initialCoopRecord[0].numNc %>" min="0">
               </div>
               <div class="col pb-2">
-                <label for="acceptedEggs" class="form-label pt-2 mb-0">Number of Accepted Eggs</label>
+                <label for="acceptedEggs" class="form-label pt-2 mb-0">Number of Accepted Eggs</label>&nbsp;<i class="fas fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="top"
+                  data-bs-title="The number of accepted eggs is calculated automatically"></i>
                 <input type="number" class="form-control p-2" name="acceptedEggs" id="acceptedEggs" readonly>
               </div>
             </div>
@@ -196,6 +201,11 @@
     <script src="/assets/js/plugins/perfect-scrollbar.min.js"></script>
     <script src="/assets/js/plugins/smooth-scrollbar.min.js"></script>
     <script src="/assets/js/plugins/chartjs.min.js"></script>
+    
+    <script>
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+      const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+    </script>
     
     <script>
       var win = navigator.platform.indexOf('Win') > -1;
