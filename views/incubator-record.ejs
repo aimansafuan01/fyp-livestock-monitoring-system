@@ -189,7 +189,7 @@
             <div class="text-end pt-1">
               <p class="text-sm mb-0 text-capitalize">Hatching Rate</p>
               <h4 class="mb-2">
-                <%= allIncubator[0].hatchingRate %>%
+                <%= allIncubator[0].hatchingRate === '100.00' ?  100 : allIncubator[0].hatchingRate %>%
               </h4>
               <p class="text-sm mb-0 text-capitalize">Egg Inside</p>
               <h4 class="mb-0">
@@ -215,7 +215,7 @@
             <div class="text-end pt-1">
               <p class="text-sm mb-0 text-capitalize">Hatching Rate</p>
               <h4 class="mb-2">
-                <%= allIncubator[1].hatchingRate %>%
+                <%= allIncubator[1].hatchingRate === '100.00' ? 100 :  allIncubator[1].hatchingRate%>%
               </h4>
               <p class="text-sm mb-0 text-capitalize">Egg Inside</p>
               <h4 class="mb-0">

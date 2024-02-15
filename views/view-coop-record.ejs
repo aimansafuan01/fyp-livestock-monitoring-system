@@ -18,8 +18,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="apple-touch-icon" sizes="76x76" href="../../assets/img/apple-icon.png">
-  <link rel="icon" type="image/png" href="../../assets/img/favicon.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="../../../assets/img/apple-icon.png">
+  <link rel="icon" type="image/png" href="../../../assets/img/favicon.png">
   <title>
     Tiroi Farm PLT
   </title>
@@ -54,7 +54,7 @@
         aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand m-0" href=" https://demos.creative-tim.com/material-dashboard/pages/dashboard "
         target="_blank">
-        <img src="../assets/img/logo-ct.png" class="navbar-brand-img h-100" alt="main_logo">
+        <img src="../../../assets/img/logo-ct.png" class="navbar-brand-img h-100" alt="main_logo">
         <span class="ms-1 font-weight-bold text-white">Tiroi Farm PLT</span>
       </a>
     </div>
@@ -235,7 +235,12 @@
                                 This will delete the record for coop <b><%= coopIDData[i] %></b><br>
                                 Record ID: <b class="text-lg"><%= recordIDData[i] %></b><br>
                                 Record Date: <b class="text-lg"><%=recordedAtData[i].toLocaleDateString('en-MY')%></b>.<br><br>
-                                <h5 class="text-justify">Warning! This will add the number of hens and roosters to the coop. Total number of eggs data will also be affected.</h5>
+                                <h5>Warning! Deleting this record will:</h5>
+                                  <ul>
+                                    <li>Add number of hens and roosters to the coop.</li>
+                                    <li>Add total number of eggs collected, accepted and NC at the farm.</li>
+                                    <li>The mortality rate will remain unchanged.</li>
+                                  </ul>
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -258,11 +263,11 @@
 
 
       <!--   Core JS Files   -->
-      <script src="/assets/js/core/popper.min.js"></script>
-      <script src="/assets/js/core/bootstrap.min.js"></script>
-      <script src="/assets/js/plugins/perfect-scrollbar.min.js"></script>
-      <script src="/assets/js/plugins/smooth-scrollbar.min.js"></script>
-      <script src="/assets/js/plugins/chartjs.min.js"></script>
+      <script src="../../../assets/js/core/popper.min.js"></script>
+      <script src="../../../assets/js/core/bootstrap.min.js"></script>
+      <script src="../../../assets/js/plugins/perfect-scrollbar.min.js"></script>
+      <script src="../../../assets/js/plugins/smooth-scrollbar.min.js"></script>
+      <script src="../../../assets/js/plugins/chartjs.min.js"></script>
       <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
       </script>
@@ -280,7 +285,7 @@
       <!-- Github buttons -->
       <script async defer src="https://buttons.github.io/buttons.js"></script>
       <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-      <script src="../assets/js/material-dashboard.min.js?v=3.1.0"></script>
+      <script src="../../../assets/js/material-dashboard.min.js?v=3.1.0"></script>
 </body>
 
 </html>

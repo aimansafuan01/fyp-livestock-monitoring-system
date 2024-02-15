@@ -159,37 +159,61 @@
     %>
 
     <div class="p-3 mx-5 border border-secondary rounded shadow-lg mb-4">
-      <form class="needs-validation" action="/incubator/submit-tray-record" method="post" role="form" class="text-start">
+      <form class="needs-validation" action="/incubator/submit-tray-record" method="post" role="form" class="text-start" id="trayForm">
         <div id="formRepeat">
           <div class="row border px-2 py-2 mx-1">
             <div class="row mt-1">
               <div class="col-12 col-md-2">
                 <label for="incubatorID" class="form-label pt-2 mb-0">Incubator ID</label>
-                <input type="text" class="form-control text-black ps-2" name="incubatorID" value="<%= data.id %>" readonly>
+                <input type="text" class="form-control text-black ps-2" name="incubatorID" id="incubatorID" value="<%= data.id %>" readonly>
               </div>
               <div class="col-12 col-md-2">
                 <label for="incubatorID" class="form-label pt-2 mb-0">Date</label>
-                <input type="text" class="form-control text-black ps-2" name="dateIn" value="<%= currDate %>" readonly>
+                <input type="text" class="form-control text-black ps-2" name="dateIn" id="dateIn" value="<%= currDate %>" readonly>
               </div>
             </div>
             <div class="row mt-1">
               <div class="col-12 col-md-3">
-                <label for="trayID" class="form-label pt-2 mb-0">Tray Placement:</label>
-                <select class="form-select ps-2" name="trayID">
+                <label for="trayID" class="form-label pt-2 mb-0">Tray Placement:</label>&nbsp;<i class="fas fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="right"
+                  data-bs-title="Only display available tray"></i>
+                <select class="form-select ps-2" name="trayID" id="trayID">
                   <% for (let i=0; i<filteredTrayListArr.length; i++) { %>
                   <option value="<%= filteredTrayListArr[i] %>"><%= filteredTrayListArr[i] %></option>
                   <% } %>
                 </select>
               </div>
               <div class="col-12 col-md-2">
-                <label for="numEggs" class="form-label pt-2 mb-0">Number of Eggs</label>
-                <input type="number" class="form-control text-black ps-2" name="numEggs" min="0" value="176" >
+                <label for="numEggs" class="form-label pt-2 mb-0">Number of Eggs</label>&nbsp;<i class="fas fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="right"
+                  data-bs-title="A tray full of eggs would be 176. The number can be adjusted if the tray is not full."></i>
+                <input type="number" class="form-control text-black ps-2" name="numEggs" id="numEggs" min="0" value="176" max="176">
               </div>
             </div>
             <div class="col-12 col-md-2">
             </div>
             <div class="col-12 mt-3 align-self-end d-flex">
-              <button class="btn btn-warning" type="submit">Submit form</button>
+              <button type="button" class="btn btn-sm btn-warning p-3 px-3" data-bs-toggle="modal"
+                data-bs-target="#confirmationModal" id="submitBtn">
+                Submit form
+              </button> 
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="confirmationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+              aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Submit Record?</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body" id="modalBody">
+            
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-warning" action="submit">Confirm</button>
+                  </div>
+                </div>
+              </div>
             </div>
         </form>
             
@@ -235,6 +259,24 @@
       }
     </script>
 
+    <!-- Populate data from form to modal -->
+    <script>
+      document.getElementById('submitBtn').addEventListener('click', function () {
+
+        // Get the form data
+        var formData = new FormData(document.getElementById('trayForm'));
+        var incubatorID = formData.get('incubatorID');
+        var dateIn = formData.get('dateIn');
+        var trayID = formData.get('trayID');
+        var numEggs = formData.get('numEggs');
+
+        var modalBodyContent = '<h5>This will submit the following record:</h5><ul><li>Incubator ID: <b>' +
+          incubatorID + '</b></li><li>Date Inserted: <b>' + dateIn + '</b></li><li>Tray ID: <b>' +
+          trayID + '</b></li><li>Number of Eggs in Tray: <b>' + numEggs + '</b></li></ul>'
+        document.getElementById('modalBody').innerHTML = modalBodyContent;
+
+      });
+    </script>
     <!-- Github buttons -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->

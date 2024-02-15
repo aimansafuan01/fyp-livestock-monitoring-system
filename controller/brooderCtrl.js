@@ -104,11 +104,12 @@ export const submitBrooderForm = async (req, res) => {
     const resultUpdateMRChick = await BrooderDB.updateBrooderMR(brooderData);
     await BrooderDB.minusBrooderNumChick(brooderData);
     const surveillanceThreshold = await SurveillanceDB.getSurveillance();
-
     if (resultUpdateMRChick[1] > surveillanceThreshold[0].chickMRThreshold) {
       await SurveillanceDB.submitSurveillanceRecord(brooderSurveillance);
       sendAlert();
     }
+    const latestNumChick = await BrooderDB.getNumChick(brooderID);
+    if (parseInt(latestNumChick[0].numChick) === 0) { BrooderDB.setBrooderMortalityRate(brooderID); }
     res.status(200)
       .redirect('/brooder/view');
   } catch (error) {
@@ -185,13 +186,13 @@ export const editBrooderForm = async (req, res) => {
 
     await RecordBrooderDB.editBrooderRecord(recordData);
     await BrooderDB.minusBrooderNumChick(brooderData);
-    await BrooderDB.setBrooderMR(brooderMR);
     const surveillanceThreshold = await SurveillanceDB.getSurveillance();
     if (updatedCumMR > surveillanceThreshold[0].chickMRThreshold) {
       await SurveillanceDB.submitSurveillanceRecord(brooderSurveillance);
       sendAlert();
     }
-
+    const latestNumChick = await BrooderDB.getNumChick(brooderID);
+    parseInt(latestNumChick[0].numChick) !== 0 ? await BrooderDB.setBrooderMR(brooderMR) : BrooderDB.setBrooderMortalityRate(brooderID);
     res.status(200)
       .redirect('/brooder/view');
   } catch (error) {

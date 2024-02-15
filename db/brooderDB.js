@@ -113,7 +113,7 @@ export async function setBrooderMR (brooderData) {
   }
 }
 
-// Update Num Chick in Brooder after hatch
+// Update Num Chick in Brooder
 export async function addChickToBrooder (hatchData) {
   try {
     const brooderID = hatchData.brooderID;
@@ -121,6 +121,24 @@ export async function addChickToBrooder (hatchData) {
     const result = await pool.query(`UPDATE brooder
     SET brooder.numChick = brooder.numChick + ${numChick}
     WHERE brooderID = '${brooderID}'`);
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error updating number of chick in brooder to database');
+  }
+}
+
+// Insert Chick in Brooder after hatch
+export async function insertChickToBrooder (hatchData) {
+  try {
+    const brooderID = hatchData.brooderID;
+    const numChick = hatchData.numChick;
+    const result = await pool.query(`UPDATE brooder
+    SET brooder.numChick = ?,
+    brooder.mortalityRate = 0.00,
+    brooder.inserted_at = CURRENT_TIMESTAMP()
+    WHERE brooder.brooderID = ?`,
+    [numChick, brooderID]);
     return result;
   } catch (error) {
     console.error(error);

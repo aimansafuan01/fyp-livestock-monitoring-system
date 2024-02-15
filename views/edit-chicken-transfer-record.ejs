@@ -18,8 +18,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="apple-touch-icon" sizes="76x76" href="../../assets/img/apple-icon.png">
-  <link rel="icon" type="image/png" href="../../assets/img/favicon.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="../../../assets/img/apple-icon.png">
+  <link rel="icon" type="image/png" href="../../../assets/img/favicon.png">
   <title>
     Tiroi Farm PLT
   </title>
@@ -54,7 +54,7 @@
         aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand m-0" href=" https://demos.creative-tim.com/material-dashboard/pages/dashboard "
         target="_blank">
-        <img src="../assets/img/logo-ct.png" class="navbar-brand-img h-100" alt="main_logo">
+        <img src="../../../assets/img/logo-ct.png" class="navbar-brand-img h-100" alt="main_logo">
         <span class="ms-1 font-weight-bold text-white">Tiroi Farm PLT</span>
       </a>
     </div>
@@ -133,123 +133,92 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/dashboard/view">Dashboard</a></li>
-            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/daily-record">Daily Record</a></li>
-            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/brooder/view">Brooder</a></li>
-            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Brooder Record</li>
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/daily-record">Daily Record</a>
+            </li>
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/chicken-transfer/view">Chicken Transfer</a>
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/chicken-transfer/view/id?id=<%= transferData[0].origin %>">View Chicken Transfer (<%= transferData[0].origin %>)</a>
+            </li>
+            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Edit Chicken Transfer (<%= transferData[0].transferID %>)</li>
           </ol>
-          <h4 class="font-weight-bolder mb-0">Brooder Record</h4>
+          <h4 class="font-weight-bolder mb-0">Edit Transfer Record</h4>
         </nav>
       </div>
     </nav>
     <!------------------------------- Top Navbar ----------------------->
 
-    <% console.log(brooderData) %>
-    <div class="p-3 mx-5 border border-secondary rounded shadow-lg mb-4">
-      <form class="needs-validation" action="/brooder/submit" method="post" role="form" class="text-start" id="brooderForm">
-        <div id="formRepeat">
-          <div class="row border px-2 py-2 mx-1">
-            <div class="row mx-1">
-              Brooder ID
-            </div>
-            <div class="row mt-1">
-              <div class="col-12 col-md-2">
-                <input type="text" class="form-control text-black ps-2" name="brooderID" id="brooderID" value="<%= brooderData.id %>" readonly>
+
+    <!-------------------- GET CURRENT DATE ---------------------->
+
+      <div class="p-3 mx-5 border border-secondary rounded shadow-lg mb-4">
+        <form class="needs-validation" action="/chicken-transfer/edit/submit" method="post" role="form" class="text-start">
+          <div id="formRepeat">
+            <div class="row border px-2 py-2 mx-1">
+              <div class="row mt-1">
+                <div class="col-12 col-md-2">
+                  <label for="incubatorID" class="form-label pt-2 mb-0">Transfer ID</label>
+                  <input type="text" class="form-control text-black ps-2" name="transferID" value="<%= transferData[0].transferID %>" readonly>
+                </div>
               </div>
-            </div>
-            <div class="row">
-              <div class="col-6 pb-2">
-                <label for="numDeadChick" class="form-label pt-2 mb-0">Number of Dead Chick</label>&nbsp;<i class="fas fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="top"
-                  data-bs-title="The number in grey shows the maximum amount to be entered based on the total number of chick"></i>
-                <input type="number" class="form-control p-2" name="numDeadChick" id="numDeadChick" min="0" placeholder="<%= brooderData.numChick %>" max="<%= brooderData.numChick %>" required>
+              <div class="row mt-1">
+                <div class="col-12 col-md-2">
+                  <label for="incubatorID" class="form-label pt-2 mb-0">Origin</label>
+                  <input type="text" class="form-control text-black ps-2" name="origin" value="<%= transferData[0].origin %>" readonly>
+                </div>
+                <div class="col-12 col-md-4">
+                  <label for="destination" class="form-label pt-2 mb-0">To</label>
+                  <select class="form-select ps-2" aria-label="Default select example" name="destination" placeholder="<%= transferData[0].destination %>" required>
+                    <%
+                      for (coopID of coopData) { 
+                        if (coopID === transferData[0].origin || coopID === transferData[0].destination) {
+                          continue;
+                        }
+                    %>
+                    <option value="<%= coopID %>"><%= coopID %></option>
+                    <% } %>
+                  </select>
+                </div>
               </div>
-              <div class="col-6 pb-2">
-                <label for="numChickSold" class="form-label pt-2 mb-0">Number of Chick Sold</label>&nbsp;<i class="fas fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="top"
-                  data-bs-title="The number of accepted eggs is calculated automatically"></i>
-                <input type="number" class="form-control p-2" name="numChickSold" id="numChickSold" min="0" max="<%= brooderData.numChick %>" placeholder="<%= brooderData.numChick %>" required>
+              <div class="row mt-1">
+                <div class="col-12 col-md-3">
+                  <label for="trayPlacement" class="form-label pt-2 mb-0">Number of Hens</label>&nbsp;<i class="fas fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="top"
+                    data-bs-title="The number in grey represents the number of hens transferred from current record"></i>
+                  <input type="number" class="form-control text-black ps-2" name="numOfHens" min="0" placeholder="<%= transferData[0].numOfHens %>" required>
+                </div>
+                <div class="col-12 col-md-3">
+                  <label for="trayPlacement" class="form-label pt-2 mb-0">Number of Roosters</label>&nbsp;<i class="fas fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="top"
+                    data-bs-title="The number in grey represents the number of roosters transferred from current record"></i>
+                  <input type="number" class="form-control text-black ps-2" name="numOfRoosters" min="0" placeholder="<%= transferData[0].numOfRoosters %>" required>
+                </div>
+              </div>
+              <div class="col-12 mt-3 align-self-end d-flex">
+                <button class="btn btn-warning" type="submit">Submit form</button>
               </div>
             </div>
           </div>
-        </div>
-        <div class="col-12 mt-3 align-self-end d-flex">
-          <button type="button" class="btn btn-sm btn-warning p-3 px-3" data-bs-toggle="modal"
-            data-bs-target="#confirmationModal" id="submitBtn">
-            Submit form
-          </button>
-        </div>
-        <div class="modal fade" id="confirmationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-          aria-labelledby="staticBackdropLabel" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel">Submit Record?</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body" id="modalBody">
-        
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-warning" action="submit">Confirm</button>
-              </div>
-            </div>
-          </div>
-      </form>
-    </div>
+        </form>
+      </div>
 
-    <!--   Core JS Files   -->
-    <script src="/assets/js/core/popper.min.js"></script>
-    <script src="/assets/js/core/bootstrap.min.js"></script>
-    <script src="/assets/js/plugins/perfect-scrollbar.min.js"></script>
-    <script src="/assets/js/plugins/smooth-scrollbar.min.js"></script>
-    <script src="/assets/js/plugins/chartjs.min.js"></script>
+      <!--   Core JS Files   -->
+      <script src="../../../assets/js/core/popper.min.js"></script>
+      <script src="../../../assets/js/core/bootstrap.min.js"></script>
+      <script src="../../../assets/js/plugins/perfect-scrollbar.min.js"></script>
+      <script src="../../../assets/js/plugins/smooth-scrollbar.min.js"></script>
+      <script src="../../../assets/js/plugins/chartjs.min.js"></script>
 
-    <script>
-      var win = navigator.platform.indexOf('Win') > -1;
-      if (win && document.querySelector('#sidenav-scrollbar')) {
-        var options = {
-          damping: '0.5'
+      <script>
+        var win = navigator.platform.indexOf('Win') > -1;
+        if (win && document.querySelector('#sidenav-scrollbar')) {
+          var options = {
+            damping: '0.5'
+          }
+          Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
         }
-        Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
-      }
-    </script>
+      </script>
 
-    <!-- Ensure that max value for sold is not more than after calculate minus dead chick -->
-    <script>
-      var numDeadChick = document.getElementById('numDeadChick');
-      var numChick = <%- JSON.stringify(brooderData.numChick) %>;
-      numDeadChick.addEventListener('input', function() {
-        numChickSold.setAttribute('max', numChick - this.value);
-        numChickSold.setAttribute('placeholder', numChick - this.value);
-      })
-      numChickSold.addEventListener('input', function () {
-          numDeadChick.setAttribute('max', numChick - this.value);
-          numDeadChick.setAttribute('placeholder', numChick - this.value);
-        })
-    </script>
-
-    <!-- Populate data from form to modal -->
-    <script>
-      document.getElementById('submitBtn').addEventListener('click', function () {
-
-        // Get the form data
-        var formData = new FormData(document.getElementById('brooderForm'));
-        var brooderID = formData.get('brooderID');
-        var numDeadChick = formData.get('numDeadChick');
-        var numChickSold = formData.get('numChickSold');
-        var totalChick = parseInt(numDeadChick) + parseInt(numChickSold)
-        var modalBodyContent = '<h5>This will submit the following record:</h5><ul><li>Brooder ID: <b>' +
-          brooderID + '</b></li><li>Number of Dead Chick: <b>' + numDeadChick + '</b></li><li>Number of Chick Sold: <b>' +
-          numChickSold + '</b></li></ul>'
-        document.getElementById('modalBody').innerHTML = modalBodyContent;
-
-
-      });
-    </script>
-
-    <!-- Github buttons -->
-    <script async defer src="https://buttons.github.io/buttons.js"></script>
-    <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-    <script src="../assets/js/material-dashboard.min.js?v=3.1.0"></script>
+      <!-- Github buttons -->
+      <script async defer src="https://buttons.github.io/buttons.js"></script>
+      <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+      <script src="../../../assets/js/material-dashboard.min.js?v=3.1.0"></script>
 </body>
 
 </html>

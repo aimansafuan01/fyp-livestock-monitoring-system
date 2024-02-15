@@ -152,18 +152,17 @@
     %>
 
       <div class="p-3 mx-5 border border-secondary rounded shadow-lg mb-4">
-        <form class="needs-validation" action="/chicken-transfer/submit" method="post" role="form" class="text-start">
+        <form class="needs-validation" action="/chicken-transfer/submit" method="post" role="form" class="text-start" id="transferForm">
           <div id="formRepeat">
             <div class="row border px-2 py-2 mx-1">
               <div class="row mt-1">
                 <div class="col-12 col-md-2">
                   <label for="incubatorID" class="form-label pt-2 mb-0">Origin</label>
-                  <input type="text" class="form-control text-black ps-2" name="origin" value="<%= data.id %>" readonly>
+                  <input type="text" class="form-control text-black ps-2" name="origin" id="origin" value="<%= data.id %>" readonly>
                 </div>
                 <div class="col-12 col-md-4">
                   <label for="destination" class="form-label pt-2 mb-0">To</label>
-                  <select class="form-select ps-2" aria-label="Default select example" name="destination">
-                    <option selected>Choose Destination</option>
+                  <select class="form-select ps-2" aria-label="Default select example" name="destination" id="destination" required> 
                     <%
                       for (coopID of coopIDs) { 
                         if (coopID === data.id) {
@@ -178,18 +177,39 @@
               <div class="row mt-1">
                 <div class="col-12 col-md-3">
                   <label for="trayPlacement" class="form-label pt-2 mb-0">Number of Hens</label>
-                  <input type="number" class="form-control text-black ps-2" name="numOfHens" min="0" value="0">
+                  <input type="number" class="form-control text-black ps-2" name="numOfHens" min="0" id="numOfHens" required>
                 </div>
                 <div class="col-12 col-md-3">
                   <label for="trayPlacement" class="form-label pt-2 mb-0">Number of Roosters</label>
-                  <input type="number" class="form-control text-black ps-2" name="numOfRoosters" min="0" value="0">
+                  <input type="number" class="form-control text-black ps-2" name="numOfRoosters" min="0"  id="numOfRoosters" required>
                 </div>
               </div>
               <div class="col-12 mt-3 align-self-end d-flex">
-                <button class="btn btn-warning" type="submit">Submit form</button>
+                <button type="button" class="btn btn-sm btn-warning p-3 px-3" data-bs-toggle="modal"
+                  data-bs-target="#confirmationModal" id="submitBtn">
+                  Submit form
+                </button>
               </div>
             </div>
           </div>
+          <!-- Modal -->
+          <div class="modal fade" id="confirmationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="staticBackdropLabel">Submit Record?</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalBody">
+          
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-warning" action="submit">Confirm</button>
+                </div>
+              </div>
+            </div>
         </form>
       </div>
 
@@ -208,6 +228,29 @@
           }
           Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
         }
+      </script>
+
+      <!-- Populate data from form to modal -->
+      <script>
+        document.getElementById('submitBtn').addEventListener('click', function () {
+
+          // Get the form data
+          var formData = new FormData(document.getElementById('transferForm'));
+          var origin = formData.get('origin');
+          var destination = formData.get('destination');
+          var numOfHens = formData.get('numOfHens');
+          var numOfRoosters = formData.get('numOfRoosters');
+          console.log(origin)
+          console.log(destination)
+          console.log(numOfHens)
+          console.log(numOfRoosters)
+
+          var modalBodyContent = '<h5>This will submit the following record:</h5><ul><li>Origin: <b>' + origin + '</b></li><li>Transfer to: <b>' +
+            destination + '</b></li><li>Number of Hens: <b>' + numOfHens + '</b></li><li>Number of Roosters: <b>' +
+            numOfRoosters + '</b></li></ul>'
+          document.getElementById('modalBody').innerHTML = modalBodyContent;
+
+        });
       </script>
 
       <!-- Github buttons -->

@@ -18,8 +18,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="apple-touch-icon" sizes="76x76" href="../../assets/img/apple-icon.png">
-  <link rel="icon" type="image/png" href="../../assets/img/favicon.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="../../../assets/img/apple-icon.png">
+  <link rel="icon" type="image/png" href="../../../assets/img/favicon.png">
   <title>
     Tiroi Farm PLT
   </title>
@@ -54,7 +54,7 @@
         aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand m-0" href=" https://demos.creative-tim.com/material-dashboard/pages/dashboard "
         target="_blank">
-        <img src="../assets/img/logo-ct.png" class="navbar-brand-img h-100" alt="main_logo">
+        <img src="../../../assets/img/logo-ct.png" class="navbar-brand-img h-100" alt="main_logo">
         <span class="ms-1 font-weight-bold text-white">Tiroi Farm PLT</span>
       </a>
     </div>
@@ -207,11 +207,14 @@
                             <h6 class="mb-0 text-md ps-2">
                               <%= transferredDateData[i] %>
                             </h6>
+                            <p class="text-xs"><i>
+                                <%= updatedAtData[i] ? 'Updated:' + updatedAtData[i].toLocaleString('en-MY') : '' %>
+                              </i></p>
                           </div>
                         </td>
                         <td class="align-middle text-center">
                           <button type="button" class="btn btn-sm btn-warning p-3 px-3"
-                            onclick="window.location.href=''">
+                            onclick="window.location.href='/chicken-transfer/view/id/edit?id=<%= transferIDData[i] %>'">
                             Edit
                           </button>
                           <button type="button" class="btn btn-sm btn-danger p-3 px-3" data-bs-toggle="modal"
@@ -239,12 +242,17 @@
                                 Transfer ID: <b class="text-lg">
                                   <%= transferIDData[i] %>
                                 </b><br>
-                                Record Date: <b class="text-lg"><%=transferredDateData[i]%></b>.
+                                Record Date: <b class="text-lg"><%=transferredDateData[i]%></b>.<br><br>
+                                <h5>Warning! Deleting this record will:</h5>
+                                <ul>
+                                  <li>Add number of hen and rooster in origin coop.</li>
+                                  <li>Subtract number of hen and rooster in destination coop.</li>
+                                </ul>
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                 <button type="button" class="btn btn-warning"
-                                  onclick="location.href=''">Confirm</button>
+                                  onclick="location.href='/chicken-transfer/delete?id=<%= transferIDData[i] %>'">Confirm</button>
                               </div>
                             </div>
                           </div>
@@ -262,11 +270,11 @@
 
 
       <!--   Core JS Files   -->
-      <script src="/assets/js/core/popper.min.js"></script>
-      <script src="/assets/js/core/bootstrap.min.js"></script>
-      <script src="/assets/js/plugins/perfect-scrollbar.min.js"></script>
-      <script src="/assets/js/plugins/smooth-scrollbar.min.js"></script>
-      <script src="/assets/js/plugins/chartjs.min.js"></script>
+      <script src="../../../assets/js/core/popper.min.js"></script>
+      <script src="../../../assets/js/core/bootstrap.min.js"></script>
+      <script src="../../../assets/js/plugins/perfect-scrollbar.min.js"></script>
+      <script src="../../../assets/js/plugins/smooth-scrollbar.min.js"></script>
+      <script src="../../../assets/js/plugins/chartjs.min.js"></script>
       <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
         </script>
@@ -284,7 +292,7 @@
       <!-- Github buttons -->
       <script async defer src="https://buttons.github.io/buttons.js"></script>
       <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-      <script src="../assets/js/material-dashboard.min.js?v=3.1.0"></script>
+      <script src="../../../assets/js/material-dashboard.min.js?v=3.1.0"></script>
 </body>
 
 </html>

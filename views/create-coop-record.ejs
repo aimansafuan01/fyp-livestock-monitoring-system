@@ -144,7 +144,7 @@
 
 
     <div class="p-3 mx-5 border border-secondary rounded shadow-lg mb-4">
-      <form class="needs-validation" action="/coop/submit" method="post" role="form" class="text-start">
+      <form class="needs-validation" action="/coop/submit" method="post" role="form" class="text-start" id="coopForm">
         <div id="formRepeat">
           <div class="row border px-2 py-2 mx-1">
             <div class="row mx-1">
@@ -158,21 +158,21 @@
             <div class="row">
               <div class="col pb-2">
                 <label for="numOfDeadHens" class="form-label pt-2 mb-0">Number of Dead Hens</label>
-                <input type="number" class="form-control p-2" name="numOfDeadHens" placeholder="Enter number of dead Hens" min="0" value="0">
+                <input type="number" class="form-control p-2" name="numOfDeadHens" id="numOfDeadHens" placeholder="Enter number of dead Hens" min="0" required>
               </div>
               <div class="col pb-2">
                 <label for="numOfDeadRoosters" class="form-label pt-2 mb-0">Number of Dead Roosters</label>
-                <input type="number" class="form-control p-2" name="numOfDeadRoosters" placeholder="Enter number of dead Roosters" min="0" value="0">
+                <input type="number" class="form-control p-2" name="numOfDeadRoosters" id="numOfDeadRoosters" placeholder="Enter number of dead Roosters" min="0" required>
               </div>
             </div>
             <div class="row">
               <div class="col pb-2">
                 <label for="numOfEggs" class="form-label pt-2 mb-0">Total Number of Collected Eggs</label>
-                <input type="number" class="form-control p-2" name="numOfEggs" id="numOfEggs" placeholder="Enter number of dead Hens" min="0" value="0">
+                <input type="number" class="form-control p-2" name="numOfEggs" id="numOfEggs" placeholder="Enter number of collected eggs" min="0" required>
               </div>
               <div class="col pb-2">
                 <label for="numOfNC" class="form-label pt-2 mb-0">Number of NC Eggs</label>
-                <input type="number" class="form-control p-2" name="numOfNC" id="numOfNC" placeholder="Enter number of dead Hens" min="0" value="0">
+                <input type="number" class="form-control p-2" name="numOfNC" id="numOfNC" placeholder="Enter number of NC eggs" min="0" required>
               </div>
               <div class="col pb-2">
                 <label for="acceptedEggs" class="form-label pt-2 mb-0">Number of Accepted Eggs</label>&nbsp;<i class="fas fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="top"
@@ -183,11 +183,35 @@
           </div>
         </div>
         <div class="col-12 mt-3 align-self-end d-flex">
-          <button class="btn btn-warning" type="submit">Submit form</button>
+          <button type="button" class="btn btn-sm btn-warning p-3 px-3" data-bs-toggle="modal"
+            data-bs-target="#confirmationModal" id="submitBtn">
+            Submit form
+          </button>
         </div>
-      </form>
+      </div>
+      
+      <!-- Modal -->
+      <div class="modal fade" id="confirmationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+      aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">Submit Record?</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="modalBody">
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-warning"
+            action="submit">Confirm</button>
+          </div>
+        </div>
+      </div>
+    </form>
     </div>
-
+    
     <!--   Core JS Files   -->
     <script src="/assets/js/core/popper.min.js"></script>
     <script src="/assets/js/core/bootstrap.min.js"></script>
@@ -214,6 +238,37 @@
         var acceptedEggs = numOfEggs - numOfNC;
 
         document.querySelector('input[name="acceptedEggs"]').value = acceptedEggs;
+      })
+    </script>
+
+    <!-- Populate data from form to modal -->
+    <script>
+      document.getElementById('submitBtn').addEventListener('click', function () {
+
+        // Get the form data
+          var formData = new FormData(document.getElementById('coopForm'));
+          var numOfDeadHens = formData.get('numOfDeadHens');
+          var numOfDeadRoosters = formData.get('numOfDeadRoosters');
+          var numOfEggs = formData.get('numOfEggs');
+          var numOfNC = formData.get('numOfNC');
+          var acceptedEggs = formData.get('acceptedEggs');
+          var coopID = formData.get('coopID');
+
+          var modalBodyContent = '<h5>This will submit the following record:</h5><ul><li>Coop ID: <b>' + 
+            coopID + '</b></li><li>Number of Dead Hen: <b>' + numOfDeadHens +'</b></li><li>Number of Dead Rooster: <b>' + 
+            numOfDeadRoosters +'</b></li><li>Number of Collected Eggs: <b>' + numOfEggs +'</b></li><li>Number of NC Eggs: <b>' + 
+            numOfNC +'</b></li><li>Number of Accepted Eggs: <b>' + 
+            acceptedEggs +'</b></li></ul>'
+          document.getElementById('modalBody').innerHTML = modalBodyContent;
+
+        });
+    </script>
+
+    <!-- Set max for NC eggs -->
+    <script>
+      document.getElementById('numOfEggs').addEventListener('input', function() {
+        var numEgg = parseInt(this.value)
+        document.getElementById('numOfNC').setAttribute('max', numEgg);
       })
     </script>
 
