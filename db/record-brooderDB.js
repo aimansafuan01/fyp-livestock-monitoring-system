@@ -199,3 +199,16 @@ export async function getPreviousRecord (recordID, brooderID) {
     throw new Error('Error fetching previous brooder record details from database');
   }
 }
+
+export async function deleteBrooderRecord (recordID) {
+  try {
+    const [result] = await pool.query(`
+    DELETE FROM \`record-brooder\`
+    WHERE recordID = ?
+    `, [recordID]);
+    return result;
+  } catch (error) {
+    console.error(error);
+    throw new Error('DB QUERY: Error deleting brooder record details from database');
+  }
+}

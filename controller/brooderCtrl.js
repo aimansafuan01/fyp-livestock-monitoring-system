@@ -200,3 +200,24 @@ export const editBrooderForm = async (req, res) => {
       .send('Internal Server Error');
   }
 };
+
+export const deleteBrooderRecord = async (req, res) => {
+  try {
+    const recordID = req.query.id;
+    const recordData = await RecordBrooderDB.getBrooderRecord(recordID);
+    const { numDeadChick, numChickSold, brooderID } = recordData[0];
+    const numChick = +numDeadChick + +numChickSold;
+    const brooderData = {
+      numChick,
+      brooderID
+    };
+    await RecordBrooderDB.deleteBrooderRecord(recordID);
+    await BrooderDB.addChickToBrooder(brooderData);
+    res.status(200)
+      .redirect(`/brooder/view/record?id=${brooderID}`);
+  } catch (error) {
+    console.error('Error deleting brooder record from database');
+    res.status(500)
+      .send('Internal Server Error');
+  }
+};
