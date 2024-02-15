@@ -52,8 +52,7 @@
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
         aria-hidden="true" id="iconSidenav"></i>
-      <a class="navbar-brand m-0" href=" https://demos.creative-tim.com/material-dashboard/pages/dashboard "
-        target="_blank">
+      <a class="navbar-brand m-0" href="/dashboard/view">
         <img src="../assets/img/logo-ct.png" class="navbar-brand-img h-100" alt="main_logo">
         <span class="ms-1 font-weight-bold text-white">Tiroi Farm PLT</span>
       </a>
@@ -145,24 +144,44 @@
     <!-------------------- GET CURRENT DATE ---------------------->
 
       <div class="p-3 mx-5 border border-secondary rounded shadow-lg mb-4">
-        <form class="needs-validation" action="/submit-register-account" method="post" role="form" class="text-start">
+        <form class="needs-validation" action="/submit-register-account" method="post" role="form" class="text-start" id="registerForm">
           <div id="formRepeat">
             <div class="row border px-2 py-2 mx-1">
               <div class="row mt-1">
                 <div class="col-12 col-md-3">
                   <label for="username" class="form-label pt-2 mb-0">Username</label>
-                  <input type="text" class="form-control text-black ps-2" name="username" id="username">
+                  <input type="text" class="form-control text-black ps-2" name="username" id="username" required>
                 </div>
                 <div class="col-12 col-md-3">
                   <label for="password" class="form-label pt-2 mb-0">Password</label>
-                  <input type="password" class="form-control text-black ps-2" name="password" id="password">
+                  <input type="password" class="form-control text-black ps-2" name="password" id="password" required>
                 </div>
               <div class="row mt-1">
               <div class="col-12 mt-3 align-self-end d-flex">
-                <button class="btn btn-warning" type="submit">Register Account</button>
+                <button type="button" class="btn btn-sm btn-warning p-3 px-3" data-bs-toggle="modal"
+                  data-bs-target="#confirmationModal" id="submitBtn">
+                  Create Account
+                </button>
               </div>
             </div>
           </div>
+          <div class="modal fade" id="confirmationModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="staticBackdropLabel">Create Account?</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalBody">
+          
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-warning" action="submit">Confirm</button>
+                </div>
+              </div>
+            </div>
         </form>
       </div>
 
@@ -181,6 +200,24 @@
           }
           Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
         }
+      </script>
+
+      <!-- Populate data from form to modal -->
+      <script>
+        document.getElementById('submitBtn').addEventListener('click', function () {
+
+          // Get the form data
+          var formData = new FormData(document.getElementById('registerForm'));
+          var brooderID = formData.get('brooderID');
+          var username = formData.get('username');
+          var password = formData.get('password');
+
+          var modalBodyContent = '<h5>This will create an account with the following details:</h5><ul><li>Username: <b>' +
+            username + '</b></li><li>Password: <b>' + password + '</b></li></ul>'
+          document.getElementById('modalBody').innerHTML = modalBodyContent;
+
+
+        });
       </script>
 
       <!-- Github buttons -->
