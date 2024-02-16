@@ -156,6 +156,7 @@
                         <tr>
                           <th class="text-uppercase text-secondary text-lg font-weight-bolder">Record ID</th>
                           <th class="text-uppercase text-secondary text-lg font-weight-bolder ps-2">Origin</th>
+                          <th class="text-uppercase text-secondary text-lg font-weight-bolder ps-2">Cause</th>
                           <th class="text-center text-uppercase text-secondary text-lg font-weight-bolder">Status
                           </th>
                           <th class="text-center text-uppercase text-secondary text-lg font-weight-bolder">Date
@@ -182,19 +183,19 @@
                             if (recordSurveillanceData[i].brooderID != null) {
                               origin = recordSurveillanceData[i].brooderID;
                               originDesc = 'Brooder';
-                              indicator = 'mortality rate'
+                              indicator = 'Mortality Rate'
                             }
 
                             if (recordSurveillanceData[i].incubatorID != null) {
                               origin = recordSurveillanceData[i].incubatorID;
                               originDesc = 'Incubator';
-                              indicator = 'hatching rate'
+                              indicator = 'Hatching Rate'
                             }
 
                             if (recordSurveillanceData[i].coopID != null) {
                               origin = recordSurveillanceData[i].coopID;
                               originDesc = 'Coop';
-                              indicator = 'mortality rate'
+                              indicator = 'Mortality Rate'
                             }
                         %>
                         <tr>
@@ -208,6 +209,9 @@
                           <td>
                             <p class="text-md font-weight-bold mb-0"><%= origin %></p>
                             <p class="text-xs text-secondary mb-0"><%= originDesc %></p>
+                          </td>
+                          <td>
+                              <p class="text-md font-weight-bold mb-0"><%= indicator %></p>
                           </td>
                           <td class="align-middle text-center text-md">
                             <span class="badge badge-md <%= badgeBG %>"><%= status %></span>

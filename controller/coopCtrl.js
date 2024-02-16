@@ -166,7 +166,7 @@ export const submitCoopForm = async (req, res) => {
 
     if (resultUpdateCoopMR[1] > surveillanceThreshold[0].chickenMRThreshold) {
       await SurveillanceDB.submitSurveillanceRecord(coopSurveillance);
-      sendAlert();
+      sendAlert(coopID);
     }
     if (resultSubmit && resultUpdate && resultUpdateEggs) {
       res.status(200)
@@ -246,7 +246,7 @@ export const editCoopRecord = async (req, res) => {
 
     if (+updatedCumMR > surveillanceThreshold[0].chickenMRThreshold) {
       await SurveillanceDB.submitSurveillanceRecord(coopSurveillance);
-      sendAlert();
+      sendAlert(coopID);
     }
 
     res.status(200)

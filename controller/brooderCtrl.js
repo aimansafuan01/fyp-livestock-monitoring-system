@@ -106,7 +106,7 @@ export const submitBrooderForm = async (req, res) => {
     const surveillanceThreshold = await SurveillanceDB.getSurveillance();
     if (resultUpdateMRChick[1] > surveillanceThreshold[0].chickMRThreshold) {
       await SurveillanceDB.submitSurveillanceRecord(brooderSurveillance);
-      sendAlert();
+      sendAlert(brooderID);
     }
     const latestNumChick = await BrooderDB.getNumChick(brooderID);
     if (parseInt(latestNumChick[0].numChick) === 0) { BrooderDB.setBrooderMortalityRate(brooderID); }
@@ -189,7 +189,7 @@ export const editBrooderForm = async (req, res) => {
     const surveillanceThreshold = await SurveillanceDB.getSurveillance();
     if (updatedCumMR > surveillanceThreshold[0].chickMRThreshold) {
       await SurveillanceDB.submitSurveillanceRecord(brooderSurveillance);
-      sendAlert();
+      sendAlert(brooderID);
     }
     const latestNumChick = await BrooderDB.getNumChick(brooderID);
     parseInt(latestNumChick[0].numChick) !== 0 ? await BrooderDB.setBrooderMR(brooderMR) : BrooderDB.setBrooderMortalityRate(brooderID);

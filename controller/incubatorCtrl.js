@@ -107,7 +107,7 @@ export const submitIncubatorHatchForm = async (req, res) => {
 
     if (hatchRate < surveillanceThreshold[0].hatchingRateThreshold) {
       await SurveillanceDB.submitSurveillanceRecord(incubatorSurveillance);
-      sendAlert();
+      sendAlert(incubatorID);
     }
 
     res.status(200)

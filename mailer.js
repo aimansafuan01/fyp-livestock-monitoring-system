@@ -3,7 +3,7 @@ import Mailgen from 'mailgen';
 import nodemailer from 'nodemailer';
 dotenv.config();
 
-export async function sendAlert (req, res) {
+export async function sendAlert (origin) {
   const config = {
     service: 'gmail',
     auth: {
@@ -11,7 +11,7 @@ export async function sendAlert (req, res) {
       pass: process.env.EMAIL_PASSWORD
     }
   };
-
+  const date = new Date().toLocaleString('en-My');
   // Create a Nodemailer transporter using SMTP
   const transporter = nodemailer.createTransport(config);
 
@@ -26,7 +26,7 @@ export async function sendAlert (req, res) {
   const email = {
     body: {
       name: 'Safuan Idris',
-      intro: 'Potential problem detected at the farm which require your immediate attention',
+      intro: `<h1>Potential problem detected at ${origin} which require your immediate attention</h1><br>Surveillance Date: <b>${date}<b>`,
       action: {
         instructions: 'Click the button below to view the detailed report:',
         button: {
@@ -44,7 +44,7 @@ export async function sendAlert (req, res) {
 
   const message = {
     from: process.env.EMAIL_USERNAME,
-    to: 'witewey879@tanlanav.com',
+    to: 'behem67958@laymro.com',
     subject: 'POSSIBLE OUTBREAK DETECTED',
     html: emailBody
   };
