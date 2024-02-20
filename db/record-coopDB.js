@@ -139,11 +139,23 @@ export async function getFirstDateCoopRecord () {
 export async function avgDailyEgg () {
   try {
     const [result] = await pool.query(`
-    SELECT sum(numEggs) / count(recordID) AS avgDailyEgg
-    FROM \`record-coop\`
-    WHERE MONTH(current_date()) = MONTH(recorded_at)
-    AND
-    YEAR(current_date()) = YEAR(recorded_at)
+SELECT 
+    YEAR(recorded_at) AS year,
+    MONTH(recorded_at) AS month,
+    SUM(numEggs) / COUNT(recordID) AS avgDailyEgg
+FROM 
+    \`record-coop\`
+WHERE 
+    YEAR(recorded_at) = YEAR(CURRENT_DATE())
+    AND MONTH(recorded_at) <= MONTH(CURRENT_DATE())
+    AND MONTH(recorded_at) >= 1
+GROUP BY 
+    YEAR(recorded_at),
+    MONTH(recorded_at)
+ORDER BY 
+    YEAR(recorded_at),
+    MONTH(recorded_at);
+
     `);
     return result;
   } catch (error) {

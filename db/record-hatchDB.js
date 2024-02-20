@@ -4,13 +4,26 @@ import pool from './database.js';
 export async function getIncubationData () {
   try {
     const [result] = await pool.query(`
-    SELECT SUM(numEgg) AS numEgg, SUM(numHatch) AS numHatch,
-    sum(numNotHatch) AS numNotHatch, sum(hatchRate) / COUNT(recordHatchID) AS hatchRate,
-    MIN(hatchRate) AS minHatchRate, MAX(hatchRate) AS maxHatchRate
-    FROM \`record-hatch\`
-    WHERE
-    MONTH(created_at) = MONTH(CURDATE())
-    AND YEAR(created_at) = YEAR(CURDATE())`);
+    SELECT 
+    YEAR(created_at) AS year,
+    MONTH(created_at) AS month,
+    SUM(numEgg) AS numEgg,
+    SUM(numHatch) AS numHatch,
+    SUM(numNotHatch) AS numNotHatch,
+    SUM(hatchRate) / COUNT(recordHatchID) AS hatchRate,
+    MIN(hatchRate) AS minHatchRate,
+    MAX(hatchRate) AS maxHatchRate
+FROM 
+    \`record-hatch\`
+WHERE 
+    YEAR(created_at) = YEAR(CURRENT_DATE())
+GROUP BY 
+    YEAR(created_at),
+    MONTH(created_at)
+ORDER BY 
+    YEAR(created_at),
+    MONTH(created_at);
+`);
     return result;
   } catch (error) {
     console.error(error);

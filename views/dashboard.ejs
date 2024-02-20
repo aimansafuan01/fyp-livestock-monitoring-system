@@ -372,7 +372,7 @@
     new Chart(ctx, {
       type: "bar",
       data: {
-        labels: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+        labels: [ "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
         datasets: [{
           label: "Number of Eggs",
           tension: 0.4,
@@ -380,7 +380,7 @@
           borderRadius: 4,
           borderSkipped: false,
           backgroundColor: "rgba(255, 255, 255, .8)",
-          data: [<%= numEggsCurrWeekData %>],
+          <!-- data: [<%= numEggsCurrWeekData %>], -->
           maxBarThickness: 6,
         },],
       },

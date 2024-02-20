@@ -86,8 +86,7 @@ export const submitBrooderForm = async (req, res) => {
   try {
     const numChickData = await BrooderDB.getNumChick(brooderID);
     const { numChick } = numChickData[0];
-
-    const mortalityRate = ((+numDeadChick / numChick) * 100);
+    const mortalityRate = +numDeadChick === 0 ? 0 : ((+numDeadChick / numChick) * 100);
     const brooderData = {
       brooderID,
       numDeadChick,

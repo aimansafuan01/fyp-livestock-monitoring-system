@@ -134,7 +134,7 @@ export const submitCoopForm = async (req, res) => {
     const numDeadRoosters = req.body.numOfDeadRoosters;
     const coop = await CoopDB.getCoop(coopID);
     const { totalChickens } = coop[0];
-    const mortalityRate = ((+numDeadHen + +numDeadRoosters) / +totalChickens) * 100;
+    const mortalityRate = +numDeadHen && +numDeadRoosters === 0 ? 0 : ((+numDeadHen + +numDeadRoosters) / +totalChickens) * 100;
 
     const coopData = {
       coopID,
