@@ -54,6 +54,9 @@ app.use('/report', Routes.ReportRoutes);
 // Dashboard Routes
 app.use('/dashboard', Routes.DashboardRoutes);
 
+// Sales Routes
+app.use('/sales', Routes.SalesRoutes);
+
 // Daily Record
 app.get('/daily-record', (req, res) => {
   res.render('daily-record');

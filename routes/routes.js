@@ -8,6 +8,7 @@ import SurveillanceRoutes from './surveillanceRoutes.js';
 import ReportRoutes from './reportRoutes.js';
 import DashboardRoutes from './dashboardRoutes.js';
 import UserRoutes from './userRoutes.js';
+import SalesRoutes from './salesRoutes.js';
 
 // The purpose of this file is to gather all different routes so that app.js need only 1 import route
 
@@ -21,5 +22,6 @@ export {
   SurveillanceRoutes,
   ReportRoutes,
   DashboardRoutes,
-  UserRoutes
+  UserRoutes,
+  SalesRoutes
 };
