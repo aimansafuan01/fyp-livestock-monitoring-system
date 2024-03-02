@@ -138,7 +138,7 @@
             </li>
             <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Chicken Transfer Record</li>
           </ol>
-          <h4 class="font-weight-bolder mb-0">Hatch Record</h4>
+          <h4 class="font-weight-bolder mb-0">Transfer Chicken</h4>
         </nav>
       </div>
     </nav>
@@ -151,10 +151,10 @@
       const coopIDs = data.coopIDS.map(coop => coop.coopID);
     %>
 
-      <div class="p-3 mx-5 border border-secondary rounded shadow-lg mb-4">
+      <div class="p-3 mx-5 bg-white rounded shadow-lg mb-4">
         <form class="needs-validation" action="/chicken-transfer/submit" method="post" role="form" class="text-start" id="transferForm">
           <div id="formRepeat">
-            <div class="row border px-2 py-2 mx-1">
+            <div class="row px-2 py-2 mx-1">
               <div class="row mt-1">
                 <div class="col-12 col-md-2">
                   <label for="incubatorID" class="form-label pt-2 mb-0">Origin</label>

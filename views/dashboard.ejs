@@ -57,8 +57,7 @@
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
         aria-hidden="true" id="iconSidenav"></i>
-      <a class="navbar-brand m-0" href="/dashboard/view"
-        >
+      <a class="navbar-brand m-0" href="/dashboard/view">
         <img src="../assets/img/logo-ct.png" class="navbar-brand-img h-100" alt="main_logo">
         <span class="ms-1 font-weight-bold text-white">Tiroi Farm PLT</span>
       </a>
@@ -140,8 +139,22 @@
           <h4 class="font-weight-bolder mb-0">Dashboard</h4>
         </nav>
       </div>
+      <!---------------- End BreadCrumb ------------------>
+      <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+        <ul class="navbar-nav  justify-content-end">
+          <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+            <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+              <div class="sidenav-toggler-inner">
+                <i class="sidenav-toggler-line"></i>
+                <i class="sidenav-toggler-line"></i>
+                <i class="sidenav-toggler-line"></i>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div>
     </nav>
-    <!---------------- End BreadCrumb ------------------>
+      
     <div class="container-fluid py-4">
       <div class="row mb-6 d-flex justify-content-center">
         <div class="col-6 align-self-center text-center <%= surveillanceBGSize %> <%= surveillanceBG %>">
@@ -315,7 +328,7 @@
         </div>
       </div>
       <div class="row mt-4">
-        <div class="col-6 mb-4">
+        <div class="col-12 col-md-6 mb-4">
           <div class="card z-index-2 ">
             <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
               <div class="bg-gradient-secondary shadow-secondary border-radius-lg py-3 pe-1">
@@ -336,7 +349,7 @@
             </div>
           </div>
         </div>
-        <div class="col-6 mb-4">
+        <div class="col-12 col-md-6 mt-4 mb-4">
           <div class="card z-index-2 ">
             <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
               <div class="bg-gradient-secondary shadow-secondary border-radius-lg py-3 pe-1">
@@ -948,6 +961,7 @@
               },
             });
   </script>
+
   <script>
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {
@@ -957,6 +971,20 @@
       Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
   </script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const iconNavbarSidenav = document.getElementById('iconNavbarSidenav');
+    const sidenavMain = document.getElementById('sidenav-main');
+
+    iconNavbarSidenav.addEventListener("click", function() {
+      // Toggle the class on the body element to show/hide the sidenav
+      document.body.classList.toggle('g-sidenav-show');
+    });
+  });
+</script>
+
+
 </body>
 
 </html>

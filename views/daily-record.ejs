@@ -133,24 +133,37 @@
           <h4 class="font-weight-bolder mb-0">Daily Record</h4>
         </nav>
       </div>
+      <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+        <ul class="navbar-nav  justify-content-end">
+          <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+            <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+              <div class="sidenav-toggler-inner">
+                <i class="sidenav-toggler-line"></i>
+                <i class="sidenav-toggler-line"></i>
+                <i class="sidenav-toggler-line"></i>
+              </div>
+            </a>
+          </li>
+        </ul>
+      </div>
     </nav>
     <!----------------- END BREADCRUMBr ----------------->
 
-    <div class="py-0 px-0 mx-5 text-center">
-        <div class="row border">
-          <div class="col border py-6">
-            <a class="btn btn-warning btn-lg" href="/coop/view" role="button">COOP</a>
+    <div class="py-0 px-0 mx-5 text-start mt-3">
+        <div class="row ">
+          <div class="col-12 col-md-6 mb-5">
+            <a class="btn btn-warning btn-lg p-md-7 text-md" href="/brooder/view" role="button">BROODER</a>
           </div>
-          <div class="col border py-6">
-            <a class="btn btn-warning btn-lg" href="/chicken-transfer/view" role="button">CHICKEN</a>
+          <div class="col-12 col-md-6 mb-5">
+            <a class="btn btn-warning btn-lg p-md-7 text-md" href="/coop/view" role="button">COOP</a>
           </div>
         </div>
-        <div class="row border">
-          <div class="col border py-6">
-            <a class="btn btn-warning btn-lg" href="/brooder/view" role="button">BROODER</a>
+        <div class="row ">
+          <div class="col-12 col-md-6 mb-5">
+            <a class="btn btn-warning btn-lg p-md-7 text-md" href="/incubator/view" role="button">INCUBATOR</a>
           </div>
-          <div class="col border py-6">
-            <a class="btn btn-warning btn-lg" href="/incubator/view" role="button">INCUBATOR</a>
+          <div class="col-12 col-md-6 mb-5">
+            <a class="btn btn-warning btn-lg p-md-7 text-md" href="/chicken-transfer/view" role="button">CHICKEN</a>
           </div>
         </div>
     </div>
@@ -175,6 +188,18 @@
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="../assets/js/material-dashboard.min.js?v=3.1.0"></script>
+
+  <script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const iconNavbarSidenav = document.getElementById('iconNavbarSidenav');
+    const sidenavMain = document.getElementById('sidenav-main');
+
+    iconNavbarSidenav.addEventListener("click", function() {
+      // Toggle the class on the body element to show/hide the sidenav
+      document.body.classList.toggle('g-sidenav-show');
+    });
+  });
+</script>
 </body>
 
 </html>
