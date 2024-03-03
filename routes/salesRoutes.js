@@ -9,4 +9,7 @@ router.get('/view', SalesCtrl.getSalesRecordPage);
 // View Sales Form
 router.get('/create', SalesCtrl.getSalesForm);
 
+// Submit Sales Form
+router.post('/submit', SalesCtrl.submitSalesForm);
+
 export default router;

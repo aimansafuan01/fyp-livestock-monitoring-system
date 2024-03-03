@@ -154,8 +154,7 @@
     %>
 
     <div class="p-3 mx-5 bg-white rounded shadow-lg mb-6 bg-white">
-      <form class="needs-validation" action="/sales/submit" method="post" role="form" class="text-start"
-        id="brooderForm">
+      <form class="needs-validation" action="/sales/submit" method="post" role="form" class="text-start" id="salesForm">
         <div id="formRepeat">
           <div class="row px-2 py-2 mx-1">
             <div class="col-12 col-md-2 pb-2">
@@ -199,8 +198,8 @@
               <input type="text" class="form-control p-2" name="soldTo" id="soldTo" placeholder="" required>
             </div>
             <div class="col-12 col-md-4 pb-2">
-              <label for="soldTo" class="form-label pt-2 mb-0 text-md">Date:</label>
-              <input type="date" class="form-control p-2" name="soldTo" id="soldTo" placeholder="" required
+              <label for="date" class="form-label pt-2 mb-0 text-md">Date:</label>
+              <input type="date" class="form-control p-2" name="date" id="date" placeholder="" required
                 value="<%= currDate %>">
             </div>
           </div>
@@ -302,6 +301,26 @@
 
   // Add click event listener to the "Add Brooder" element
   document.getElementById('addInput').addEventListener('click', addBrooder);
+</script>
+
+<!-- Populate data from form to modal -->
+<script>
+  document.getElementById('submitBtn').addEventListener('click', function () {
+
+    // Get the form data
+    var formData = new FormData(document.getElementById('salesForm'));
+    var brooderID = formData.get('brooderID');
+    var qty = formData.get('qty');
+    var price = formData.get('price');
+    var totalPrice = formData.get('totalPrice');
+    var soldTo = formData.get('soldTo');
+    var date = formData.get('date');
+    var modalBodyContent = '<h5>This will submit the following sales record:</h5><ul><li>Brooder ID: <b>' +
+      brooderID + '</b></li><li>Quantity: <b>' + qty + '</b></li><li>Price per unit: <b>RM' +
+      price + '</b></li><li>Total: <b>' + totalPrice + '</b></li><li>Sold to: <b>RM' +
+      soldTo + '</b></li><li>Date: <b>' + date + '</b></li></ul>'
+    document.getElementById('modalBody').innerHTML = modalBodyContent;
+  });
 </script>
 
 

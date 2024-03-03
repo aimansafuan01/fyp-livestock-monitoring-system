@@ -52,8 +52,7 @@
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
         aria-hidden="true" id="iconSidenav"></i>
-      <a class="navbar-brand m-0" href="/dashboard/view"
-        >
+      <a class="navbar-brand m-0" href="/dashboard/view">
         <img src="../assets/img/logo-ct.png" class="navbar-brand-img h-100" alt="main_logo">
         <span class="ms-1 font-weight-bold text-white">Tiroi Farm PLT</span>
       </a>
@@ -141,7 +140,8 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/dashboard/view">Dashboard</a></li>
-            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/daily-record">Daily Record</a></li>
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/daily-record">Daily Record</a>
+            </li>
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/brooder/view">Brooder</a></li>
             <li class="breadcrumb-item text-lg text-dark active" aria-current="page">Brooder Record</li>
           </ol>
@@ -153,7 +153,8 @@
 
     <% console.log(brooderData) %>
     <div class="p-3 mx-5 bg-white rounded shadow-lg mb-4 bg-white">
-      <form class="needs-validation" action="/brooder/submit" method="post" role="form" class="text-start" id="brooderForm">
+      <form class="needs-validation" action="/brooder/submit" method="post" role="form" class="text-start"
+        id="brooderForm">
         <div id="formRepeat">
           <div class="row px-2 py-2 mx-1">
             <div class="row mx-1">
@@ -161,18 +162,22 @@
             </div>
             <div class="row mt-1">
               <div class="col-12 col-md-2">
-                <input type="text" class="form-control text-black ps-2" name="brooderID" id="brooderID" value="<%= brooderData.id %>" readonly>
+                <input type="text" class="form-control text-black ps-2" name="brooderID" id="brooderID"
+                  value="<%= brooderData.id %>" readonly>
               </div>
             </div>
             <div class="row">
               <div class="col-12 col-md-6 pb-2">
-                <label for="numDeadChick" class="form-label pt-2 mb-0">Number of Dead Chick</label>&nbsp;<i class="fas fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="top"
+                <label for="numDeadChick" class="form-label pt-2 mb-0">Number of Dead Chick</label>&nbsp;<i
+                  class="fas fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="top"
                   data-bs-title="The number in grey shows the maximum amount to be entered based on the total number of chick"></i>
-                <input type="number" class="form-control p-2" name="numDeadChick" id="numDeadChick" min="0" placeholder="<%= brooderData.numChick %>" max="<%= brooderData.numChick %>" required>
+                <input type="number" class="form-control p-2" name="numDeadChick" id="numDeadChick" min="0"
+                  placeholder="<%= brooderData.numChick %>" max="<%= brooderData.numChick %>" required>
               </div>
               <div class="cold-12 col-md-6 pb-2">
                 <label for="numChickSold" class="form-label pt-2 mb-0">Number of Chick Sold</label>
-                <input type="number" class="form-control p-2" name="numChickSold" id="numChickSold" min="0" max="<%= brooderData.numChick %>" placeholder="<%= brooderData.numChick %>" required>
+                <input type="number" class="form-control p-2" name="numChickSold" id="numChickSold" min="0"
+                  max="<%= brooderData.numChick %>" placeholder="<%= brooderData.numChick %>" required>
               </div>
             </div>
           </div>
@@ -192,7 +197,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body" id="modalBody">
-        
+
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -223,15 +228,15 @@
     <!-- Ensure that max value for sold is not more than after calculate minus dead chick -->
     <script>
       var numDeadChick = document.getElementById('numDeadChick');
-      var numChick = <%- JSON.stringify(brooderData.numChick) %>;
-      numDeadChick.addEventListener('input', function() {
+      var numChick = <% - JSON.stringify(brooderData.numChick) %>;
+      numDeadChick.addEventListener('input', function () {
         numChickSold.setAttribute('max', numChick - this.value);
         numChickSold.setAttribute('placeholder', numChick - this.value);
       })
       numChickSold.addEventListener('input', function () {
-          numDeadChick.setAttribute('max', numChick - this.value);
-          numDeadChick.setAttribute('placeholder', numChick - this.value);
-        })
+        numDeadChick.setAttribute('max', numChick - this.value);
+        numDeadChick.setAttribute('placeholder', numChick - this.value);
+      })
     </script>
 
     <!-- Populate data from form to modal -->
@@ -248,8 +253,6 @@
           brooderID + '</b></li><li>Number of Dead Chick: <b>' + numDeadChick + '</b></li><li>Number of Chick Sold: <b>' +
           numChickSold + '</b></li></ul>'
         document.getElementById('modalBody').innerHTML = modalBodyContent;
-
-
       });
     </script>
 
