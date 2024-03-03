@@ -148,6 +148,7 @@
       </div>
     </nav>
     <!------------------------------- Top Navbar ----------------------->
+
     <div class="row ms-2 mt-2 mb-0">
       <div class="col-4">
         <button type="button" class="btn btn-sm btn-warning p-4 mb-0 text-md"
@@ -163,13 +164,16 @@
             <div class="card-body px-0 pb-2">
               <div class="table-responsive p-0">
                 <table class="table table-striped">
-                  <thead>
+                  <thead class="justify-content-between">
                     <tr>
                       <th>
                         DATE
                       </th>
                       <th>
                         QUANTITY
+                      </th>
+                      <th>
+                        BROODER
                       </th>
                       <th>
                         PRICE PER UNIT
@@ -183,23 +187,28 @@
                     </tr>
                   </thead>
                   <tbody>
+                    <% for (let i=0; i<salesData.length; i++) { %>
                     <tr>
                       <td>
-                        <p class="ps-3 pt-3 text-lg font-weight-normal align-items-center">11/2/2022</p>
+                        <p class="ps-3 pt-3 text-lg font-weight-normal "><%= salesData[i].date.toLocaleDateString('en-MY') %> </p>
                       </td>
                       <td>
-                        <p class="ps-3 pt-3 text-lg font-weight-normal align-items-center">100</p>
+                        <p class="ps-3 pt-3 text-lg font-weight-normal "><%= salesData[i].qty %></p>
                       </td>
                       <td>
-                        <p class="ps-3 pt-3 text-lg font-weight-normal align-items-center">RM3.70</p>
+                        <p class="ps-3 pt-3 text-lg font-weight-normal "><%= salesData[i].brooderID %></p>
                       </td>
                       <td>
-                        <p class="ps-3 pt-3 text-lg font-weight-normal align-items-center">RM370.00</p>
+                        <p class="ps-3 pt-3 text-lg font-weight-normal "><%= salesData[i].priceSold %></p>
                       </td>
                       <td>
-                        <p class="ps-3 pt-3 text-lg font-weight-normal align-items-center">Desa Mart</p>
+                        <p class="ps-3 pt-3 text-lg font-weight-normal "><%= salesData[i].totalPrice %></p>
+                      </td>
+                      <td>
+                        <p class="ps-3 pt-3 text-lg font-weight-normal "><%= salesData[i].soldTo %></p>
                       </td>
                     </tr>
+                    <% } %>
                   </tbody>
                 </table>
               </div>
