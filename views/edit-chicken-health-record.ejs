@@ -109,6 +109,14 @@
             <span class="nav-link-text ms-1">Generate Report</span>
           </a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link text-white " href="/sales/view">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-icons opacity-10">sell</i>
+            </div>
+            <span class="nav-link-text ms-1">Sales Record</span>
+          </a>
+        </li>
         <li class="nav-item mt-3">
           <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">Account pages</h6>
         </li>
@@ -134,9 +142,9 @@
           <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/dashboard/view">Dashboard</a></li>
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="/chicken-health/view">Chicken Health</a></li>
-            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Update Chicken Health Record (<%= recordData[0].recordHealthID %>)</li>
+            <li class="breadcrumb-item text-lg text-dark active" aria-current="page">Update Chicken Health Record (<%= recordData[0].recordHealthID %>)</li>
           </ol>
-          <h4 class="font-weight-bolder mb-0">Update Chicken Health Record</h4>
+          <h2 class="font-weight-bolder mb-0">Update Chicken Health Record</h2>
         </nav>
       </div>
     </nav>
@@ -145,36 +153,36 @@
     <div class="p-3 mx-5 bg-white rounded shadow-lg mb-4">
       <form class="needs-validation" action="/chicken-health/edit/record" method="post" role="form" class="text-start" id="updateChickenHealthForm">
         <div id="formRepeat">
-          <div class="row border px-2 py-2 mx-1">
+          <div class="row px-2 py-2 mx-1">
             <div class="row mx-1">
               <div class="col-2 ps-0">
-                <label for="recordID">Record ID</label>
+                <label for="recordID" class="text-md">Record ID</label>
                 <input type="text" class="form-control text-black ps-2" name="recordID" id="recordID" value="<%= recordData[0].recordHealthID %>" readonly>
               </div>
               <div class="col-2 ps-0">
-                <label for="origin">Origin</label>
+                <label class="text-md" for="origin">Origin</label>
                 <input type="text" class="form-control text-black ps-2" name="origin" id="origin" value="<%= recordData[0].origin %>" readonly>
               </div>
               <div class="col-2 ps-0">
-                <label for="symptom">Symptom</label>
+                <label class="text-md" for="symptom">Symptom</label>
                 <input type="text" class="form-control text-black ps-2" name="symptom" id="symptom" value="<%= recordData[0].symptom %>" readonly>
               </div>
             </div>
-            <div class="row">
+            <div class="row mt-3">
               <div class="col pb-2">
-                <label for="numOfHens" class="form-label pt-2 mb-0">Number of Hens</label>&nbsp;<i class="fas fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="top"
+                <label class="text-md" for="numOfHens" class="form-label pt-2 mb-0">Number of Hens</label>&nbsp;<i class="fas fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="top"
                   data-bs-title="The number in grey represent the number of hens from current health record"></i>
                 <input type="number" class="form-control p-2" name="numOfHens" id="numOfHens" min="0" max="<%= recordData[0].numOfHens %>" placeholder="<%= recordData[0].numOfHens %>" required>
               </div>
               <div class="col pb-2">
-                <label for="numOfRoosters" class="form-label pt-2 mb-0">Number of Roosters</label>&nbsp;<i class="fas fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="top"
+                <label class="text-md" for="numOfRoosters" class="form-label pt-2 mb-0">Number of Roosters</label>&nbsp;<i class="fas fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="top"
                   data-bs-title="The number in grey represent the number of roosters from current health record"></i>
                 <input type="number" class="form-control p-2" name="numOfRoosters" id="numOfRoosters" min="0" max="<%= recordData[0].numOfRoosters %>" placeholder="<%= recordData[0].numOfRoosters %>" required>
               </div>
             </div>
-            <div class="row">
+            <div class="row mt-3">
               <div class="col pb-2">
-                <label for="status" class="form-label pt-2 mb-0">Status</label>
+                <label class="text-md" for="status" class="form-label pt-2 mb-0">Status</label>
                 <select class="form-select ps-2" name="status" id="status" required>
                   <% for (status of healthStatus) { 
                     if (status.status === 'Moved to SB') {continue}
@@ -188,7 +196,7 @@
             </div>
             <div class="row" id="hidden" style="display: none">
               <div class="col pb-2">
-                <label for="transferTo" class="form-label pt-2 mb-0">Transfer to</label>
+                <label class="text-md" for="transferTo" class="form-label pt-2 mb-0">Transfer to</label>
                 <select class="form-select ps-2" name="transferTo" id="transferTo">
                   <% for (coopID of coopIDs) { if (coopID.coopID==='SB' ) { continue; } %>
                     <option value="<%= coopID.coopID %>">
