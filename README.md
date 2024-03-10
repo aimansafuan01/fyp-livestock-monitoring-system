@@ -21,6 +21,16 @@
 
 ![V3-Use Case Diagram](https://github.com/aimansafuan01/fyp-livestock-monitoring-system/assets/86760998/dc319cdb-cb70-4b69-9365-8184bb602736)
 
+<h1>System UI</h1>
+![Dashboard-V1](https://github.com/aimansafuan01/fyp-livestock-monitoring-system/assets/86760998/b93d2d46-5d80-4fda-a878-02337775fe3f)
+![Screenshot 2024-03-10 234303](https://github.com/aimansafuan01/fyp-livestock-monitoring-system/assets/86760998/bd6d8486-adc0-4834-85c3-a69833b48596)
+![Screenshot 2024-03-10 234403](https://github.com/aimansafuan01/fyp-livestock-monitoring-system/assets/86760998/354e5ee2-817b-45fc-a926-905eaca32f77)
+![Screenshot 2024-03-10 234542](https://github.com/aimansafuan01/fyp-livestock-monitoring-system/assets/86760998/bf36463c-d908-4ad2-8303-7a22b4e2fde7)
+
+
+
+
+
 
 
 
