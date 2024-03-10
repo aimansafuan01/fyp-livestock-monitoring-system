@@ -5,6 +5,7 @@
   <li>Farm Data Recording System with Elements of Surveillance by Monitoring Syndromic Indicators (mortality rates & hatching rates) which sends out alerts when syndromic indicators exceeds certain threshold specified by FAO.</li>
   <li>Designed and developed in accordance with the requirements from Tiroi Farm PLT</li>
   <li>Academic Final Year Project in Information Systems Engineering</li>
+  <li>Uses UI template from https://www.creative-tim.com/product/material-dashboard</li>
 </ul>
 <h1>Documentations</h1>
 <ul>
